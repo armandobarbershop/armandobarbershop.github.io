@@ -281,7 +281,7 @@ font-weight:bold;
 
 <input type="tel" inputmode="numeric" id="telefone" placeholder="Ex: 95991554792" required>
 
-<button type="button" onclick="alert('boton funciona'); agendar()">Reservar</button>
+<button type="button" onclick="agendar()">Reservar</button>
 
 <button type="button" onclick="abrirMaps()">📍 Ver localização</button>
 
@@ -379,7 +379,7 @@ selectHora.add(opt);
 cargarHoras();
 
 document.getElementById("data").addEventListener("change",cargarHoras);
-
+document.getElementById("barbeiro").addEventListener("change",cargarHoras);
 async function agendar(){
 
 let data=document.getElementById("data").value;
@@ -432,39 +432,6 @@ alert("Erro ao enviar reserva");
 }
 
 // ENVIAR A GOOGLE SHEETS
-fetch("https://script.google.com/macros/s/AKfycbyMT7igW6nYz8TanmqHxZo44UPypYpmFN8HSjEjNSALD300tfXE4PBYpBYxkPJMXhP6/exec",{
-method:"POST",
-headers:{
-"Content-Type":"application/json"
-},
-body:JSON.stringify({
-fecha:data,
-hora:hora,
-cliente:nome,
-telefono:telefone,
-servicio:servico,
-barbero:barbeiro
-})
-})
-.then(r=>r.text())
-.then(res=>{
-
-document.getElementById("confirmacao").style.display="block";
-document.querySelector("form").reset();
-  
-// MENSAJE WHATSAPP
-var texto="Olá Armando Barber Shop %0A%0AQuero agendar um horário%0A%0ABarbeiro: "+barbeiro+"%0AServiço: "+servico+"%0AData: "+data+"%0AHora: "+hora+"%0ANome: "+nome;
-
-var numero="5595991554792";
-
-var link="https://wa.me/"+numero+"?text="+texto;
-
-window.open(link);
-
-})
-.catch(err=>console.log(err));
-
-}
 
 
 function abrirMaps(){
