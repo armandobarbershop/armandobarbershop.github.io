@@ -335,20 +335,37 @@ var horas=[
 "19:00","19:30","20:00"
 ];
 
-function cargarHoras(){
+async function cargarHoras(){
 
 var selectHora=document.getElementById("hora");
 selectHora.innerHTML="";
 
 var dataSeleccionada=document.getElementById("data").value;
+var barbeiro=document.getElementById("barbeiro").value;
 
 if(!dataSeleccionada){
 return;
 }
 
+var ocupadas=[];
+
+try{
+
+let resp=await fetch("https://script.google.com/macros/s/AKfycbyMT7igW6nYz8TanmqHxZo44UPypYpmFN8HSjEjNSALD300tfXE4PBYpBYxkPJMXhP6/exec");
+let dados=await resp.json();
+
+dados.forEach(r=>{
+if(r.fecha==dataSeleccionada && r.barbero==barbeiro){
+ocupadas.push(r.hora);
+}
+});
+
+}catch(e){
+console.log("error cargando reservas");
+}
+
 var hoje=new Date();
 var dataHoje=hoje.toISOString().split("T")[0];
-
 var horaAtual=hoje.getHours();
 var minutoAtual=hoje.getMinutes();
 
@@ -359,11 +376,13 @@ var h=parseInt(partes[0]);
 var m=parseInt(partes[1]);
 
 if(dataSeleccionada===dataHoje){
-
 if(h<horaAtual || (h==horaAtual && m<=minutoAtual)){
 continue;
 }
+}
 
+if(ocupadas.includes(horas[i])){
+continue;
 }
 
 var opt=document.createElement("option");
