@@ -315,6 +315,8 @@ el.classList.add("active")
 
 }
 
+window.addEventListener("load",function(){
+
 var hoje=new Date();
 var dd=String(hoje.getDate()).padStart(2,'0');
 var mm=String(hoje.getMonth()+1).padStart(2,'0');
@@ -322,6 +324,7 @@ var yyyy=hoje.getFullYear();
 
 document.getElementById("data").min=yyyy+'-'+mm+'-'+dd;
 
+});
 var horas=[
 "08:30","09:00","09:30",
 "10:00","10:30","11:00",
