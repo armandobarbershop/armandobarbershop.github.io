@@ -428,19 +428,16 @@ window.open(link,"_blank");
 
 // 🚀 guarda sin esperar
 fetch("https://script.google.com/macros/s/AKfycbyMT7igW6nYz8TanmqHxZo44UPypYpmFN8HSjEjNSALD300tfXE4PBYpBYxkPJMXhP6/exec",{
-method:"POST",
-mode:"cors",
-headers:{
-"Content-Type":"application/json"
-},
-body:JSON.stringify({
-fecha:data,
-hora:hora,
-cliente:nome,
-telefono:telefone,
-servicio:servico,
-barbero:barbeiro
-})
+  method:"POST",
+  mode:"no-cors",
+  body: JSON.stringify({
+    fecha:data,
+    hora:hora,
+    cliente:nome,
+    telefono:telefone,
+    servicio:servico,
+    barbero:barbeiro
+  })
 });
 
 document.getElementById("confirmacao").style.display="block";
