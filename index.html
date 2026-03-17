@@ -355,7 +355,10 @@ let resp=await fetch("https://script.google.com/macros/s/AKfycbyMT7igW6nYz8Tanmq
 let dados=await resp.json();
 
 dados.forEach(r=>{
-if(r.fecha==dataSeleccionada && r.barbero==barbeiro){
+
+let fechaFormateada = new Date(r.fecha).toISOString().split("T")[0];
+
+if(fechaFormateada == dataSeleccionada && r.barbero == barbeiro){
 ocupadas.push(r.hora);
 }
 });
