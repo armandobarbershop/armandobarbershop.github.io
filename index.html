@@ -403,6 +403,11 @@ document.getElementById("barbeiro").addEventListener("change",cargarHoras);
 async function agendar(){
 
 let data=document.getElementById("data").value;
+if(!data){
+alert("Selecciona la fecha");
+return;
+}
+console.log("DATA ENVIADA:", data);
 let hora=document.getElementById("hora").value;
 let nome=document.getElementById("nome").value;
 let telefone=document.getElementById("telefone").value;
