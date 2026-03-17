@@ -417,9 +417,18 @@ return;
 
 try{
 
-await fetch("https://script.google.com/macros/s/AKfycbyMT7igW6nYz8TanmqHxZo44UPypYpmFN8HSjEjNSALD300tfXE4PBYpBYxkPJMXhP6/exec",{
+let texto="Olá Armando Barber Shop %0A%0AQuero agendar um horário%0A%0ABarbeiro: "+barbeiro+"%0AServiço: "+servico+"%0AData: "+data+"%0AHora: "+hora+"%0ANome: "+nome;
+
+let numero="5595991554792";
+
+let link="https://wa.me/"+numero+"?text="+texto;
+
+// 🚀 abre WhatsApp rápido
+window.open(link,"_blank");
+
+// 🚀 guarda sin esperar
+fetch("https://script.google.com/macros/s/AKfycbyMT7igW6nYz8TanmqHxZo44UPypYpmFN8HSjEjNSALD300tfXE4PBYpBYxkPJMXhP6/exec",{
 method:"POST",
-mode:"no-cors",
 headers:{
 "Content-Type":"application/json"
 },
@@ -434,14 +443,6 @@ barbero:barbeiro
 });
 
 document.getElementById("confirmacao").style.display="block";
-
-let texto="Olá Armando Barber Shop %0A%0AQuero agendar um horário%0A%0ABarbeiro: "+barbeiro+"%0AServiço: "+servico+"%0AData: "+data+"%0AHora: "+hora+"%0ANome: "+nome;
-
-let numero="5595991554792";
-
-let link="https://wa.me/"+numero+"?text="+texto;
-
-window.open(link,"_blank");
 
 }catch(e){
 
