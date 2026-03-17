@@ -358,7 +358,7 @@ dados.forEach(r=>{
 
 let fechaFormateada = new Date(r.fecha).toISOString().split("T")[0];
 
-if(fechaFormateada == dataSeleccionada && r.barbero == barbeiro){
+if(r.data == dataSeleccionada && r.barbero == barbeiro){
 ocupadas.push(r.hora);
 }
 });
