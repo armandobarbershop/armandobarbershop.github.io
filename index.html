@@ -297,6 +297,10 @@ Reserva enviada com sucesso! Obrigado por nos preferir.
 
 <script>
 
+window.onerror = function(msg, url, line, col, error){
+alert("Error: " + msg + " | Línea: " + line);
+};
+
 console.log("JS cargado");
   
 window.addEventListener("load",function(){
