@@ -325,6 +325,7 @@ var yyyy=hoje.getFullYear();
 document.getElementById("data").min=yyyy+'-'+mm+'-'+dd;
 
 });
+
 var horas=[
 "08:30","09:00","09:30",
 "10:00","10:30","11:00",
@@ -335,6 +336,7 @@ var horas=[
 "19:00","19:30","20:00"
 ];
 
+// BLOQUEA HORAS OCUPADAS Y LAS MUESTRA EN GRIS
 async function cargarHoras(){
 
 var selectHora=document.getElementById("hora");
@@ -343,24 +345,16 @@ selectHora.innerHTML="";
 var dataSeleccionada=document.getElementById("data").value;
 var barbeiro=document.getElementById("barbeiro").value;
 
-if(!dataSeleccionada){
+if(!dataSeleccionada ||!barbeiro){
 return;
 }
 
+// Consulta al Google Sheet las horas ya ocupadas
 var ocupadas=[];
-
 try{
-
-let resp=await fetch("https://script.google.com/macros/s/AKfycbyMT7igW6nYz8TanmqHxZo44UPypYpmFN8HSjEjNSALD300tfXE4PBYpBYxkPJMXhP6/exec");
+let resp=await fetch("https://script.google.com/macros/s/AKfycbyMT7igW6nYz8TanmqHxZo44UPypYpmFN8HSjEjNSALD300tfXE4PBYpBYxkPJMXhP6/exec?fecha="+encodeURIComponent(dataSeleccionada)+"&barbero="+encodeURIComponent(barbeiro));
 let dados=await resp.json();
-
-dados.forEach(r=>{
-
-if(r.data == dataSeleccionada && r.barbero == barbeiro){
-ocupadas.push(r.hora);
-}
-});
-
+ocupadas = dados;
 }catch(e){
 console.log("error cargando reservas");
 }
@@ -372,23 +366,25 @@ var minutoAtual=hoje.getMinutes();
 
 for(var i=0;i<horas.length;i++){
 
-var partes=horas[i].split(":");
-var h=parseInt(partes[0]);
-var m=parseInt(partes[1]);
-
-if(dataSeleccionada===dataHoje){
-if(h<horaAtual || (h==horaAtual && m<=minutoAtual)){
-continue;
-}
-}
-
-if(ocupadas.includes(horas[i])){
-continue;
-}
-
 var opt=document.createElement("option");
 opt.value=horas[i];
 opt.text=horas[i];
+
+// Bloquea horas que ya pasaron hoy
+if(dataSeleccionada===dataHoje){
+var h=parseInt(horas[i].split(":")[0]);
+var m=parseInt(horas[i].split(":")[1]);
+if(h<horaAtual || (h==horaAtual && m<=minutoAtual)){
+opt.disabled=true;
+opt.text=horas[i]+" (no disponible)";
+}
+}
+
+// Bloquea horas ya reservadas
+if(ocupadas.includes(horas[i])){
+opt.disabled=true;
+opt.text=horas[i]+" (ocupado)";
+}
 
 selectHora.add(opt);
 
@@ -396,10 +392,14 @@ selectHora.add(opt);
 
 }
 
+// Carga inicial y se refresca cada 30 segundos
 cargarHoras();
+setInterval(cargarHoras, 30000);
 
 document.getElementById("data").addEventListener("change",cargarHoras);
 document.getElementById("barbeiro").addEventListener("change",cargarHoras);
+
+// AGENDAR CON BLOQUEO
 async function agendar(){
 
 let data=document.getElementById("data").value;
@@ -407,18 +407,24 @@ if(!data){
 alert("Selecciona la fecha");
 return;
 }
-console.log("DATA ENVIADA:", data);
 let hora=document.getElementById("hora").value;
 let nome=document.getElementById("nome").value;
 let telefone=document.getElementById("telefone").value;
 let barbeiro=document.getElementById("barbeiro").value;
 let servico=document.getElementById("servico").value;
 
-if(!data || !hora || !nome || !telefone){
-
+if(!data ||!hora ||!nome ||!telefone){
 alert("Complete todos los campos");
 return;
+}
 
+// Si el cliente intenta elegir una hora bloqueada
+let selectHora=document.getElementById("hora");
+let optionSeleccionada=selectHora.options[selectHora.selectedIndex];
+if(optionSeleccionada.disabled){
+alert("Esta hora ya está ocupada, elige otra");
+cargarHoras();
+return;
 }
 
 try{
@@ -426,14 +432,11 @@ try{
 let texto="Olá Armando Barber Shop %0A%0AQuero agendar um horário%0A%0ABarbeiro: "+barbeiro+"%0AServiço: "+servico+"%0AData: "+data+"%0AHora: "+hora+"%0ANome: "+nome;
 
 let numero="5595991554792";
-
 let link="https://wa.me/"+numero+"?text="+texto;
-
-// 🚀 abre WhatsApp rápido
 window.open(link,"_blank");
 
-// 🚀 guarda sin esperar
-fetch("https://script.google.com/macros/s/AKfycbyMT7igW6nYz8TanmqHxZo44UPypYpmFN8HSjEjNSALD300tfXE4PBYpBYxkPJMXhP6/exec",{
+// Guarda la reserva y verifica que nadie la tomó en el mismo segundo
+let resp = await fetch("https://script.google.com/macros/s/AKfycbyMT7igW6nYz8TanmqHxZo44UPypYpmFN8HSjEjNSALD300tfXE4PBYpBYxkPJMXhP6/exec",{
   method:"POST",
   headers:{
     "Content-Type":"application/json"
@@ -442,26 +445,28 @@ fetch("https://script.google.com/macros/s/AKfycbyMT7igW6nYz8TanmqHxZo44UPypYpmFN
     data: data,
     hora: hora,
     cliente: nome,
-    telefono: telefone,
+    telefone: telefone,
     servicio: servico,
     barbero: barbeiro
   })
 });
 
-document.getElementById("confirmacao").style.display="block";
+let r = await resp.json();
 
+if(!r.ok){
+  alert(r.msg);
+  cargarHoras();
+  return;
+}
+
+document.getElementById("confirmacao").style.display="block";
 setTimeout(cargarHoras,1000);
 
 }catch(e){
-
 alert("Erro ao enviar reserva");
-
 }
 
 }
-
-// ENVIAR A GOOGLE SHEETS
-
 
 function abrirMaps(){
 window.open("https://maps.app.goo.gl/PeCnFTVfxGxvAyP48");
@@ -485,6 +490,5 @@ deferredPrompt=null;
 });
 
 </script>
-
 </body>
 </html>
