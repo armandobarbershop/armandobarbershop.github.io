@@ -304,26 +304,17 @@ document.getElementById("loader").style.display="none";
 });
 
 function selecionarBarbeiro(nome,el){
-
 document.getElementById("barbeiro").value=nome;
-
-document.querySelectorAll(".card").forEach(c=>{
-c.classList.remove("active")
-})
-
+document.querySelectorAll(".card").forEach(c=>c.classList.remove("active"))
 el.classList.add("active")
-
 }
 
 window.addEventListener("load",function(){
-
 var hoje=new Date();
 var dd=String(hoje.getDate()).padStart(2,'0');
 var mm=String(hoje.getMonth()+1).padStart(2,'0');
 var yyyy=hoje.getFullYear();
-
 document.getElementById("data").min=yyyy+'-'+mm+'-'+dd;
-
 });
 
 var horas=[
@@ -336,20 +327,13 @@ var horas=[
 "19:00","19:30","20:00"
 ];
 
-// BLOQUEA HORAS OCUPADAS Y LAS MUESTRA EN GRIS
 async function cargarHoras(){
-
 var selectHora=document.getElementById("hora");
 selectHora.innerHTML="";
-
 var dataSeleccionada=document.getElementById("data").value;
 var barbeiro=document.getElementById("barbeiro").value;
+if(!dataSeleccionada ||!barbeiro){return;}
 
-if(!dataSeleccionada ||!barbeiro){
-return;
-}
-
-// Consulta al Google Sheet las horas ya ocupadas
 var ocupadas=[];
 try{
 let resp=await fetch("https://script.google.com/macros/s/AKfycbwZDShxW3G990UvaVTvVl-g6olh9-rCP1jxC1AIe5DN1LINJsqeNQyPqnyrdsS2kr1X/exec?fecha="+encodeURIComponent(dataSeleccionada)+"&barbero="+encodeURIComponent(barbeiro));
@@ -365,12 +349,9 @@ var horaAtual=hoje.getHours();
 var minutoAtual=hoje.getMinutes();
 
 for(var i=0;i<horas.length;i++){
-
 var opt=document.createElement("option");
 opt.value=horas[i];
 opt.text=horas[i];
-
-// Bloquea horas que ya pasaron hoy
 if(dataSeleccionada===dataHoje){
 var h=parseInt(horas[i].split(":")[0]);
 var m=parseInt(horas[i].split(":")[1]);
@@ -379,34 +360,22 @@ opt.disabled=true;
 opt.text=horas[i]+" (no disponible)";
 }
 }
-
-// Bloquea horas ya reservadas
 if(ocupadas.includes(horas[i])){
 opt.disabled=true;
 opt.text=horas[i]+" (ocupado)";
 }
-
 selectHora.add(opt);
-
+}
 }
 
-}
-
-// Carga inicial y se refresca cada 30 segundos
 cargarHoras();
 setInterval(cargarHoras, 30000);
-
 document.getElementById("data").addEventListener("change",cargarHoras);
 document.getElementById("barbeiro").addEventListener("change",cargarHoras);
 
-// AGENDAR CON BLOQUEO
 async function agendar(){
-
 let data=document.getElementById("data").value;
-if(!data){
-alert("Selecciona la fecha");
-return;
-}
+if(!data){alert("Selecciona la fecha");return;}
 let hora=document.getElementById("hora").value;
 let nome=document.getElementById("nome").value;
 let telefone=document.getElementById("telefone").value;
@@ -418,7 +387,6 @@ alert("Complete todos los campos");
 return;
 }
 
-// Si el cliente intenta elegir una hora bloqueada
 let selectHora=document.getElementById("hora");
 let optionSeleccionada=selectHora.options[selectHora.selectedIndex];
 if(optionSeleccionada.disabled){
@@ -428,19 +396,14 @@ return;
 }
 
 try{
-
 let texto="Olá Armando Barber Shop %0A%0AQuero agendar um horário%0A%0ABarbeiro: "+barbeiro+"%0AServiço: "+servico+"%0AData: "+data+"%0AHora: "+hora+"%0ANome: "+nome;
-
 let numero="5595991554792";
 let link="https://wa.me/"+numero+"?text="+texto;
 window.open(link,"_blank");
 
-// Guarda la reserva y verifica que nadie la tomó en el mismo segundo
 let resp = await fetch("https://script.google.com/macros/s/AKfycbwZDShxW3G990UvaVTvVl-g6olh9-rCP1jxC1AIe5DN1LINJsqeNQyPqnyrdsS2kr1X/exec",{
   method:"POST",
-  headers:{
-    "Content-Type":"application/json"
-  },
+  headers:{"Content-Type":"application/json"},
   body: JSON.stringify({
     data: data,
     hora: hora,
@@ -452,7 +415,6 @@ let resp = await fetch("https://script.google.com/macros/s/AKfycbwZDShxW3G990Uva
 });
 
 let r = await resp.json();
-
 if(!r.ok){
   alert(r.msg);
   cargarHoras();
@@ -463,9 +425,8 @@ document.getElementById("confirmacao").style.display="block";
 setTimeout(cargarHoras,1000);
 
 }catch(e){
-alert("Erro ao enviar reserva");
+alert("Erro ao enviar reserva: "+e.message);
 }
-
 }
 
 function abrirMaps(){
@@ -473,19 +434,15 @@ window.open("https://maps.app.goo.gl/PeCnFTVfxGxvAyP48");
 }
 
 let deferredPrompt;
-
 window.addEventListener("beforeinstallprompt",(e)=>{
 e.preventDefault();
 deferredPrompt=e;
 document.getElementById("installBtn").style.display="block";
 });
-
 document.getElementById("installBtn").addEventListener("click",()=>{
 if(deferredPrompt){
 deferredPrompt.prompt();
-deferredPrompt.userChoice.then(()=>{
-deferredPrompt=null;
-});
+deferredPrompt.userChoice.then(()=>{deferredPrompt=null;});
 }
 });
 
