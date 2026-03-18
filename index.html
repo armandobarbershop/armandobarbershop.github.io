@@ -328,7 +328,7 @@ if(!dataSelecionada ||!barbeiro){return;}
 
 var ocupados=[];
 try{
-let resp=await fetch("https://script.google.com/macros/s/AKfycbwZDShxW3G990UvaVTvVl-g6olh9-rCP1jxC1AIe5DN1LINJsqeNQyPqnyrdsS2kr1X/exec?fecha="+encodeURIComponent(dataSelecionada)+"&barbero="+encodeURIComponent(barbeiro));
+let resp=await fetch("https://script.google.com/macros/s/AKfycby9toAhuy1DU1eIcsxtuJeSwaNq3etD-XU9h4ktZVgFKNw0c5gP693TX5wGa0tbPApo/exec?fecha="+encodeURIComponent(dataSelecionada)+"&barbero="+encodeURIComponent(barbeiro));
 let dados=await resp.json();
 ocupados = dados;
 }catch(e){
@@ -394,7 +394,7 @@ let numero="5595991554792";
 let link="https://wa.me/"+numero+"?text="+texto;
 window.open(link,"_blank");
 
-let resp = await fetch("https://script.google.com/macros/s/AKfycbwZDShxW3G990UvaVTvVl-g6olh9-rCP1jxC1AIe5DN1LINJsqeNQyPqnyrdsS2kr1X/exec",{
+let resp = await fetch("https://script.google.com/macros/s/AKfycby9toAhuy1DU1eIcsxtuJeSwaNq3etD-XU9h4ktZVgFKNw0c5gP693TX5wGa0tbPApo/exec",{
   method:"POST",
   headers:{"Content-Type":"application/json"},
   body: JSON.stringify({
