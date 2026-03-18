@@ -403,33 +403,31 @@ let numero="5595991554792";
 let link="https://wa.me/"+numero+"?text="+texto;
 window.open(link,"_blank");
 
-let resp = await fetch("https://script.google.com/macros/s/AKfycbwZDShxW3G990UvaVTvVl-g6olh9-rCP1jxC1AIe5DN1LINJsqeNQyPqnyrdsS2kr1X/exec",{
-  method:"POST",
-  headers:{"Content-Type":"application/json"},
-  body: JSON.stringify({
-    data: data,
-    hora: hora,
-    cliente: nome,
-    telefone: telefone,
-    servico: servico,
-    barbeiro: barbeiro
-  })
-});
-
-let r = await resp.json();
-if(!r.ok){
-  alert(r.msg);
-  carregarHoras();
-  return;
-}
+fetch("TU_LINK",{
+method:"POST",
+headers:{
+"Content-Type":"application/json"
+},
+body: JSON.stringify({
+data:data,
+hora:hora,
+cliente:nome,
+telefono:telefone,
+servicio:servico,
+barbero:barbeiro
+})
+})
+.then(()=>{
 
 document.getElementById("confirmacao").style.display="block";
-setTimeout(carregarHoras,1000);
+setTimeout(cargarHoras,1000);
 
-}catch(e){
-alert("Erro ao enviar reserva: "+e.message);
-}
-}
+})
+.catch(()=>{
+
+alert("Error al guardar, revisa conexión");
+
+});
 
 function abrirMaps(){
 window.open("https://maps.app.goo.gl/PeCnFTVfxGxvAyP48");
