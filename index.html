@@ -297,14 +297,12 @@ Reserva enviada com sucesso! Obrigado por nos preferir.
 
 <script>
 
-window.onerror = function(msg, url, line, col, error){
-alert("Error: " + msg + " | Línea: " + line);
+// detectar errores
+window.onerror = function(msg, url, line){
+alert("Error: " + msg + " Línea: " + line);
 };
 
-console.log("JS cargado");
-  
-window.addEventListener("load",function(){
-setTimeout(function(){
+// quitar loader
 document.addEventListener("DOMContentLoaded", function(){
 setTimeout(function(){
 let loader = document.getElementById("loader");
@@ -314,26 +312,23 @@ loader.style.display="none";
 },1500);
 });
 
-setTimeout(function(){
-let loader = document.getElementById("loader");
-if(loader){
-loader.style.display="none";
-}
-},4000);
+// seleccionar barbero
 function selecionarBarbeiro(nome,el){
 document.getElementById("barbeiro").value=nome;
-document.querySelectorAll(".card").forEach(c=>c.classList.remove("active"))
-el.classList.add("active")
+document.querySelectorAll(".card").forEach(c=>c.classList.remove("active"));
+el.classList.add("active");
 }
 
+// fecha mínima
 window.addEventListener("load",function(){
 var hoje=new Date();
 var dd=String(hoje.getDate()).padStart(2,'0');
 var mm=String(hoje.getMonth()+1).padStart(2,'0');
-var aaaa=hoje.getFullYear();
-document.getElementById("data").min=aaaa+'-'+mm+'-'+dd;
+var yyyy=hoje.getFullYear();
+document.getElementById("data").min=yyyy+'-'+mm+'-'+dd;
 });
 
+// horarios
 var horas=[
 "08:30","09:00","09:30",
 "10:00","10:30","11:00",
@@ -344,83 +339,71 @@ var horas=[
 "19:00","19:30","20:00"
 ];
 
-// BLOQUEIA HORÁRIOS OCUPADOS E MOSTRA EM CINZA
+// cargar horas
 async function carregarHoras(){
 var selectHora=document.getElementById("hora");
 selectHora.innerHTML="";
+
 var dataSelecionada=document.getElementById("data").value;
 var barbeiro=document.getElementById("barbeiro").value;
-if(!dataSelecionada ||!barbeiro){return;}
+
+if(!dataSelecionada || !barbeiro){return;}
 
 var ocupados=[];
+
 try{
-let resp=await fetch("https://script.google.com/macros/s/AKfycbwZDShxW3G990UvaVTvVl-g6olh9-rCP1jxC1AIe5DN1LINJsqeNQyPqnyrdsS2kr1X/exec?fecha="+encodeURIComponent(dataSelecionada)+"&barbero="+encodeURIComponent(barbeiro));
+let resp=await fetch("https://script.google.com/macros/s/AKfycbwZDShxW3G990UvaVTvVl-g6olh9-rCP1jxC1AIe5DN1LINJsqeNQyPqnyrdsS2kr1X/exec");
 let dados=await resp.json();
-ocupados = dados;
+
+dados.forEach(r=>{
+if(r.data === dataSelecionada && r.barbero === barbeiro){
+ocupados.push(r.hora);
+}
+});
 }catch(e){
 console.log("Erro ao carregar reservas");
 }
-
-var hoje=new Date();
-var dataHoje=hoje.toISOString().split("T")[0];
-var horaAtual=hoje.getHours();
-var minutoAtual=hoje.getMinutes();
 
 for(var i=0;i<horas.length;i++){
 var opt=document.createElement("option");
 opt.value=horas[i];
 opt.text=horas[i];
-if(dataSelecionada===dataHoje){
-var h=parseInt(horas[i].split(":")[0]);
-var m=parseInt(horas[i].split(":")[1]);
-if(h<horaAtual || (h==horaAtual && m<=minutoAtual)){
-opt.disabled=true;
-opt.text=horas[i]+" (indisponível)";
-}
-}
+
 if(ocupados.includes(horas[i])){
 opt.disabled=true;
 opt.text=horas[i]+" (ocupado)";
 }
+
 selectHora.add(opt);
 }
 }
 
-carregarHoras();
-setInterval(carregarHoras, 30000);
+// eventos
 document.getElementById("data").addEventListener("change",carregarHoras);
 document.getElementById("barbeiro").addEventListener("change",carregarHoras);
 
-// AGENDAR COM BLOQUEIO
-async function agendar(){
+// agendar
+function agendar(){
+
 let data=document.getElementById("data").value;
-if(!data){alert("Selecione a data");return;}
 let hora=document.getElementById("hora").value;
 let nome=document.getElementById("nome").value;
 let telefone=document.getElementById("telefone").value;
 let barbeiro=document.getElementById("barbeiro").value;
 let servico=document.getElementById("servico").value;
 
-if(!data ||!hora ||!nome ||!telefone){
+if(!data || !hora || !nome || !telefone){
 alert("Preencha todos os campos");
 return;
 }
 
-let selectHora=document.getElementById("hora");
-let opcaoSelecionada=selectHora.options[selectHora.selectedIndex];
-if(opcaoSelecionada.disabled){
-alert("Este horário já está ocupado, escolha outro");
-carregarHoras();
-return;
-}
-
-try{
+// abrir WhatsApp
 let texto="Olá Armando Barber Shop %0A%0AQuero agendar um horário%0A%0ABarbeiro: "+barbeiro+"%0AServiço: "+servico+"%0AData: "+data+"%0AHora: "+hora+"%0ANome: "+nome;
-let numero="5595991554792";
-let link="https://wa.me/"+numero+"?text="+texto;
+let link="https://wa.me/5595991554792?text="+texto;
 window.open(link,"_blank");
 
-fetch("TU_LINK",{
+// guardar en sheets
+fetch("https://script.google.com/macros/s/AKfycbwZDShxW3G990UvaVTvVl-g6olh9-rCP1jxC1AIe5DN1LINJsqeNQyPqnyrdsS2kr1X/exec",{
 method:"POST",
 headers:{
 "Content-Type":"application/json"
@@ -435,34 +418,18 @@ barbero:barbeiro
 })
 })
 .then(()=>{
-
 document.getElementById("confirmacao").style.display="block";
-setTimeout(cargarHoras,1000);
-
+setTimeout(carregarHoras,1000);
 })
 .catch(()=>{
-
-alert("Error al guardar, revisa conexión");
-
+alert("Error al guardar");
 });
 
+}
+
+// maps
 function abrirMaps(){
 window.open("https://maps.app.goo.gl/PeCnFTVfxGxvAyP48");
 }
 
-let deferredPrompt;
-window.addEventListener("beforeinstallprompt",(e)=>{
-e.preventDefault();
-deferredPrompt=e;
-document.getElementById("installBtn").style.display="block";
-});
-document.getElementById("installBtn").addEventListener("click",()=>{
-if(deferredPrompt){
-deferredPrompt.prompt();
-deferredPrompt.userChoice.then(()=>{deferredPrompt=null;});
-}
-});
-
 </script>
-</body>
-</html>
