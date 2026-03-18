@@ -349,7 +349,7 @@ if(!dataSelecionada || !barbeiro){return;}
 var ocupados=[];
 
 try{
-let resp=await fetch("https://script.google.com/macros/s/AKfycbwZDShxW3G990UvaVTvVl-g6olh9-rCP1jxC1AIe5DN1LINJsqeNQyPqnyrdsS2kr1X/exec");
+let resp=await fetch("https://script.google.com/macros/s/AKfycbwSs_WByWoeAIFiP8Z_TeHf3vhPelF0f7r1rFTMhFowkhWTsJc46Y116qt_q50mysAU/exec");
 let dados=await resp.json();
 
 dados.forEach(r=>{
@@ -400,7 +400,7 @@ let link="https://wa.me/5595991554792?text="+texto;
 window.open(link,"_blank");
 
 // guardar en sheets
-fetch("https://script.google.com/macros/s/AKfycbwZDShxW3G990UvaVTvVl-g6olh9-rCP1jxC1AIe5DN1LINJsqeNQyPqnyrdsS2kr1X/exec",{
+fetch("https://script.google.com/macros/s/AKfycbwSs_WByWoeAIFiP8Z_TeHf3vhPelF0f7r1rFTMhFowkhWTsJc46Y116qt_q50mysAU/exec",{
 method:"POST",
 headers:{
 "Content-Type":"application/json"
