@@ -313,8 +313,8 @@ window.addEventListener("load",function(){
 var hoje=new Date();
 var dd=String(hoje.getDate()).padStart(2,'0');
 var mm=String(hoje.getMonth()+1).padStart(2,'0');
-var yyyy=hoje.getFullYear();
-document.getElementById("data").min=yyyy+'-'+mm+'-'+dd;
+var aaaa=hoje.getFullYear();
+document.getElementById("data").min=aaaa+'-'+mm+'-'+dd;
 });
 
 var horas=[
@@ -327,20 +327,21 @@ var horas=[
 "19:00","19:30","20:00"
 ];
 
-async function cargarHoras(){
+// BLOQUEIA HORÁRIOS OCUPADOS E MOSTRA EM CINZA
+async function carregarHoras(){
 var selectHora=document.getElementById("hora");
 selectHora.innerHTML="";
-var dataSeleccionada=document.getElementById("data").value;
+var dataSelecionada=document.getElementById("data").value;
 var barbeiro=document.getElementById("barbeiro").value;
-if(!dataSeleccionada ||!barbeiro){return;}
+if(!dataSelecionada ||!barbeiro){return;}
 
-var ocupadas=[];
+var ocupados=[];
 try{
-let resp=await fetch("https://script.google.com/macros/s/AKfycbwZDShxW3G990UvaVTvVl-g6olh9-rCP1jxC1AIe5DN1LINJsqeNQyPqnyrdsS2kr1X/exec?fecha="+encodeURIComponent(dataSeleccionada)+"&barbero="+encodeURIComponent(barbeiro));
+let resp=await fetch("https://script.google.com/macros/s/AKfycbwZDShxW3G990UvaVTvVl-g6olh9-rCP1jxC1AIe5DN1LINJsqeNQyPqnyrdsS2kr1X/exec?fecha="+encodeURIComponent(dataSelecionada)+"&barbero="+encodeURIComponent(barbeiro));
 let dados=await resp.json();
-ocupadas = dados;
+ocupados = dados;
 }catch(e){
-console.log("error cargando reservas");
+console.log("Erro ao carregar reservas");
 }
 
 var hoje=new Date();
@@ -352,15 +353,15 @@ for(var i=0;i<horas.length;i++){
 var opt=document.createElement("option");
 opt.value=horas[i];
 opt.text=horas[i];
-if(dataSeleccionada===dataHoje){
+if(dataSelecionada===dataHoje){
 var h=parseInt(horas[i].split(":")[0]);
 var m=parseInt(horas[i].split(":")[1]);
 if(h<horaAtual || (h==horaAtual && m<=minutoAtual)){
 opt.disabled=true;
-opt.text=horas[i]+" (no disponible)";
+opt.text=horas[i]+" (indisponível)";
 }
 }
-if(ocupadas.includes(horas[i])){
+if(ocupados.includes(horas[i])){
 opt.disabled=true;
 opt.text=horas[i]+" (ocupado)";
 }
@@ -368,14 +369,15 @@ selectHora.add(opt);
 }
 }
 
-cargarHoras();
-setInterval(cargarHoras, 30000);
-document.getElementById("data").addEventListener("change",cargarHoras);
-document.getElementById("barbeiro").addEventListener("change",cargarHoras);
+carregarHoras();
+setInterval(carregarHoras, 30000);
+document.getElementById("data").addEventListener("change",carregarHoras);
+document.getElementById("barbeiro").addEventListener("change",carregarHoras);
 
+// AGENDAR COM BLOQUEIO
 async function agendar(){
 let data=document.getElementById("data").value;
-if(!data){alert("Selecciona la fecha");return;}
+if(!data){alert("Selecione a data");return;}
 let hora=document.getElementById("hora").value;
 let nome=document.getElementById("nome").value;
 let telefone=document.getElementById("telefone").value;
@@ -383,15 +385,15 @@ let barbeiro=document.getElementById("barbeiro").value;
 let servico=document.getElementById("servico").value;
 
 if(!data ||!hora ||!nome ||!telefone){
-alert("Complete todos los campos");
+alert("Preencha todos os campos");
 return;
 }
 
 let selectHora=document.getElementById("hora");
-let optionSeleccionada=selectHora.options[selectHora.selectedIndex];
-if(optionSeleccionada.disabled){
-alert("Esta hora ya está ocupada, elige otra");
-cargarHoras();
+let opcaoSelecionada=selectHora.options[selectHora.selectedIndex];
+if(opcaoSelecionada.disabled){
+alert("Este horário já está ocupado, escolha outro");
+carregarHoras();
 return;
 }
 
@@ -409,20 +411,20 @@ let resp = await fetch("https://script.google.com/macros/s/AKfycbwZDShxW3G990Uva
     hora: hora,
     cliente: nome,
     telefone: telefone,
-    servicio: servico,
-    barbero: barbeiro
+    servico: servico,
+    barbeiro: barbeiro
   })
 });
 
 let r = await resp.json();
 if(!r.ok){
   alert(r.msg);
-  cargarHoras();
+  carregarHoras();
   return;
 }
 
 document.getElementById("confirmacao").style.display="block";
-setTimeout(cargarHoras,1000);
+setTimeout(carregarHoras,1000);
 
 }catch(e){
 alert("Erro ao enviar reserva: "+e.message);
