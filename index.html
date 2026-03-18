@@ -352,7 +352,7 @@ return;
 // Consulta al Google Sheet las horas ya ocupadas
 var ocupadas=[];
 try{
-let resp=await fetch("https://script.google.com/macros/s/AKfycbyMT7igW6nYz8TanmqHxZo44UPypYpmFN8HSjEjNSALD300tfXE4PBYpBYxkPJMXhP6/exec?fecha="+encodeURIComponent(dataSeleccionada)+"&barbero="+encodeURIComponent(barbeiro));
+let resp=await fetch("https://script.google.com/macros/s/AKfycbwZDShxW3G990UvaVTvVl-g6olh9-rCP1jxC1AIe5DN1LINJsqeNQyPqnyrdsS2kr1X/exec?fecha="+encodeURIComponent(dataSeleccionada)+"&barbero="+encodeURIComponent(barbeiro));
 let dados=await resp.json();
 ocupadas = dados;
 }catch(e){
@@ -436,7 +436,7 @@ let link="https://wa.me/"+numero+"?text="+texto;
 window.open(link,"_blank");
 
 // Guarda la reserva y verifica que nadie la tomó en el mismo segundo
-let resp = await fetch("https://script.google.com/macros/s/AKfycbyMT7igW6nYz8TanmqHxZo44UPypYpmFN8HSjEjNSALD300tfXE4PBYpBYxkPJMXhP6/exec",{
+let resp = await fetch("https://script.google.com/macros/s/AKfycbwZDShxW3G990UvaVTvVl-g6olh9-rCP1jxC1AIe5DN1LINJsqeNQyPqnyrdsS2kr1X/exec",{
   method:"POST",
   headers:{
     "Content-Type":"application/json"
