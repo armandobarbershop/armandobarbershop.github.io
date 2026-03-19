@@ -290,6 +290,21 @@ Reserva enviada com sucesso! Obrigado por nos preferir.
 
 const URL = "https://script.google.com/macros/s/AKfycbxiKW-D3n7Z99uqbSAm6aF31G64Kt093Q5ZYGZjjM-wehPRm7x72yAT6Xdl9Lfz2hZe/exec";
 
+// 🔴 detectar errores
+window.onerror = function(msg, url, line){
+  alert("Error: " + msg + " Línea: " + line);
+};
+
+// 🔥 quitar loader SIEMPRE
+window.addEventListener("load", function(){
+  setTimeout(function(){
+    let loader = document.getElementById("loader");
+    if(loader){
+      loader.style.display = "none";
+    }
+  }, 2000);
+});
+
 // 🔹 fecha mínima
 window.addEventListener("load", function(){
   let hoy = new Date();
@@ -318,7 +333,7 @@ const horas = [
 "19:00","19:30","20:00"
 ];
 
-// 🔹 cargar horas
+// 🔥 BLOQUEO DEFINITIVO
 async function carregarHoras(){
 
   let data = document.getElementById("data").value;
@@ -336,16 +351,22 @@ async function carregarHoras(){
     let datos = await res.json();
 
     datos.forEach(r=>{
-      if(
-        String(r.data).trim() === data &&
-        String(r.barbero).trim().toLowerCase() === barbeiro.toLowerCase()
-      ){
-        ocupados.push(String(r.hora).trim());
+
+      let dataSheet = String(r.data).trim();
+      let horaSheet = String(r.hora).trim();
+      let barberoSheet = String(r.barbero).trim().toLowerCase();
+
+      let dataSel = String(data).trim();
+      let barberSel = String(barbeiro).trim().toLowerCase();
+
+      if(dataSheet === dataSel && barberoSheet === barberSel){
+        ocupados.push(horaSheet);
       }
+
     });
 
   }catch(e){
-    console.log("error cargando reservas");
+    console.log("Error cargando reservas", e);
   }
 
   let ahora = new Date();
@@ -361,16 +382,19 @@ async function carregarHoras(){
 
     // bloquear horas pasadas hoy
     if(data === hoy){
-      let p = h.split(":");
-      let m = parseInt(p[0])*60 + parseInt(p[1]);
-      if(m <= minutosAhora) bloqueado = true;
+      let [hh, mm] = h.split(":").map(Number);
+      let minutosHora = hh*60 + mm;
+      if(minutosHora <= minutosAhora){
+        bloqueado = true;
+      }
     }
 
-    opt.text = bloqueado ? h+" (ocupado)" : h;
+    opt.text = bloqueado ? h + " (ocupado)" : h;
     if(bloqueado) opt.disabled = true;
 
     select.add(opt);
   });
+
 }
 
 // 🔹 eventos
@@ -439,14 +463,5 @@ Nome: ${nome}`;
 function abrirMaps(){
   window.open("https://maps.app.goo.gl/PeCnFTVfxGxvAyP48");
 }
-// 🔥 FORZAR QUITAR LOADER (ANTI BLOQUEO)
-window.addEventListener("load", function(){
-  setTimeout(function(){
-    let loader = document.getElementById("loader");
-    if(loader){
-      loader.style.display = "none";
-    }
-  }, 2000); // puedes subir a 3000 si quieres más tiempo
-});
   
 </script>
