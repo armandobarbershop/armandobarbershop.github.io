@@ -394,6 +394,8 @@ let numero="5595991554792";
 let link="https://wa.me/"+numero+"?text="+texto;
 window.open(link,"_blank");
 
+let telefone = document.getElementById("telefone").value;
+
 fetch("https://script.google.com/macros/s/AKfycbwaTf5oLEon8r-avReE_eWSohGAoDLbvezOY2IUJW01ifa3QdvK1-IHNSUQfFjWuFlF/exec", {
   method: "POST",
   mode: "no-cors",
