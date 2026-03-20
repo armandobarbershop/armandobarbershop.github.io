@@ -342,12 +342,13 @@ async function carregarHoras(){
   var dataSelecionada = document.getElementById("data").value;
   var barbeiro = document.getElementById("barbeiro").value;
 
-  if(!dataSelecionada || !barbeiro){return;}
+  if(!dataSelecionada || !barbeiro){
+    return;
+  }
 
   var ocupados = [];
 
   try{
-
     let res = await fetch("https://script.google.com/macros/s/AKfycbztv0Kjze9NPhvUBXgkD0ROj_kvRZOrOq2a9hNkn4tzVIPQ0LB3oT3wFSycJTRRGucn/exec?reservas=1");
     let datos = await res.json();
 
@@ -360,6 +361,7 @@ async function carregarHoras(){
       let dataSel = String(dataSelecionada).trim();
       let barberSel = String(barbeiro).trim().toLowerCase();
 
+      // ignorar datos dañados
       if(!dataAPI || dataAPI === "1969-12-31") return;
       if(!horaAPI || !barberoAPI) return;
 
@@ -370,66 +372,44 @@ async function carregarHoras(){
     });
 
   }catch(e){
-    console.log("Error real:", e);
+    console.log("Error cargando reservas:", e);
   }
 
-  // 🔥 GENERAR HORAS SIEMPRE
-  for(var i=0;i<horas.length;i++){
+  // 🔥 HORAS BASE (SIEMPRE SE GENERAN)
+  var horas = [
+    "08:30","09:00","09:30",
+    "10:00","10:30","11:00",
+    "13:00","13:30","14:00",
+    "14:30","15:00","15:30",
+    "16:00","16:30","17:00",
+    "17:30","18:00","18:30",
+    "19:00","19:30","20:00"
+  ];
 
-    var opt = document.createElement("option");
+  let ahora = new Date();
+  let hoy = ahora.toISOString().split("T")[0];
+  let horaActual = ahora.getHours() + ":" + String(ahora.getMinutes()).padStart(2,'0');
+
+  for(let i=0;i<horas.length;i++){
+
+    let opt = document.createElement("option");
     opt.value = horas[i];
     opt.text = horas[i];
 
+    // 🔴 bloquear horas ocupadas
     if(ocupados.includes(horas[i])){
       opt.disabled = true;
       opt.text = horas[i] + " (ocupado)";
     }
 
-    selectHora.add(opt);
-  }
-
-}
-
-  // 🚫 ignorar datos dañados
-  if(!dataAPI || dataAPI === "1969-12-31") return;
-  if(!horaAPI || !barberoAPI) return;
-
-  // ✅ comparación correcta
-  if(dataAPI === dataSel && barberoAPI === barberSel){
-    ocupados.push(horaAPI);
-  }
-
-});
-
-  }catch(e){
-    console.log("Error cargando reservas", e);
-  }
-
-  let ahora = new Date();
-  let hoy = ahora.toISOString().split("T")[0];
-  let minutosAhora = ahora.getHours()*60 + ahora.getMinutes();
-
-  horas.forEach(h=>{
-
-    let opt = document.createElement("option");
-    opt.value = h;
-
-    let bloqueado = ocupados.includes(h);
-
-    // bloquear horas pasadas hoy
-    if(data === hoy){
-      let [hh, mm] = h.split(":").map(Number);
-      let minutosHora = hh*60 + mm;
-      if(minutosHora <= minutosAhora){
-        bloqueado = true;
-      }
+    // 🔴 bloquear horas pasadas (solo hoy)
+    if(dataSelecionada === hoy && horas[i] <= horaActual){
+      opt.disabled = true;
+      opt.text = horas[i] + " (pasó)";
     }
 
-    opt.text = bloqueado ? h + " (ocupado)" : h;
-    if(bloqueado) opt.disabled = true;
-
-    select.add(opt);
-  });
+    selectHora.add(opt);
+  }
 
 }
 
