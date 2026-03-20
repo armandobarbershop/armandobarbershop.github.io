@@ -275,7 +275,7 @@ font-weight:bold;
 <label>📱 WhatsApp</label>
 <input type="tel" inputmode="numeric" id="telefone" placeholder="Ex: 95991554792" required>
 
-<button type="button" onclick="agendar()">Reservar</button>
+<button onclick="agendar()">Agendar</button>
 <button type="button" onclick="abrirMaps()">📍 Ver localização</button>
 
 </form>
@@ -382,16 +382,28 @@ alert("Completa todo");
 return;
 }
 
-window.open(`https://wa.me/5595991554792?text=Reserva%0A${data}%20${hora}%20${nome}`);
+let texto = 
+"Olá Armando Barber Shop%0A%0A" +
+"Quero agendar um horário%0A%0A" +
+"Barbeiro: " + barbeiro + "%0A" +
+"Serviço: " + document.getElementById("servico").value + "%0A" +
+"Data: " + data + "%0A" +
+"Hora: " + hora + "%0A" +
+"Nome: " + nome;
+
+window.open("https://wa.me/5595991554792?text=" + texto);
 
 fetch("https://script.google.com/macros/s/AKfycbztv0Kjze9NPhvUBXgkD0ROj_kvRZOrOq2a9hNkn4tzVIPQ0LB3oT3wFSycJTRRGucn/exec",{
-method:"POST",
-body:JSON.stringify({data,hora,cliente:nome,telefono,barbero})
+  method:"POST",
+  body: JSON.stringify({
+    data: data,
+    hora: hora,
+    cliente: nome,
+    telefono: telefone,
+    servicio: document.getElementById("servico").value,
+    barbero: barbeiro.trim() // 🔥 CLAVE
+  })
 });
-
-document.getElementById("confirmacao").style.display="block";
-setTimeout(carregarHoras,1000);
-}
 
 // MAPS
 function abrirMaps(){
