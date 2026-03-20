@@ -297,12 +297,10 @@ window.onerror = function(msg, url, line){
 
 // 🔥 quitar loader SIEMPRE
 window.addEventListener("load", function(){
-  setTimeout(function(){
-    let loader = document.getElementById("loader");
-    if(loader){
-      loader.style.display = "none";
-    }
-  }, 2000);
+  let loader = document.getElementById("loader");
+  if(loader){
+    loader.style.display = "none";
+  }
 });
 
 // 🔹 fecha mínima
@@ -336,28 +334,59 @@ const horas = [
 // 🔥 BLOQUEO DEFINITIVO
 async function carregarHoras(){
 
-  let data = document.getElementById("data").value;
-  let barbeiro = document.getElementById("barbeiro").value;
-  let select = document.getElementById("hora");
+  var selectHora = document.getElementById("hora");
+  selectHora.innerHTML = "";
 
-  select.innerHTML = "";
+  var dataSelecionada = document.getElementById("data").value;
+  var barbeiro = document.getElementById("barbeiro").value;
 
-  if(!data || !barbeiro) return;
+  if(!dataSelecionada || !barbeiro){return;}
 
-  let ocupados = [];
+  var ocupados = [];
 
   try{
+
     let res = await fetch("https://script.google.com/macros/s/AKfycbztv0Kjze9NPhvUBXgkD0ROj_kvRZOrOq2a9hNkn4tzVIPQ0LB3oT3wFSycJTRRGucn/exec?reservas=1");
     let datos = await res.json();
 
-  datos.forEach(r => {
+    datos.forEach(r => {
 
-  let dataAPI = String(r.data).trim();
-  let horaAPI = String(r.hora).trim();
-  let barberoAPI = String(r.barbero).trim().toLowerCase();
+      let dataAPI = String(r.data).trim();
+      let horaAPI = String(r.hora).trim();
+      let barberoAPI = String(r.barbero).trim().toLowerCase();
 
-  let dataSel = String(data).trim();
-  let barberSel = String(barbeiro).trim().toLowerCase();
+      let dataSel = String(dataSelecionada).trim();
+      let barberSel = String(barbeiro).trim().toLowerCase();
+
+      if(!dataAPI || dataAPI === "1969-12-31") return;
+      if(!horaAPI || !barberoAPI) return;
+
+      if(dataAPI === dataSel && barberoAPI === barberSel){
+        ocupados.push(horaAPI);
+      }
+
+    });
+
+  }catch(e){
+    console.log("Error real:", e);
+  }
+
+  // 🔥 GENERAR HORAS SIEMPRE
+  for(var i=0;i<horas.length;i++){
+
+    var opt = document.createElement("option");
+    opt.value = horas[i];
+    opt.text = horas[i];
+
+    if(ocupados.includes(horas[i])){
+      opt.disabled = true;
+      opt.text = horas[i] + " (ocupado)";
+    }
+
+    selectHora.add(opt);
+  }
+
+}
 
   // 🚫 ignorar datos dañados
   if(!dataAPI || dataAPI === "1969-12-31") return;
