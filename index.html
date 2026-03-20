@@ -285,131 +285,166 @@ Reserva enviada com sucesso! Obrigado por nos preferir.
 </div>
 
 </div>
-
 <script>
+(function(){
 
-// LOADER
-window.addEventListener("load", ()=>{
-  setTimeout(()=>{
-    document.getElementById("loader").style.display="none";
-  },1500);
+"use strict";
+
+/* CONFIG */
+const API_URL = "https://script.google.com/macros/s/AKfycbztv0Kjze9NPhvUBXgkD0ROj_kvRZOrOq2a9hNkn4tzVIPQ0LB3oT3wFSycJTRRGucn/exec";
+
+/* LOADER */
+window.addEventListener("load", function(){
+  setTimeout(function(){
+    var loader = document.getElementById("loader");
+    if(loader){
+      loader.style.display = "none";
+    }
+  }, 1200);
 });
 
-// FECHA MINIMA
-window.addEventListener("load", ()=>{
-  let hoje=new Date();
-  document.getElementById("data").min=hoje.toISOString().split("T")[0];
+/* FECHA MINIMA */
+window.addEventListener("load", function(){
+  var hoy = new Date().toISOString().split("T")[0];
+  document.getElementById("data").min = hoy;
 });
 
-// BARBERO
-function selecionarBarbeiro(nome,el){
-  document.getElementById("barbeiro").value=nome;
-  document.querySelectorAll(".card").forEach(c=>c.classList.remove("active"));
-  el.classList.add("active");
-  carregarHoras();
-}
-
-// HORAS
-const horas=[
-"08:30","09:00","09:30","10:00","10:30","11:00",
-"13:00","13:30","14:00","14:30","15:00","15:30",
-"16:00","16:30","17:00","17:30","18:00","18:30",
+/* HORAS */
+var HORAS = [
+"08:30","09:00","09:30",
+"10:00","10:30","11:00",
+"13:00","13:30","14:00",
+"14:30","15:00","15:30",
+"16:00","16:30","17:00",
+"17:30","18:00","18:30",
 "19:00","19:30","20:00"
 ];
 
-// CARGAR HORAS
+/* SELECCIONAR BARBERO */
+window.selecionarBarbeiro = function(nome, el){
+  document.getElementById("barbeiro").value = nome.trim();
+
+  var cards = document.querySelectorAll(".card");
+  for(var i=0;i<cards.length;i++){
+    cards[i].classList.remove("active");
+  }
+
+  el.classList.add("active");
+
+  carregarHoras();
+};
+
+/* CARGAR HORAS */
 async function carregarHoras(){
 
-let data=document.getElementById("data").value;
-let barbeiro=document.getElementById("barbeiro").value;
-let select=document.getElementById("hora");
-select.innerHTML="";
+  var data = document.getElementById("data").value;
+  var barbeiro = document.getElementById("barbeiro").value.trim();
+  var select = document.getElementById("hora");
 
-if(!data)return;
+  select.innerHTML = "";
 
-let ocupados=[];
+  if(!data || !barbeiro) return;
 
-try{
-let res=await fetch("https://script.google.com/macros/s/AKfycbztv0Kjze9NPhvUBXgkD0ROj_kvRZOrOq2a9hNkn4tzVIPQ0LB3oT3wFSycJTRRGucn/exec?reservas=1");
-let datos=await res.json();
+  var ocupados = [];
 
-datos.forEach(r=>{
-if(r.data===data && r.barbero===barbeiro){
-ocupados.push(r.hora);
-}
-});
-}catch(e){}
+  try{
+    var res = await fetch(API_URL + "?reservas=1");
+    var datos = await res.json();
 
-let ahora=new Date();
-let hoy=ahora.toISOString().split("T")[0];
-let horaActual=ahora.getHours()+":"+String(ahora.getMinutes()).padStart(2,"0");
+    for(var i=0;i<datos.length;i++){
+      var d = String(datos[i].data).trim();
+      var h = String(datos[i].hora).trim();
+      var b = String(datos[i].barbero).trim();
 
-horas.forEach(h=>{
+      if(d === data && b === barbeiro){
+        ocupados.push(h);
+      }
+    }
 
-let opt=document.createElement("option");
-opt.value=h;
-opt.text=h;
+  }catch(e){
+    console.log("Erro API");
+  }
 
-if(ocupados.includes(h)){
-opt.disabled=true;
-opt.text=h+" (ocupado)";
-}
+  var ahora = new Date();
+  var hoy = ahora.toISOString().split("T")[0];
+  var horaActual = ahora.getHours() + ":" + String(ahora.getMinutes()).padStart(2,'0');
 
-if(data===hoy && h<=horaActual){
-opt.disabled=true;
-opt.text=h+" (pasó)";
-}
+  for(var i=0;i<HORAS.length;i++){
 
-select.add(opt);
+    var h = HORAS[i];
+    var opt = document.createElement("option");
 
-});
-}
+    opt.value = h;
+    opt.text = h;
 
-// EVENTO
-document.getElementById("data").addEventListener("change",carregarHoras);
+    if(ocupados.indexOf(h) !== -1){
+      opt.disabled = true;
+      opt.text = h + " (ocupado)";
+    }
 
-// AGENDAR
-function agendar(){
+    if(data === hoy && h <= horaActual){
+      opt.disabled = true;
+      opt.text = h + " (passou)";
+    }
 
-let data=document.getElementById("data").value;
-let hora=document.getElementById("hora").value;
-let nome=document.getElementById("nome").value;
-let telefono=document.getElementById("telefone").value;
-let barbeiro=document.getElementById("barbeiro").value;
-
-if(!data||!hora||!nome||!telefono){
-alert("Completa todo");
-return;
+    select.add(opt);
+  }
 }
 
-let texto = 
-"Olá Armando Barber Shop%0A%0A" +
-"Quero agendar um horário%0A%0A" +
-"Barbeiro: " + barbeiro + "%0A" +
-"Serviço: " + document.getElementById("servico").value + "%0A" +
-"Data: " + data + "%0A" +
-"Hora: " + hora + "%0A" +
-"Nome: " + nome;
-
-window.open("https://wa.me/5595991554792?text=" + texto);
-
-fetch("https://script.google.com/macros/s/AKfycbztv0Kjze9NPhvUBXgkD0ROj_kvRZOrOq2a9hNkn4tzVIPQ0LB3oT3wFSycJTRRGucn/exec",{
-  method:"POST",
-  body: JSON.stringify({
-    data: data,
-    hora: hora,
-    cliente: nome,
-    telefono: telefone,
-    servicio: document.getElementById("servico").value,
-    barbero: barbeiro.trim() // 🔥 CLAVE
-  })
+/* EVENTO FECHA */
+document.addEventListener("DOMContentLoaded", function(){
+  document.getElementById("data").addEventListener("change", carregarHoras);
 });
 
-// MAPS
-function abrirMaps(){
-window.open("https://maps.app.goo.gl/PeCnFTVfxGxvAyP48");
-}
+/* AGENDAR */
+window.agendar = function(){
 
+  var data = document.getElementById("data").value;
+  var hora = document.getElementById("hora").value;
+  var nome = document.getElementById("nome").value;
+  var telefono = document.getElementById("telefone").value;
+  var barbeiro = document.getElementById("barbeiro").value.trim();
+  var servico = document.getElementById("servico").value;
+
+  if(!data || !hora || !nome || !telefono){
+    alert("Preencha todos os campos");
+    return;
+  }
+
+  var texto =
+  "Olá Armando Barber Shop%0A%0A" +
+  "Quero agendar um horário%0A%0A" +
+  "Barbeiro: " + barbeiro + "%0A" +
+  "Serviço: " + servico + "%0A" +
+  "Data: " + data + "%0A" +
+  "Hora: " + hora + "%0A" +
+  "Nome: " + nome;
+
+  window.open("https://wa.me/5595991554792?text=" + texto);
+
+  fetch(API_URL,{
+    method:"POST",
+    body: JSON.stringify({
+      data: data,
+      hora: hora,
+      cliente: nome,
+      telefono: telefono,
+      servicio: servico,
+      barbero: barbeiro
+    })
+  });
+
+  document.getElementById("confirmacao").style.display = "block";
+
+  setTimeout(carregarHoras, 1200);
+};
+
+/* MAPS */
+window.abrirMaps = function(){
+  window.open("https://maps.app.goo.gl/PeCnFTVfxGxvAyP48");
+};
+
+})();
 </script>
 
 </body>
