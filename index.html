@@ -350,20 +350,25 @@ async function carregarHoras(){
     let res = await fetch("https://script.google.com/macros/s/AKfycbztv0Kjze9NPhvUBXgkD0ROj_kvRZOrOq2a9hNkn4tzVIPQ0LB3oT3wFSycJTRRGucn/exec?reservas=1");
     let datos = await res.json();
 
-    datos.forEach(r=>{
+  datos.forEach(r => {
 
-      let dataSheet = String(r.data).trim();
-      let horaSheet = String(r.hora).trim();
-      let barberoSheet = String(r.barbero).trim().toLowerCase();
+  let dataAPI = String(r.data).trim();
+  let horaAPI = String(r.hora).trim();
+  let barberoAPI = String(r.barbero).trim().toLowerCase();
 
-      let dataSel = String(data).trim();
-      let barberSel = String(barbeiro).trim().toLowerCase();
+  let dataSel = String(data).trim();
+  let barberSel = String(barbeiro).trim().toLowerCase();
 
-      if(dataSheet === dataSel && barberoSheet === barberSel){
-        ocupados.push(horaSheet);
-      }
+  // 🚫 ignorar datos dañados
+  if(!dataAPI || dataAPI === "1969-12-31") return;
+  if(!horaAPI || !barberoAPI) return;
 
-    });
+  // ✅ comparación correcta
+  if(dataAPI === dataSel && barberoAPI === barberSel){
+    ocupados.push(horaAPI);
+  }
+
+});
 
   }catch(e){
     console.log("Error cargando reservas", e);
