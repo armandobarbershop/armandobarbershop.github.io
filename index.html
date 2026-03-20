@@ -347,7 +347,7 @@ async function carregarHoras(){
   let ocupados = [];
 
   try{
-    let res = await fetch(URL + "?reservas=1");
+    let res = await fetch("https://script.google.com/macros/s/AKfycbztv0Kjze9NPhvUBXgkD0ROj_kvRZOrOq2a9hNkn4tzVIPQ0LB3oT3wFSycJTRRGucn/exec?reservas=1");
     let datos = await res.json();
 
     datos.forEach(r=>{
@@ -418,7 +418,7 @@ async function agendar(){
 
   try{
 
-    let res = await fetch(URL,{
+    let res = await fetch("https://script.google.com/macros/s/AKfycbztv0Kjze9NPhvUBXgkD0ROj_kvRZOrOq2a9hNkn4tzVIPQ0LB3oT3wFSycJTRRGucn/exec?reservas=1")
       method:"POST",
       body: JSON.stringify({
         data:data,
