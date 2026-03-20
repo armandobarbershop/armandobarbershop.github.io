@@ -313,10 +313,12 @@ window.addEventListener("load", function(){
 });
 
 // 🔹 seleccionar barbero
-function selecionarBarbeiro(nome, el){
+function selecionarBarbeiro(nome,el){
   document.getElementById("barbeiro").value = nome;
   document.querySelectorAll(".card").forEach(c=>c.classList.remove("active"));
   el.classList.add("active");
+
+  // 🔥 ACTUALIZAR HORAS
   carregarHoras();
 }
 
@@ -433,7 +435,6 @@ async function carregarHoras(){
 
 // 🔹 eventos
 document.getElementById("data").addEventListener("change", carregarHoras);
-document.getElementById("barbeiro").addEventListener("change", carregarHoras);
 
 // 🔹 agendar
 async function agendar(){
