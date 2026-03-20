@@ -287,212 +287,117 @@ Reserva enviada com sucesso! Obrigado por nos preferir.
 </div>
 
 <script>
-  
-console.log("SCRIPT OK");
 
-const URL = "https://script.google.com/macros/s/AKfycbxiKW-D3n7Z99uqbSAm6aF31G64Kt093Q5ZYGZjjM-wehPRm7x72yAT6Xdl9Lfz2hZe/exec";
-
-// 🔴 detectar errores
-window.onerror = function(msg, url, line){
-  alert("Error: " + msg + " Línea: " + line);
-};
-
-// 🔥 quitar loader SIEMPRE
-window.addEventListener("load", function(){
-  let loader = document.getElementById("loader");
-  if(loader){
-    loader.style.display = "none";
-  }
+// LOADER
+window.addEventListener("load", ()=>{
+  setTimeout(()=>{
+    document.getElementById("loader").style.display="none";
+  },1500);
 });
 
-// 🔹 fecha mínima
-window.addEventListener("load", function(){
-  let hoy = new Date();
-  let yyyy = hoy.getFullYear();
-  let mm = String(hoy.getMonth()+1).padStart(2,'0');
-  let dd = String(hoy.getDate()).padStart(2,'0');
-  document.getElementById("data").min = `${yyyy}-${mm}-${dd}`;
+// FECHA MINIMA
+window.addEventListener("load", ()=>{
+  let hoje=new Date();
+  document.getElementById("data").min=hoje.toISOString().split("T")[0];
 });
 
-// 🔹 seleccionar barbero
+// BARBERO
 function selecionarBarbeiro(nome,el){
-  document.getElementById("barbeiro").value = nome;
+  document.getElementById("barbeiro").value=nome;
   document.querySelectorAll(".card").forEach(c=>c.classList.remove("active"));
   el.classList.add("active");
-
-  // 🔥 ACTUALIZAR HORAS
   carregarHoras();
 }
 
-// 🔹 horas
-const horas = [
-"08:30","09:00","09:30",
-"10:00","10:30","11:00",
-"13:00","13:30","14:00",
-"14:30","15:00","15:30",
-"16:00","16:30","17:00",
-"17:30","18:00","18:30",
+// HORAS
+const horas=[
+"08:30","09:00","09:30","10:00","10:30","11:00",
+"13:00","13:30","14:00","14:30","15:00","15:30",
+"16:00","16:30","17:00","17:30","18:00","18:30",
 "19:00","19:30","20:00"
 ];
 
-// 🔥 BLOQUEO DEFINITIVO
+// CARGAR HORAS
 async function carregarHoras(){
-async function carregarHoras(){
-console.log("CARGAR HORAS EJECUTANDO");
 
-  var selectHora = document.getElementById("hora");
-  selectHora.innerHTML = "";
+let data=document.getElementById("data").value;
+let barbeiro=document.getElementById("barbeiro").value;
+let select=document.getElementById("hora");
+select.innerHTML="";
 
-  var dataSelecionada = document.getElementById("data").value;
-  var barbeiro = document.getElementById("barbeiro").value;
+if(!data)return;
 
-  if(!dataSelecionada || !barbeiro){
-    return;
-  }
+let ocupados=[];
 
-  var ocupados = [];
+try{
+let res=await fetch("https://script.google.com/macros/s/AKfycbztv0Kjze9NPhvUBXgkD0ROj_kvRZOrOq2a9hNkn4tzVIPQ0LB3oT3wFSycJTRRGucn/exec?reservas=1");
+let datos=await res.json();
 
-  try{
-    let res = await fetch("https://script.google.com/macros/s/AKfycbztv0Kjze9NPhvUBXgkD0ROj_kvRZOrOq2a9hNkn4tzVIPQ0LB3oT3wFSycJTRRGucn/exec?reservas=1");
-    let datos = await res.json();
+datos.forEach(r=>{
+if(r.data===data && r.barbero===barbeiro){
+ocupados.push(r.hora);
+}
+});
+}catch(e){}
 
-    datos.forEach(r => {
+let ahora=new Date();
+let hoy=ahora.toISOString().split("T")[0];
+let horaActual=ahora.getHours()+":"+String(ahora.getMinutes()).padStart(2,"0");
 
-      let dataAPI = String(r.data).trim();
-      let horaAPI = String(r.hora).trim();
-      let barberoAPI = String(r.barbero).trim().toLowerCase();
+horas.forEach(h=>{
 
-      let dataSel = String(dataSelecionada).trim();
-      let barberSel = String(barbeiro).trim().toLowerCase();
+let opt=document.createElement("option");
+opt.value=h;
+opt.text=h;
 
-      // ignorar datos dañados
-      if(!dataAPI || dataAPI === "1969-12-31") return;
-      if(!horaAPI || !barberoAPI) return;
-
-      if(dataAPI === dataSel && barberoAPI === barberSel){
-        ocupados.push(horaAPI);
-      }
-
-    });
-
-  }catch(e){
-    console.log("Error cargando reservas:", e);
-  }
-
-  // 🔥 HORAS BASE (SIEMPRE SE GENERAN)
-  var horas = [
-    "08:30","09:00","09:30",
-    "10:00","10:30","11:00",
-    "13:00","13:30","14:00",
-    "14:30","15:00","15:30",
-    "16:00","16:30","17:00",
-    "17:30","18:00","18:30",
-    "19:00","19:30","20:00"
-  ];
-
-  let ahora = new Date();
-  let hoy = ahora.toISOString().split("T")[0];
-  let horaActual = ahora.getHours() + ":" + String(ahora.getMinutes()).padStart(2,'0');
-
-  for(let i=0;i<horas.length;i++){
-
-    let opt = document.createElement("option");
-    opt.value = horas[i];
-    opt.text = horas[i];
-
-    // 🔴 bloquear horas ocupadas
-    if(ocupados.includes(horas[i])){
-      opt.disabled = true;
-      opt.text = horas[i] + " (ocupado)";
-    }
-
-    // 🔴 bloquear horas pasadas (solo hoy)
-    if(dataSelecionada === hoy && horas[i] <= horaActual){
-      opt.disabled = true;
-      opt.text = horas[i] + " (pasó)";
-    }
-
-    selectHora.add(opt);
-  }
-
+if(ocupados.includes(h)){
+opt.disabled=true;
+opt.text=h+" (ocupado)";
 }
 
-// 🔹 eventos
-document.getElementById("data").addEventListener("change", carregarHoras);
-
-// 🔹 agendar
-async function agendar(){
-
-  let data = document.getElementById("data").value;
-  let hora = document.getElementById("hora").value;
-  let nome = document.getElementById("nome").value;
-  let telefone = document.getElementById("telefone").value;
-  let barbeiro = document.getElementById("barbeiro").value;
-  let servico = document.getElementById("servico").value;
-
-  if(!data || !hora || !nome || !telefone){
-    alert("Preencha todos os campos");
-    return;
-  }
-
-  try{
-
-    let res = await fetch("https://script.google.com/macros/s/AKfycbztv0Kjze9NPhvUBXgkD0ROj_kvRZOrOq2a9hNkn4tzVIPQ0LB3oT3wFSycJTRRGucn/exec?reservas=1")
-      method:"POST",
-      body: JSON.stringify({
-        data:data,
-        hora:hora,
-        cliente:nome,
-        telefono:telefone,
-        servicio:servico,
-        barbero:barbeiro
-      })
-    });
-
-    let r = await res.json();
-
-    if(r.status === "ocupado"){
-      alert("⚠️ Este horario ya fue reservado");
-      carregarHoras();
-      return;
-    }
-
-    // WhatsApp
-    let texto = `Olá Armando Barber Shop
-
-Barbeiro: ${barbeiro}
-Serviço: ${servico}
-Data: ${data}
-Hora: ${hora}
-Nome: ${nome}`;
-
-    let link = "https://wa.me/5595991554792?text="+encodeURIComponent(texto);
-    window.open(link,"_blank");
-
-    document.getElementById("confirmacao").style.display="block";
-
-    setTimeout(carregarHoras,1000);
-
-  }catch(e){
-    alert("Erro ao enviar reserva");
-  }
+if(data===hoy && h<=horaActual){
+opt.disabled=true;
+opt.text=h+" (pasó)";
 }
 
-// 🔹 maps
+select.add(opt);
+
+});
+}
+
+// EVENTO
+document.getElementById("data").addEventListener("change",carregarHoras);
+
+// AGENDAR
+function agendar(){
+
+let data=document.getElementById("data").value;
+let hora=document.getElementById("hora").value;
+let nome=document.getElementById("nome").value;
+let telefono=document.getElementById("telefone").value;
+let barbeiro=document.getElementById("barbeiro").value;
+
+if(!data||!hora||!nome||!telefono){
+alert("Completa todo");
+return;
+}
+
+window.open(`https://wa.me/5595991554792?text=Reserva%0A${data}%20${hora}%20${nome}`);
+
+fetch("https://script.google.com/macros/s/AKfycbztv0Kjze9NPhvUBXgkD0ROj_kvRZOrOq2a9hNkn4tzVIPQ0LB3oT3wFSycJTRRGucn/exec",{
+method:"POST",
+body:JSON.stringify({data,hora,cliente:nome,telefono,barbero})
+});
+
+document.getElementById("confirmacao").style.display="block";
+setTimeout(carregarHoras,1000);
+}
+
+// MAPS
 function abrirMaps(){
-  window.open("https://maps.app.goo.gl/PeCnFTVfxGxvAyP48");
+window.open("https://maps.app.goo.gl/PeCnFTVfxGxvAyP48");
 }
-  
-</script>
-</script>
 
-<script>
-setTimeout(function(){
-  var loader = document.getElementById("loader");
-  if(loader){
-    loader.style.display = "none";
-  }
-}, 2000);
 </script>
 
 </body>
