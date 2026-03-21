@@ -280,7 +280,7 @@ font-weight:bold;
 
 </form>
 
-<div id="confirmacao">
+<div id="confirmacao" style="display:none;">
 Reserva enviada com sucesso! Obrigado por nos preferir.
 </div>
 
@@ -423,21 +423,27 @@ window.agendar = function(){
   window.open("https://wa.me/5595991554792?text=" + texto);
 
   fetch(API_URL,{
-    method:"POST",
-    body: JSON.stringify({
-      data: data,
-      hora: hora,
-      cliente: nome,
-      telefono: telefono,
-      servicio: servico,
-      barbero: barbeiro
-    })
-  });
+  method:"POST",
+  body: JSON.stringify({
+    data: data,
+    hora: hora,
+    cliente: nome,
+    telefono: telefono,
+    servicio: servico,
+    barbero: barbeiro
+  })
+})
+.then(() => {
 
-  document.getElementById("confirmacao").style.display = "block";
+  // guardar estado
+  localStorage.setItem("ultima_reserva", "ok");
 
-  setTimeout(carregarHoras, 1200);
-};
+  // recargar horas bloqueadas
+  setTimeout(() => {
+    carregarHoras();
+  }, 1000);
+
+});
 
 /* MAPS */
 window.abrirMaps = function(){
@@ -445,6 +451,30 @@ window.abrirMaps = function(){
 };
 
 })();
+
+window.addEventListener("load", function(){
+
+  if(localStorage.getItem("ultima_reserva")){
+
+    let msg = document.getElementById("confirmacao");
+
+    if(msg){
+      msg.style.display = "block";
+      msg.innerHTML =
+      "Reserva enviada com sucesso! Obrigado por nos preferir.";
+    }
+
+    // recargar horas
+    if(typeof carregarHoras === "function"){
+      carregarHoras();
+    }
+
+    localStorage.removeItem("ultima_reserva");
+
+  }
+
+});
+
 </script>
 
 </body>
