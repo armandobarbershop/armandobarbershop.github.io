@@ -358,8 +358,22 @@ async function carregarHoras(){
       var h = String(datos[i].hora).trim();
       var b = String(datos[i].barbero).trim();
 
-      if(d === data && b === barbeiro){
-        ocupados.push(h);
+      if((d === data || d === "TODOS") && b === barbeiro){
+
+  var status = "";
+
+  if(datos[i].status){
+    status = String(datos[i].status).trim().toLowerCase();
+  }
+
+  // si está cancelado, no bloquear
+  if(status === "cancelado"){
+    continue;
+  }
+
+  // bloquear si está confirmado o bloqueado
+  ocupados.push(h);
+
       }
     }
 
