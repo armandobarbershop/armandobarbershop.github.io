@@ -424,6 +424,9 @@ window.agendar = function(){
 
   fetch(API_URL,{
   method:"POST",
+  headers:{
+    "Content-Type":"application/json"
+  },
   body: JSON.stringify({
     data: data,
     hora: hora,
@@ -433,19 +436,31 @@ window.agendar = function(){
     barbero: barbeiro
   })
 })
+.then(response => response.text())
 .then(() => {
 
-  // guardar estado
+  // guardar estado de confirmación
   localStorage.setItem("ultima_reserva", "ok");
 
-  // recargar horas bloqueadas
+  // mostrar mensaje inmediatamente
+  let msg = document.getElementById("confirmacao");
+
+  if(msg){
+    msg.style.display = "block";
+    msg.innerHTML =
+    "Reserva enviada com sucesso! Obrigado por nos preferir.";
+  }
+
+  // recargar horas después de guardar
   setTimeout(() => {
     carregarHoras();
-  }, 1000);
+  }, 1500);
 
+})
+.catch(() => {
+  alert("Erro ao salvar reserva");
 });
 
-// ESTA LÍNEA FALTABA
 };
 
 /* MAPS */
