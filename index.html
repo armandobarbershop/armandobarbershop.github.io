@@ -367,7 +367,7 @@ async function carregarHoras(){
   }
 
   // si está cancelado, no bloquear
-  if(status === "cancelado"){
+  if(status.includes("cancelado")){
     continue;
   }
 
