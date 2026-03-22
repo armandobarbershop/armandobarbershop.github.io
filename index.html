@@ -449,6 +449,12 @@ window.agendar = function(){
     msg.innerHTML =
     "Reserva enviada com sucesso! Obrigado por nos preferir.";
   }
+  
+  // limpiar campos
+document.getElementById("nome").value = "";
+document.getElementById("telefone").value = "";
+document.getElementById("servico").value = "";
+document.getElementById("hora").value = "";
 
   // recargar horas después de guardar
   setTimeout(() => {
@@ -471,31 +477,15 @@ window.abrirMaps = function(){
 
 window.addEventListener("load", function(){
 
-  if(localStorage.getItem("ultima_reserva")){
+  let msg = document.getElementById("confirmacao");
 
-    let msg = document.getElementById("confirmacao");
-
-    if(msg){
-
-      msg.style.display = "block";
-      msg.innerHTML =
-      "Reserva enviada com sucesso! Obrigado por nos preferir.";
-
-      // ocultar después de 5 segundos
-      setTimeout(function(){
-        msg.style.display = "none";
-      }, 5000);
-
-    }
-
-    if(typeof carregarHoras === "function"){
-      carregarHoras();
-    }
-
-    // borrar el estado inmediatamente
-    localStorage.removeItem("ultima_reserva");
-
+  // ocultar mensaje siempre al entrar a la página
+  if(msg){
+    msg.style.display = "none";
   }
+
+  // limpiar cualquier estado anterior
+  localStorage.removeItem("ultima_reserva");
 
 });
 
