@@ -285,7 +285,9 @@ Reserva enviada com sucesso! Obrigado por nos preferir.
 </div>
 
 </div>
+
 <script>
+
 (function(){
 
 "use strict";
@@ -424,16 +426,13 @@ window.agendar = function(){
 
   fetch(API_URL,{
   method:"POST",
-  headers:{
-    "Content-Type":"application/json"
-  },
-  body: JSON.stringify({
+  body: new URLSearchParams({
     data: data,
     hora: hora,
     cliente: nome,
-    telefono: telefono,
-    servicio: servico,
-    barbero: barbeiro
+    telefone: telefono,
+    servico: servico,
+    barbeiro: barbeiro
   })
 })
 .then(response => response.text())
