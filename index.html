@@ -476,16 +476,23 @@ window.addEventListener("load", function(){
     let msg = document.getElementById("confirmacao");
 
     if(msg){
+
       msg.style.display = "block";
       msg.innerHTML =
       "Reserva enviada com sucesso! Obrigado por nos preferir.";
+
+      // ocultar después de 5 segundos
+      setTimeout(function(){
+        msg.style.display = "none";
+      }, 5000);
+
     }
 
-    // recargar horas
     if(typeof carregarHoras === "function"){
       carregarHoras();
     }
 
+    // borrar el estado inmediatamente
     localStorage.removeItem("ultima_reserva");
 
   }
