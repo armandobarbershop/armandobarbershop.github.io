@@ -383,7 +383,10 @@ async function carregarHoras(){
 
   var ahora = new Date();
   var hoy = ahora.toISOString().split("T")[0];
-  var horaActual = ahora.getHours() + ":" + String(ahora.getMinutes()).padStart(2,'0');
+  var horaActual =
+String(ahora.getHours()).padStart(2,'0') +
+":" +
+String(ahora.getMinutes()).padStart(2,'0');
 
   for(var i=0;i<HORAS.length;i++){
 
