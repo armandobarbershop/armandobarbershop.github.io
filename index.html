@@ -337,62 +337,49 @@ window.selecionarBarbeiro = function(nome, el){
 };
 
 /* CARGAR HORAS */
-// --- Parche para acelerar la carga de horas ---
-async function carregarHoras() {
-  var data = document.getElementById("data").value;
-  var barbeiro = document.getElementById("barbeiro").value.trim();
-  var select = document.getElementById("hora");
-
-  select.innerHTML = "";
-  if (!data || !barbeiro) return;
-
-  try {
-    // llamar al Web App para obtener horas ocupadas
-    var res = await fetch("https://script.google.com/macros/s/AKfycbztv0Kjze9NPhvUBXgkD0ROj_kvRZOrOq2a9hNkn4tzVIPQ0LB3oT3wFSycJTRRGucn/exec?reservas=1&fecha=" + data + "&barbero=" + barbeiro);
-    var ocupados = await res.json();
-
-    // construir todas las opciones de golpe
-    var html = "";
-    var HORAS = [
-      "08:30","09:00","09:30","10:00","10:30","11:00","11:30",
-      "13:00","13:30","14:00","14:30","15:00","15:30",
-      "16:00","16:30","17:00","17:30","18:00","18:30",
-      "19:00","19:30","20:00"
-    ];
-
-    var ahora = new Date();
-    var horaActual = String(ahora.getHours()).padStart(2,'0') + ":" + String(ahora.getMinutes()).padStart(2,'0');
-    var hoy = ahora.toISOString().split("T")[0];
-
-    HORAS.forEach(h => {
-      var disabled = "";
-      var texto = h;
-
-      if (ocupados.includes(h)) {
-        disabled = " disabled";
-        texto += " (ocupado)";
-      }
-
-      if (data === hoy && h <= horaActual) {
-        disabled = " disabled";
-        texto += " (passou)";
-      }
-
-      html += `<option value="${h}"${disabled}>${texto}</option>`;
-    });
-
-    select.innerHTML = html;
-
-    // si no hay opciones habilitadas
-    if (!html.match(/option(?!.*disabled)/)) {
-      select.innerHTML = `<option disabled>Não há horários disponíveis</option>`;
-    }
-
-  } catch (e) {
-    console.log("Erro API:", e);
-    select.innerHTML = `<option disabled>Erro ao carregar horários</option>`;
+async function carregarHoras(){  
+  
+  var data = document.getElementById("data").value;  
+  var barbeiro = document.getElementById("barbeiro").value.trim();  
+  var select = document.getElementById("hora");  
+  
+  select.innerHTML = "";  
+  
+  if(!data || !barbeiro) return;  
+  
+  var ocupados = [];  
+  
+  try{  
+    var res = await fetch(API_URL + "?reservas=1");  
+    var datos = await res.json();  
+  
+    for(var i=0;i<datos.length;i++){  
+      var d = String(datos[i].data).trim();  
+      var h = String(datos[i].hora).trim();  
+      var b = String(datos[i].barbero).trim();  
+  
+      if((d === data || d === "TODOS") && b === barbeiro){  
+  
+  var status = "";  
+  
+  if(datos[i].status){  
+    status = String(datos[i].status).trim().toLowerCase();  
+  }  
+  
+  // si está cancelado, no bloquear  
+  if(status.includes("cancelado")){  
+    continue;  
+  }  
+  
+  // bloquear si está confirmado o bloqueado  
+  ocupados.push(h);  
+  
+      }  
+    }  
+  
+  }catch(e){  
+    console.log("Erro API");  
   }
-}
 
 /* EVENTO FECHA */
 document.addEventListener("DOMContentLoaded", function(){
