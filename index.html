@@ -379,7 +379,36 @@ async function carregarHoras(){
   
   }catch(e){  
     console.log("Erro API");  
-  }
+  }  
+  
+  var ahora = new Date();  
+  var hoy = ahora.toISOString().split("T")[0];  
+  var horaActual =  
+String(ahora.getHours()).padStart(2,'0') +  
+":" +  
+String(ahora.getMinutes()).padStart(2,'0');  
+  
+  for(var i=0;i<HORAS.length;i++){  
+  
+    var h = HORAS[i];  
+    var opt = document.createElement("option");  
+  
+    opt.value = h;  
+    opt.text = h;  
+  
+    if(ocupados.indexOf(h) !== -1){  
+      opt.disabled = true;  
+      opt.text = h + " (ocupado)";  
+    }  
+  
+    if(data === hoy && h <= horaActual){  
+      opt.disabled = true;  
+      opt.text = h + " (passou)";  
+    }  
+  
+    select.add(opt);  
+  }  
+}
 
 /* EVENTO FECHA */
 document.addEventListener("DOMContentLoaded", function(){
