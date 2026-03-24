@@ -350,7 +350,12 @@ async function carregarHoras(){
   var ocupados = [];  
   
   try{  
-    var res = await fetch(API_URL + "?reservas=1");  
+    var res = await fetch(
+  API_URL +
+  "?reservas=1" +
+  "&data=" + data +
+  "&barbero=" + encodeURIComponent(barbeiro)
+);
     var datos = await res.json();  
   
     for(var i=0;i<datos.length;i++){  
