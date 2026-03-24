@@ -363,7 +363,14 @@ async function carregarHoras(){
       var h = String(datos[i].hora).trim();  
       var b = String(datos[i].barbero).trim();  
   
-      if((d === data || d === "TODOS") && b === barbeiro){  
+  if(
+  (
+    d === data ||
+    d === "TODOS" ||
+    d.toUpperCase() === diaSemana
+  ) &&
+  b === barbeiro
+){
   
   var status = "";  
   
@@ -425,6 +432,20 @@ document.addEventListener("DOMContentLoaded", function(){
 window.agendar = function(){
 
   var data = document.getElementById("data").value;
+  
+  var dias = [
+  "DOMINGO",
+  "SEGUNDA",
+  "TERCA",
+  "QUARTA",
+  "QUINTA",
+  "SEXTA",
+  "SABADO"
+];
+
+var fechaObj = new Date(data + "T00:00:00");
+var diaSemana = dias[fechaObj.getDay()];
+  
   var hora = document.getElementById("hora").value;
   var nome = document.getElementById("nome").value;
   var telefono = document.getElementById("telefone").value;
