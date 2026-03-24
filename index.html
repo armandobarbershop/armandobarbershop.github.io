@@ -417,6 +417,7 @@ String(ahora.getMinutes()).padStart(2,'0');
 
 /* EVENTO FECHA */
 document.addEventListener("DOMContentLoaded", function(){
+  setTimeout(carregarHoras, 100);
   document.getElementById("data").addEventListener("change", carregarHoras);
 });
 
