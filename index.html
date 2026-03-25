@@ -337,7 +337,10 @@ window.selecionarBarbeiro = function(nome, el){
 };
 
 /* CARGAR HORAS */
-async function carregarHoras(){  
+async function carregarHoras(){
+
+  if(window.carregandoHoras) return;
+window.carregandoHoras = true;
   
   var data = document.getElementById("data").value;  
   var barbeiro = document.getElementById("barbeiro").value.trim();  
