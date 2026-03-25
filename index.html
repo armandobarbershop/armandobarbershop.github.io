@@ -354,18 +354,6 @@ window.carregandoHoras = true;
 }
   
   var ocupados = [];
-  var dias = [
-  "DOMINGO",
-  "SEGUNDA",
-  "TERCA",
-  "QUARTA",
-  "QUINTA",
-  "SEXTA",
-  "SABADO"
-];
-
-var fechaObj = new Date(data + "T00:00:00");
-var diaSemana = dias[fechaObj.getDay()];
   
   try{  
     var res = await fetch(
@@ -384,8 +372,7 @@ var diaSemana = dias[fechaObj.getDay()];
   if(
   (
     d === data ||
-    d === "TODOS" ||
-    d.toUpperCase() === diaSemana
+    d === "TODOS"
   ) &&
   b === barbeiro
 ){
