@@ -348,9 +348,24 @@ window.carregandoHoras = true;
   
   select.innerHTML = "";  
   
-  if(!data || !barbeiro) return;  
+    if(!data || !barbeiro){
+  window.carregandoHoras = false;
+  return;
+}
   
-  var ocupados = [];  
+  var ocupados = [];
+  var dias = [
+  "DOMINGO",
+  "SEGUNDA",
+  "TERCA",
+  "QUARTA",
+  "QUINTA",
+  "SEXTA",
+  "SABADO"
+];
+
+var fechaObj = new Date(data + "T00:00:00");
+var diaSemana = dias[fechaObj.getDay()];
   
   try{  
     var res = await fetch(
@@ -422,7 +437,8 @@ String(ahora.getMinutes()).padStart(2,'0');
     }  
   
     select.add(opt);  
-  }  
+  }
+  window.carregandoHoras = false;
 }
 
 /* EVENTO FECHA */
