@@ -365,47 +365,48 @@ window.carregandoHoras = true;
     var datos = await res.json();  
   
     for(var i=0;i<datos.length;i++){  
-      var d = String(datos[i].data).trim();  
-      var h = String(datos[i].hora).trim();  
-      var b = String(datos[i].barbero).trim();  
-  
+
+  var d = String(datos[i].data).trim();  
+  var h = String(datos[i].hora).trim();  
+  var b = String(datos[i].barbero).trim();  
+
   if(
-  (
-    d === data ||
-    d === "TODOS"
-  ) &&
-  b === barbeiro
-){
-  
-  var status = "";  
-  
-  if(datos[i].status){  
-    status = String(datos[i].status).trim().toLowerCase();  
-  }  
-  
-  // si está cancelado, no bloquear  
-  if(status.includes("cancelado")){  
-    continue;  
-  }  
-  
-  // bloquear si está confirmado o bloqueado  
-  ocupados.push(h);
+    (
+      d === data ||
+      d === "TODOS"
+    ) &&
+    b === barbeiro
+  ){
 
-// si el servicio fue Corte e Barba, bloquear el siguiente horario
-var servico = String(datos[i].servico || "").trim();
+    var status = "";  
 
-if(servico === "Corte e Barba"){
+    if(datos[i].status){  
+      status = String(datos[i].status).trim().toLowerCase();  
+    }  
 
-  var index = HORAS.indexOf(h);
+    if(status.includes("cancelado")){  
+      continue;  
+    }  
 
-  if(index !== -1 && index + 1 < HORAS.length){
-    ocupados.push(HORAS[index + 1]);
-  }
+    ocupados.push(h);
 
-} 
+    // bloquear siguiente hora si es Corte e Barba
+    var servico = String(datos[i].servico || "").trim();
+
+    if(servico === "Corte e Barba"){
+
+      var index = HORAS.indexOf(h);
+
+      if(index !== -1 && index + 1 < HORAS.length){
+        ocupados.push(HORAS[index + 1]);
+      }
+
+    }
 
   }
-  }catch(e){  
+
+    }
+ catch(e){  
     console.log("Erro API", e);
   }  
   
