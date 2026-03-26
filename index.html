@@ -389,10 +389,20 @@ window.carregandoHoras = true;
   }  
   
   // bloquear si está confirmado o bloqueado  
-  ocupados.push(h);  
-  
-      }  
-    }  
+  ocupados.push(h);
+
+// si el servicio fue Corte e Barba, bloquear el siguiente horario
+var servico = String(datos[i].servico || "").trim();
+
+if(servico === "Corte e Barba"){
+
+  var index = HORAS.indexOf(h);
+
+  if(index !== -1 && index + 1 < HORAS.length){
+    ocupados.push(HORAS[index + 1]);
+  }
+
+} 
   
   }catch(e){  
     console.log("Erro API", e);
