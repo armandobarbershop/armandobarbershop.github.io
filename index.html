@@ -390,26 +390,22 @@ async function carregarHoras(){
           continue;  
         }  
 
-        ocupados.push(h);
+ocupados.push(h);
 
-// determinar duración del servicio
-var servico = String(datos[i].servico || "")
-  .trim()
-  .toLowerCase();
+// definir duración por servicio
+var servico = String(datos[i].servico || "").trim();
 
 var duracion = 30;
 
-// si es Corte e Barba → 60 minutos
-if(servico.startsWith("corte e barba")){
+if(servico === "Corte e Barba - R$70"){
   duracion = 60;
 }
 
-// calcular bloques a bloquear
 var bloques = duracion / 30;
 
 var index = HORAS.indexOf(h);
 
-// bloquear bloques adicionales
+// bloquear horarios adicionales
 for(var b = 1; b < bloques; b++){
 
   if(index !== -1 && index + b < HORAS.length){
