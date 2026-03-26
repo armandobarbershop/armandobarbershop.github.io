@@ -340,7 +340,7 @@ window.selecionarBarbeiro = function(nome, el){
 async function carregarHoras(){
 
   if(window.carregandoHoras) return;
-window.carregandoHoras = true;
+  window.carregandoHoras = true;
   
   var data = document.getElementById("data").value;  
   var barbeiro = document.getElementById("barbeiro").value.trim();  
@@ -348,65 +348,71 @@ window.carregandoHoras = true;
   
   select.innerHTML = "";  
   
-    if(!data || !barbeiro){
-  window.carregandoHoras = false;
-  return;
-}
+  if(!data || !barbeiro){
+    window.carregandoHoras = false;
+    return;
+  }
   
   var ocupados = [];
   
   try{  
+
     var res = await fetch(
-  API_URL +
-  "?reservas=1" +
-  "&data=" + data +
-  "&barbero=" + encodeURIComponent(barbeiro)
-);
+      API_URL +
+      "?reservas=1" +
+      "&data=" + data +
+      "&barbero=" + encodeURIComponent(barbeiro)
+    );
+
     var datos = await res.json();  
   
     for(var i=0;i<datos.length;i++){  
 
-  var d = String(datos[i].data).trim();  
-  var h = String(datos[i].hora).trim();  
-  var b = String(datos[i].barbero).trim();  
+      var d = String(datos[i].data).trim();  
+      var h = String(datos[i].hora).trim();  
+      var b = String(datos[i].barbero).trim();  
 
-  if(
-    (
-      d === data ||
-      d === "TODOS"
-    ) &&
-    b === barbeiro
-  ){
+      if(
+        (
+          d === data ||
+          d === "TODOS"
+        ) &&
+        b === barbeiro
+      ){
 
-    var status = "";  
+        var status = "";  
 
-    if(datos[i].status){  
-      status = String(datos[i].status).trim().toLowerCase();  
-    }  
+        if(datos[i].status){  
+          status = String(datos[i].status).trim().toLowerCase();  
+        }  
 
-    if(status.includes("cancelado")){  
-      continue;  
-    }  
+        if(status.includes("cancelado")){  
+          continue;  
+        }  
 
-    ocupados.push(h);
+        ocupados.push(h);
 
-    // bloquear siguiente hora si es Corte e Barba
-    var servico = String(datos[i].servico || "").trim();
+        // bloquear siguiente hora si es Corte e Barba
+        var servico = String(datos[i].servico || "").trim();
 
-    if(servico === "Corte e Barba"){
+        if(servico === "Corte e Barba"){
 
-      var index = HORAS.indexOf(h);
+          var index = HORAS.indexOf(h);
 
-      if(index !== -1 && index + 1 < HORAS.length){
-        ocupados.push(HORAS[index + 1]);
+          if(index !== -1 && index + 1 < HORAS.length){
+            ocupados.push(HORAS[index + 1]);
+          }
+
+        }
+
       }
 
     }
 
   }
- catch(e){  
+  catch(e){  
     console.log("Erro API", e);
-  }  
+  }
   
   var ahora = new Date();  
   var hoy = ahora.toISOString().split("T")[0];  
