@@ -392,16 +392,34 @@ async function carregarHoras(){
 
 ocupados.push(h);
 
-// definir duración por servicio
-var servico = String(datos[i].servico || "").trim();
+// obtener servicio
+var servico = String(datos[i].servico || "")
+  .trim()
+  .toLowerCase();
 
+// tabla de duración por servicio
+var duraciones = {
+  "corte": 30,
+  "barba": 30,
+  "sobrancelha": 30,
+  "corte e barba": 60
+};
+
+// duración por defecto
 var duracion = 30;
 
-if(servico === "Corte e Barba - R$70"){
-  duracion = 60;
+// detectar servicio
+for(var nombre in duraciones){
+
+  if(servico.includes(nombre)){
+    duracion = duraciones[nombre];
+    break;
+  }
+
 }
 
-var bloques = duracion / 30;
+// calcular bloques
+var bloques = Math.ceil(duracion / 30);
 
 var index = HORAS.indexOf(h);
 
