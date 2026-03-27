@@ -350,6 +350,45 @@ window.selecionarBarbeiro = function(nome, el){
   el.classList.add("active");
 
   carregarHoras();  
+  function mostrarHoras(ocupados){
+
+  var select = document.getElementById("hora");
+  var data = document.getElementById("data").value;
+
+  select.innerHTML = "";
+
+  var ahora = new Date();
+  var hoy = ahora.toISOString().split("T")[0];
+
+  var horaActual =
+    String(ahora.getHours()).padStart(2,'0') +
+    ":" +
+    String(ahora.getMinutes()).padStart(2,'0');
+
+  for(var i=0;i<HORAS.length;i++){
+
+    var h = HORAS[i];
+    var opt = document.createElement("option");
+
+    opt.value = h;
+    opt.text = h;
+
+    if(ocupados.indexOf(h) !== -1){
+      opt.disabled = true;
+      opt.text = h + " (ocupado)";
+    }
+
+    if(data === hoy && h <= horaActual){
+      opt.disabled = true;
+      opt.text = h + " (passou)";
+    }
+
+    select.add(opt);
+
+  }
+
+  window.carregandoHoras = false;
+  }
 };  
   
 /* CARGAR HORAS */  
@@ -379,6 +418,32 @@ select.add(loadingOption);
 }  
     
   var ocupados = [];  
+  // CACHE POR 5 MINUTOS
+var cacheKey = "horas_" + data + "_" + barbeiro;
+var cacheData = sessionStorage.getItem(cacheKey);
+
+if(cacheData){
+  try{
+    var cacheObj = JSON.parse(cacheData);
+
+    // verificar si aún no expiró (5 minutos)
+    var ahora = Date.now();
+    if(ahora - cacheObj.time < 5 * 60 * 1000){
+
+      ocupados = cacheObj.ocupados;
+
+      // quitar mensaje de cargando
+      select.innerHTML = "";
+
+      // mostrar horas directamente
+      mostrarHoras(ocupados);
+
+      window.carregandoHoras = false;
+      return;
+    }
+
+  }catch(e){}
+}
     
   try{    
     var res = await fetch(  
@@ -418,7 +483,14 @@ select.add(loadingOption);
     
       }    
     }    
-    
+    // GUARDAR EN CACHE
+sessionStorage.setItem(
+  cacheKey,
+  JSON.stringify({
+    ocupados: ocupados,
+    time: Date.now()
+  })
+);
   }catch(e){    
     console.log("Erro API", e);  
   } 
@@ -433,7 +505,7 @@ String(ahora.getMinutes()).padStart(2,'0');
   // Quitar mensaje de carregando antes de insertar horas
 select.innerHTML = "";
   
-  for(var i=0;i<HORAS.length;i++){  
+  mostrarHoras(ocupados);
   
     var h = HORAS[i];  
     var opt = document.createElement("option");  
