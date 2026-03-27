@@ -304,6 +304,22 @@ window.addEventListener("load", function(){
     }
   }, 1200);
 });
+  // LIMPIAR CAMPOS CUANDO EL USUARIO REGRESA DESDE WHATSAPP
+window.addEventListener("pageshow", function(){
+
+  // limpiar nombre
+  document.getElementById("nome").value = "";
+
+  // limpiar teléfono
+  document.getElementById("telefone").value = "";
+
+  // limpiar servicio (volver al primero)
+  document.getElementById("servico").selectedIndex = 0;
+
+  // limpiar hora
+  document.getElementById("hora").selectedIndex = 0;
+
+});
 
 /* FECHA MINIMA */
 window.addEventListener("load", function(){
