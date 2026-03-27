@@ -346,7 +346,15 @@ window.carregandoHoras = true;
   var barbeiro = document.getElementById("barbeiro").value.trim();    
   var select = document.getElementById("hora");    
     
-  select.innerHTML = "";    
+  select.innerHTML = "";
+
+// Mostrar mensaje mientras carga
+var loadingOption = document.createElement("option");
+loadingOption.text = "Carregando horas...";
+loadingOption.disabled = true;
+loadingOption.selected = true;
+
+select.add(loadingOption);
     
     if(!data || !barbeiro){  
   window.carregandoHoras = false;  
