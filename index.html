@@ -346,10 +346,11 @@ window.carregandoHoras = true;
   var barbeiro = document.getElementById("barbeiro").value.trim();    
   var select = document.getElementById("hora");    
     
-  select.innerHTML = "";
+  // Mostrar mensaje mientras carga
+select.innerHTML = "";
 
-// Mostrar mensaje mientras carga
 var loadingOption = document.createElement("option");
+loadingOption.value = "";
 loadingOption.text = "Carregando horas...";
 loadingOption.disabled = true;
 loadingOption.selected = true;
@@ -412,6 +413,9 @@ select.add(loadingOption);
 String(ahora.getHours()).padStart(2,'0') +  
 ":" +  
 String(ahora.getMinutes()).padStart(2,'0');  
+  
+  // Quitar mensaje de carregando antes de insertar horas
+select.innerHTML = "";
   
   for(var i=0;i<HORAS.length;i++){  
   
