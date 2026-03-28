@@ -323,8 +323,14 @@ window.addEventListener("pageshow", function(){
 
 /* FECHA MINIMA */
 window.addEventListener("load", function(){
-  var hoy = new Date().toISOString().split("T")[0];
-  document.getElementById("data").min = hoy;
+  var agora = new Date();
+
+var hoy =
+agora.getFullYear() + "-" +
+String(agora.getMonth() + 1).padStart(2,'0') + "-" +
+String(agora.getDate()).padStart(2,'0');
+
+document.getElementById("data").min = hoy;
 });
 
 /* HORAS */
