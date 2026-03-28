@@ -422,11 +422,17 @@ select.add(loadingOption);
     console.log("Erro API", e);  
   } 
   
-  var ahora = new Date();  
-  var hoy = ahora.toISOString().split("T")[0];  
-  var horaActual =  
-String(ahora.getHours()).padStart(2,'0') +  
-":" +  
+  var ahora = new Date();
+
+// obtener fecha local correctamente (sin UTC)
+var hoy =
+ahora.getFullYear() + "-" +
+String(ahora.getMonth() + 1).padStart(2,'0') + "-" +
+String(ahora.getDate()).padStart(2,'0');
+
+// hora actual
+var horaActual =
+String(ahora.getHours()).padStart(2,'0') + ":" +
 String(ahora.getMinutes()).padStart(2,'0');  
   
   // Quitar mensaje de carregando antes de insertar horas
