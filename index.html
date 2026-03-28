@@ -334,14 +334,29 @@ document.getElementById("data").min = hoy;
 });
 
 /* HORAS */
-var HORAS = [
+
+var HORAS_SEMANA = [
 "08:30","09:00","09:30",
 "10:00","10:30","11:00",
+
 "13:00","13:30","14:00",
 "14:30","15:00","15:30",
 "16:00","16:30","17:00",
 "17:30","18:00","18:30",
 "19:00","19:30","20:00"
+];
+
+var HORAS_SABADO = [
+"08:00","08:30",
+"09:00","09:30",
+"10:00","10:30",
+"11:00","11:30",
+
+"13:00","13:30",
+"14:00","14:30",
+"15:00","15:30",
+"16:00","16:30",
+"17:00","17:30"
 ];
 
 /* SELECCIONAR BARBERO */
@@ -367,6 +382,34 @@ window.carregandoHoras = true;
   var data = document.getElementById("data").value;    
   var barbeiro = document.getElementById("barbeiro").value.trim();    
   var select = document.getElementById("hora");    
+  var dataSelecionada = new Date(data);
+var diaSemana = dataSelecionada.getDay();
+
+var HORAS;
+
+// Domingo cerrado
+if(diaSemana === 0){
+
+  select.innerHTML = "";
+
+  var opt = document.createElement("option");
+  opt.value = "";
+  opt.text = "Fechado aos domingos";
+  opt.disabled = true;
+  opt.selected = true;
+
+  select.add(opt);
+
+  window.carregandoHoras = false;
+  return;
+}
+
+// Sábado usa horario de sábado
+if(diaSemana === 6){
+  HORAS = HORAS_SABADO;
+}else{
+  HORAS = HORAS_SEMANA;
+}
     
   // Mostrar mensaje mientras carga
 select.innerHTML = "";
