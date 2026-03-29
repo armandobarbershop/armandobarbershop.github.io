@@ -364,7 +364,9 @@ window.selecionarBarbeiro = function(nome, el){
   document.getElementById("barbeiro").value = nome.trim();
 
   var cards = document.querySelectorAll(".card");
+  
   for(var i=0;i<cards.length;i++){
+   
     cards[i].classList.remove("active");
   }
 
@@ -450,30 +452,48 @@ var diaSemana = dataSelecionada.getDay();
 
     var datos = await res.json();
 
-    for(var i=0;i<datos.length;i++){
+    for(var i = 0; i < datos.length; i++){
 
-      var d = String(datos[i].data).trim();
-      var h = String(datos[i].hora).trim();
-      var b = String(datos[i].barbero).trim();
+  if(!datos[i]) continue;
 
-      if(
-        (d === data || d === "TODOS") &&
-        b === barbeiro
-      ){
+  var d = String(datos[i].data || "")
+            .trim()
+            .toUpperCase();
 
-        var status = "";
+  var h = String(datos[i].hora || "")
+            .trim();
 
-        if(datos[i].status){
-          status = String(datos[i].status).trim().toLowerCase();
-        }
+  var b = String(datos[i].barbero || "")
+            .trim();
 
-        if(status.includes("cancelado")){
-          continue;
-        }
+  // Ignorar filas vacías
+  if(!d || !h || !b) continue;
 
-        ocupados.push(h);
+  if(
+    (
+      d === data ||
+      d === "TODOS"
+    ) &&
+    b === barbeiro
+  ){
 
-      }
+    var status = "";
+
+    if(datos[i].status){
+      status = String(datos[i].status)
+                 .trim()
+                 .toLowerCase();
+    }
+
+    // Si está cancelado, no bloquear
+    if(status.includes("cancelado")){
+      continue;
+    }
+
+    // BLOQUEAR
+    ocupados.push(h);
+
+  }
 
     }
 
