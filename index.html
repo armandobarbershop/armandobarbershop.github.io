@@ -103,6 +103,7 @@ border-radius:14px;
 background:#111;
 box-shadow:0 0 25px rgba(212,175,55,0.25);
 overflow:hidden;
+animation:slideUp 0.6s ease;
 }
 
 /* LOGO FONDO */
@@ -175,36 +176,42 @@ font-weight:bold;
 
 select,input{
 width:90%;
-padding:12px;
-margin-bottom:10px;
-border-radius:6px;
-border:none;
+padding:14px;
+margin-bottom:12px;
+border-radius:10px;
+border:1px solid #333;
 background:#000;
 color:#FFD700;
-font-size:16px;
+font-size:17px;
+transition:0.3s;
 }
 
-input[type="date"]{
-color:#FFD700;
-background:#000;
+select:focus,
+input:focus{
+outline:none;
+border:1px solid #D4AF37;
+box-shadow:0 0 8px rgba(212,175,55,0.5);
 }
 
 /* BOTONES */
 button{
-background:#D4AF37;
+background:linear-gradient(90deg,#D4AF37,#FFD700);
 color:#000;
 border:none;
-padding:12px;
-font-size:18px;
-border-radius:10px;
+padding:14px;
+font-size:19px;
+font-weight:bold;
+border-radius:12px;
 cursor:pointer;
-margin-top:10px;
+margin-top:12px;
 width:90%;
 transition:0.3s;
+box-shadow:0 4px 12px rgba(212,175,55,0.4);
 }
 
 button:hover{
 transform:scale(1.05);
+box-shadow:0 6px 18px rgba(212,175,55,0.6);
 }
 
 /* MENSAJE */
@@ -213,6 +220,11 @@ display:none;
 margin-top:15px;
 color:#00ff7f;
 font-weight:bold;
+font-size:18px;
+background:#002b14;
+padding:12px;
+border-radius:10px;
+border:1px solid #00ff7f;
 }
 
 </style>
@@ -230,7 +242,11 @@ font-weight:bold;
 
 <div class="titulo">ARMANDO BARBER SHOP</div>
 
-<p>Segunda a Sábado<br>8:30–11:30 | 13:00–20:00</p>
+<p style="font-size:18px; color:#FFD700; font-weight:bold;">
+🕒 Atendimento<br>
+Segunda a Sexta: 8:30–11:00 | 13:00–20:00<br>
+Sábado: 8:00–11:30 | 13:00–17:30
+</p>
 
 <div id="form-container">
 
