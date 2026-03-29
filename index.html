@@ -400,10 +400,15 @@ async function carregarHoras(){
   }
 
   // Detectar día de la semana
-  var dataSelecionada = new Date(data);
-  var diaSemana = dataSelecionada.getDay();
+  var partes = data.split("-");
 
-  var HORAS;
+var dataSelecionada = new Date(
+  parseInt(partes[0]),
+  parseInt(partes[1]) - 1,
+  parseInt(partes[2])
+);
+
+var diaSemana = dataSelecionada.getDay();
 
   // Domingo cerrado
   if(diaSemana === 0){
