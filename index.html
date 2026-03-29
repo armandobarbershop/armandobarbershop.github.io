@@ -374,159 +374,144 @@ window.selecionarBarbeiro = function(nome, el){
 };  
   
 /* CARGAR HORAS */  
-async function carregarHoras(){  
-  
-  if(window.carregandoHoras) return;  
-window.carregandoHoras = true;  
-    
-  var data = document.getElementById("data").value;    
-  var barbeiro = document.getElementById("barbeiro").value.trim();    
-  var select = document.getElementById("hora");    
+async function carregarHoras(){
 
-// Domingo cerrado
-if(diaSemana === 0){
+  if(window.carregandoHoras) return;
+  window.carregandoHoras = true;
 
-  select.innerHTML = "";
+  var data = document.getElementById("data").value;
+  var barbeiro = document.getElementById("barbeiro").value.trim();
+  var select = document.getElementById("hora");
 
-  var opt = document.createElement("option");
-  opt.value = "";
-  opt.text = "Fechado aos domingos";
-  opt.disabled = true;
-  opt.selected = true;
-
-  select.add(opt);
-
-  window.carregandoHoras = false;
-  return;
-}
-
-// Sábado usa horario de sábado
-if(diaSemana === 6){
-  HORAS = HORAS_SABADO;
-}else{
-  HORAS = HORAS_SEMANA;
-}
-    
   // Mostrar mensaje mientras carga
-select.innerHTML = "";
-
-var loadingOption = document.createElement("option");
-loadingOption.value = "";
-loadingOption.text = "Carregando horas...";
-loadingOption.disabled = true;
-loadingOption.selected = true;
-
-select.add(loadingOption);
-    
-    if(!data || !barbeiro){  
-  window.carregandoHoras = false;  
-  return;  
-} 
-
-// Domingo cerrado
-if(diaSemana === 0){
-
   select.innerHTML = "";
 
-  var opt = document.createElement("option");
-  opt.value = "";
-  opt.text = "Fechado aos domingos";
-  opt.disabled = true;
-  opt.selected = true;
+  var loadingOption = document.createElement("option");
+  loadingOption.value = "";
+  loadingOption.text = "Carregando horas...";
+  loadingOption.disabled = true;
+  loadingOption.selected = true;
 
-  select.add(opt);
+  select.add(loadingOption);
 
-  window.carregandoHoras = false;
-  return;
-}
+  if(!data || !barbeiro){
+    window.carregandoHoras = false;
+    return;
+  }
 
-// Sábado usa horario de sábado
-if(diaSemana === 6){
-  HORAS = HORAS_SABADO;
-}else{
-  HORAS = HORAS_SEMANA;
-}
-  var ocupados = []; 
-    
-  try{    
-    var res = await fetch(  
-  API_URL +  
-  "?reservas=1" +  
-  "&data=" + data +  
-  "&barbero=" + encodeURIComponent(barbeiro)  
-);  
-    var datos = await res.json();    
-    
-    for(var i=0;i<datos.length;i++){    
-      var d = String(datos[i].data).trim();    
-      var h = String(datos[i].hora).trim();    
-      var b = String(datos[i].barbero).trim();    
-    
-  if(  
-  (  
-    d === data ||  
-    d === "TODOS"  
-  ) &&  
-  b === barbeiro  
-){  
-    
-  var status = "";    
-    
-  if(datos[i].status){    
-    status = String(datos[i].status).trim().toLowerCase();    
-  }    
-    
-  // si está cancelado, no bloquear    
-  if(status.includes("cancelado")){    
-    continue;    
-  }    
-    
-  // bloquear si está confirmado o bloqueado    
-  ocupados.push(h);    
-    
-      }    
-    }    
-  }catch(e){    
-    console.log("Erro API", e);  
-  } 
-  
+  // Detectar día de la semana
+  var dataSelecionada = new Date(data);
+  var diaSemana = dataSelecionada.getDay();
+
+  var HORAS;
+
+  // Domingo cerrado
+  if(diaSemana === 0){
+
+    select.innerHTML = "";
+
+    var opt = document.createElement("option");
+    opt.value = "";
+    opt.text = "Fechado aos domingos";
+    opt.disabled = true;
+    opt.selected = true;
+
+    select.add(opt);
+
+    window.carregandoHoras = false;
+    return;
+
+  }
+
+  // Sábado
+  if(diaSemana === 6){
+    HORAS = HORAS_SABADO;
+  }else{
+    HORAS = HORAS_SEMANA;
+  }
+
+  var ocupados = [];
+
+  try{
+
+    var res = await fetch(
+      API_URL +
+      "?reservas=1" +
+      "&data=" + data +
+      "&barbero=" + encodeURIComponent(barbeiro)
+    );
+
+    var datos = await res.json();
+
+    for(var i=0;i<datos.length;i++){
+
+      var d = String(datos[i].data).trim();
+      var h = String(datos[i].hora).trim();
+      var b = String(datos[i].barbero).trim();
+
+      if(
+        (d === data || d === "TODOS") &&
+        b === barbeiro
+      ){
+
+        var status = "";
+
+        if(datos[i].status){
+          status = String(datos[i].status).trim().toLowerCase();
+        }
+
+        if(status.includes("cancelado")){
+          continue;
+        }
+
+        ocupados.push(h);
+
+      }
+
+    }
+
+  }catch(e){
+    console.log("Erro API", e);
+  }
+
   var ahora = new Date();
 
-// obtener fecha local correctamente (sin UTC)
-var hoy =
-ahora.getFullYear() + "-" +
-String(ahora.getMonth() + 1).padStart(2,'0') + "-" +
-String(ahora.getDate()).padStart(2,'0');
+  var hoy =
+    ahora.getFullYear() + "-" +
+    String(ahora.getMonth() + 1).padStart(2,'0') + "-" +
+    String(ahora.getDate()).padStart(2,'0');
 
-// hora actual
-var horaActual =
-String(ahora.getHours()).padStart(2,'0') + ":" +
-String(ahora.getMinutes()).padStart(2,'0');  
-  
-  // Quitar mensaje de carregando antes de insertar horas
-select.innerHTML = "";
-  
+  var horaActual =
+    String(ahora.getHours()).padStart(2,'0') + ":" +
+    String(ahora.getMinutes()).padStart(2,'0');
+
+  select.innerHTML = "";
+
   for(var i=0;i<HORAS.length;i++){
-  
-    var h = HORAS[i];  
-    var opt = document.createElement("option");  
-  
-    opt.value = h;  
-    opt.text = h;  
-  
-    if(ocupados.indexOf(h) !== -1){  
-      opt.disabled = true;  
-      opt.text = h + " (ocupado)";  
-    }  
-  
-    if(data === hoy && h <= horaActual){  
-      opt.disabled = true;  
-      opt.text = h + " (passou)";  
-    }  
-  
-    select.add(opt);  
+
+    var h = HORAS[i];
+
+    var opt = document.createElement("option");
+
+    opt.value = h;
+    opt.text = h;
+
+    if(ocupados.indexOf(h) !== -1){
+      opt.disabled = true;
+      opt.text = h + " (ocupado)";
+    }
+
+    if(data === hoy && h <= horaActual){
+      opt.disabled = true;
+      opt.text = h + " (passou)";
+    }
+
+    select.add(opt);
+
   }
+
   window.carregandoHoras = false;
+
 }
 
 /* EVENTO FECHA */
