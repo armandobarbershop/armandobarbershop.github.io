@@ -421,11 +421,7 @@ select.add(loadingOption);
     if(!data || !barbeiro){  
   window.carregandoHoras = false;  
   return;  
-}  
-  var dataSelecionada = new Date(data);
-var diaSemana = dataSelecionada.getDay();
-
-var HORAS;
+} 
 
 // Domingo cerrado
 if(diaSemana === 0){
@@ -509,7 +505,32 @@ String(ahora.getMinutes()).padStart(2,'0');
   
   // Quitar mensaje de carregando antes de insertar horas
 select.innerHTML = "";
-  
+  var dataSelecionada = new Date(data);
+var diaSemana = dataSelecionada.getDay();
+
+// Domingo cerrado
+if(diaSemana === 0){
+
+  select.innerHTML = "";
+
+  var opt = document.createElement("option");
+  opt.value = "";
+  opt.text = "Fechado aos domingos";
+  opt.disabled = true;
+  opt.selected = true;
+
+  select.add(opt);
+
+  window.carregandoHoras = false;
+  return;
+}
+
+// Definir horario correcto
+if(diaSemana === 6){
+  HORAS = HORAS_SABADO;
+}else{
+  HORAS = HORAS_SEMANA;
+}
   for(var i=0;i<HORAS.length;i++){
   
     var h = HORAS[i];  
