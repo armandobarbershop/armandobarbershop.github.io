@@ -580,35 +580,7 @@ var diaSemana = dataSelecionada.getDay();
       opt.disabled = true;
       opt.text = h + " (ocupado)";
     }
-select.add(opt);
-
-}
-
-// SI NO HAY HORARIOS DISPONIBLES
-var disponibles = 0;
-
-for(var i = 0; i < select.options.length; i++){
-  if(!select.options[i].disabled){
-    disponibles++;
-  }
-}
-
-if(disponibles === 0){
-
-  select.innerHTML = "";
-
-  var opt = document.createElement("option");
-  opt.value = "";
-  opt.text = "Sem horários disponíveis";
-  opt.disabled = true;
-  opt.selected = true;
-
-  select.add(opt);
-
-}
-
-window.carregandoHoras = false;
-  
+    
     if(data === hoy && h <= horaActual){
       opt.disabled = true;
       opt.text = h + " (passou)";
