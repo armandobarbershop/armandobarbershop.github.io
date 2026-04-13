@@ -327,7 +327,7 @@ Sábado: 8:00–11:30 | 13:00–17:30
 <label>📱 WhatsApp</label>
 <input type="tel" inputmode="numeric" id="telefone" placeholder="Ex: 4734354016" required>
 
-<button type="button" onclick="agendar()">Agendar ✅</button>
+<button type="button" id="btnAgendar" onclick="agendar()">Agendar ✅</button>
 <button type="button" onclick="abrirMaps()">📍 Ver localização</button>
 
 </form>
@@ -623,6 +623,16 @@ document.addEventListener("DOMContentLoaded", function(){
 
 /* AGENDAR */
 window.agendar = function(){
+  
+  var btn = document.getElementById("btnAgendar");
+
+// evitar doble clic
+if(btn.disabled){
+  return;
+}
+
+btn.disabled = true;
+btn.innerText = "Agendando...";
 
   var data = document.getElementById("data").value;
   var hora = document.getElementById("hora").value;
@@ -683,10 +693,16 @@ document.getElementById("hora").value = "";
   setTimeout(() => {
     carregarHoras();
   }, 1500);
-
+  
+btn.disabled = false;
+btn.innerText = "Agendar ✅";
+  
 })
 .catch(() => {
   alert("Erro ao salvar reserva");
+
+  btn.disabled = false;
+  btn.innerText = "Agendar ✅";
 });
 
 };
