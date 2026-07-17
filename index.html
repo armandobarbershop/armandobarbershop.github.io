@@ -333,7 +333,27 @@ Sábado: 8:00–11:30 | 13:00–17:00
   
 <button type="button" id="btnAgendar" onclick="agendar()">Agendar ✅</button>
 <button type="button" onclick="abrirMaps()">📍 Ver localização</button>
+<button id="btnInstalar" style="display:none; width:100%; margin-top:12px; padding:15px; background:#D4AF37; color:#000; border:none; border-radius:12px; font-weight:bold; font-size:16px;">📲 Baixar APP - Armando Barber</button>
 
+<script>
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('btnInstalar').style.display = 'block';
+});
+
+document.getElementById('btnInstalar').addEventListener('click', async () => {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    if (outcome === 'accepted') {
+      document.getElementById('btnInstalar').style.display = 'none';
+    }
+    deferredPrompt = null;
+  }
+});
+</script>
 </form>
 
 <div id="confirmacao" style="display:none;">
