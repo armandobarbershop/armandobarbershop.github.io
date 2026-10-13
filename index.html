@@ -3,772 +3,300 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Armando Barber Shop</title>
-  
-  <link rel="manifest" href="manifest.json">
-<link rel="apple-touch-icon" href="logo.jpg">
+<title>Armando Barber Shop - Joinville</title>
+<link rel="apple-touch-icon" href="https://i.imgur.com/hLIKU5R.jpeg">
 <meta name="theme-color" content="#D4AF37">
-  
 <style>
-
-/* RESET (IMPORTANTE PARA QUITAR FONDO BLANCO) */
-body,html{
-margin:0;
-padding:0;
-background:#000;
-}
-
-/* PANTALLA DE CARGA */
-#loader{
-position:fixed;
-top:0;
-left:0;
-width:100vw;
-height:100vh;
-background:#000;
-display:flex;
-flex-direction:column;
-justify-content:center;
-align-items:center;
-z-index:99999;
-}
-
-#loader img{
-width:280px;
-animation:giro 4s linear infinite;
-}
-
-@keyframes giro{
-0%{transform:rotate(0deg)}
-100%{transform:rotate(360deg)}
-}
-
-.loader-bar{
-width:200px;
-height:6px;
-background:#333;
-margin-top:20px;
-border-radius:10px;
-overflow:hidden;
-}
-
-.loader-bar span{
-display:block;
-height:100%;
-width:0%;
-background:#D4AF37;
-animation:loading 2s forwards;
-}
-
-@keyframes loading{
-0%{width:0}
-100%{width:100%}
-}
-
-/* BODY */
-body{
-font-family:Arial, sans-serif;
-color:#ddd;
-text-align:center;
-padding:20px;
-animation:fadeIn 1s ease;
-}
-
-@keyframes fadeIn{
-from{opacity:0}
-to{opacity:1}
-}
-
-/* TITULO */
-.titulo{
-font-size:36px;
-font-weight:bold;
-letter-spacing:4px;
-margin-bottom:10px;
-background:linear-gradient(90deg,#D4AF37,#fff,#D4AF37);
-background-size:200%;
--webkit-background-clip:text;
--webkit-text-fill-color:transparent;
-animation:shine 4s linear infinite;
-}
-
-@keyframes shine{
-0%{background-position:-200%}
-100%{background-position:200%}
-}
-
-/* FORMULARIO */
-#form-container{
-position:relative;
-max-width:420px;
-margin:auto;
-padding:25px;
-border-radius:14px;
-background:#111;
-box-shadow:0 0 25px rgba(212,175,55,0.25);
-overflow:hidden;
-animation:slideUp 0.6s ease;
-}
-
-/* LOGO FONDO */
-#form-container::before{
-content:"";
-position:absolute;
-top:40%;
-left:50%;
-transform:translate(-50%,-50%);
-width:130%;
-height:130%;
-background-image:url("https://i.imgur.com/hLIKU5R.jpeg");
-background-size:contain;
-background-repeat:no-repeat;
-background-position:center;
-opacity:0.10;
-z-index:0;
-}
-
-#form-container form,
-#confirmacao{
-position:relative;
-z-index:1;
-}
-
-/* BARBEROS */
-.barbeiros{
-display:flex;
-justify-content:center;
-gap:20px;
-margin:10px 0 20px 0;
-}
-
-.card{
-background:#000;
-border-radius:14px;
-padding:12px;
-width:115px;
-cursor:pointer;
-transition:0.3s;
-border:2px solid transparent;
-box-shadow:0 4px 12px rgba(0,0,0,0.5);
-}
-
-.card img{
-width:80px;
-height:80px;
-border-radius:50%;
-object-fit:cover;
-}
-
-.card span{
-display:block;
-margin-top:6px;
-}
-
-.card:hover{
-transform:translateY(-4px) scale(1.05);
-}
-
-.card.active{
-border:2px solid #D4AF37;
-box-shadow:0 0 12px rgba(212,175,55,0.6);
-}
-
-/* CAMPOS */
-label{
-display:block;
-margin:10px 0 5px;
-font-weight:bold;
-}
-
-select,input{
-width:90%;
-padding:14px;
-margin-bottom:12px;
-border-radius:10px;
-border:1px solid #333;
-background:#000;
-color:#FFD700;
-font-size:17px;
-transition:0.3s;
-}
-
-select:focus,
-input:focus{
-outline:none;
-border:1px solid #D4AF37;
-box-shadow:0 0 8px rgba(212,175,55,0.5);
-}
-
-/* BOTONES */
-button{
-background:linear-gradient(90deg,#D4AF37,#FFD700);
-color:#000;
-border:none;
-padding:14px;
-font-size:19px;
-font-weight:bold;
-border-radius:12px;
-cursor:pointer;
-margin-top:12px;
-width:90%;
-transition:0.3s;
-box-shadow:0 4px 12px rgba(212,175,55,0.4);
-}
-
-button:hover{
-transform:scale(1.05);
-box-shadow:0 6px 18px rgba(212,175,55,0.6);
-}
-
-/* MENSAJE */
-#confirmacao{
-display:none;
-margin-top:15px;
-color:#00ff7f;
-font-weight:bold;
-font-size:18px;
-background:#002b14;
-padding:12px;
-border-radius:10px;
-border:1px solid #00ff7f;
-}
-@keyframes slideUp{
-from{
-opacity:0;
-transform:translateY(20px);
-}
-to{
-opacity:1;
-transform:translateY(0);
-}
-}
-/* SPINNER CARGANDO HORAS */
-
-.loading-horas{
-display:flex;
-align-items:center;
-justify-content:center;
-color:#FFD700;
-font-weight:bold;
-}
-
-.loading-horas::after{
-content:"";
-width:16px;
-height:16px;
-margin-left:8px;
-border:3px solid #FFD700;
-border-top:3px solid transparent;
-border-radius:50%;
-animation:girarHoras 0.8s linear infinite;
-}
-
-@keyframes girarHoras{
-from{ transform:rotate(0deg); }
-to{ transform:rotate(360deg); }
-}
+body,html{margin:0;padding:0;background:#000;color:#ddd;font-family:Arial,sans-serif;text-align:center;}
+#loader{position:fixed;top:0;left:0;width:100vw;height:100vh;background:#000;display:flex;flex-direction:column;justify-content:center;align-items:center;z-index:99999;}
+#loader img{width:260px;animation:giro 4s linear infinite;}
+@keyframes giro{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+.loader-bar{width:200px;height:6px;background:#222;margin-top:20px;border-radius:10px;overflow:hidden;}
+.loader-bar span{display:block;height:100%;width:0%;background:#D4AF37;animation:loading 2s forwards;}
+@keyframes loading{0%{width:0}100%{width:100%}}
+.titulo-principal{font-size:34px;font-weight:900;letter-spacing:3px;margin:20px 0 2px;background:linear-gradient(90deg,#D4AF37,#fff,#D4AF37);background-size:200%;-webkit-background-clip:text;-webkit-text-fill-color:transparent;animation:shine 4s linear infinite;line-height:1.1;}
+.titulo-sub{font-size:13px;letter-spacing:6px;color:#D4AF37;margin-bottom:15px;opacity:0.9;}
+@keyframes shine{0%{background-position:-200%}100%{background-position:200%}}
+#form-container{position:relative;max-width:430px;margin:10px auto;padding:22px;border-radius:16px;background:#101010;box-shadow:0 0 30px rgba(212,175,55,0.25);overflow:hidden;}
+#form-container::before{content:"";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:130%;height:130%;background-image:url("https://i.imgur.com/hLIKU5R.jpeg");background-size:contain;background-repeat:no-repeat;background-position:center;opacity:0.07;z-index:0;}
+#form-container>*{position:relative;z-index:1;}
+label{display:block;margin:18px 0 8px;font-weight:bold;color:#FFD700;font-size:15px;text-align:left;margin-left:5%;}
+.barbeiros{display:flex;justify-content:center;gap:14px;margin:10px 0;}
+.card-barbeiro{background:#000;border-radius:14px;padding:10px;width:120px;cursor:pointer;transition:0.3s;border:2px solid #222;box-shadow:0 4px 12px rgba(0,0,0,0.6);}
+.card-barbeiro img{width:78px;height:78px;border-radius:50%;object-fit:cover;}
+.card-barbeiro span{display:block;margin-top:6px;font-weight:bold;color:#fff;}
+.card-barbeiro small{color:#D4AF37;font-size:11px;}
+.card-barbeiro.active{border:2px solid #D4AF37;box-shadow:0 0 15px rgba(212,175,55,0.7);transform:translateY(-3px);}
+.servicos{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:10px auto;width:90%;}
+.card-servico{background:#000;border:2px solid #222;border-radius:12px;padding:12px;cursor:pointer;transition:0.25s;text-align:left;}
+.card-servico b{display:block;color:#fff;font-size:14px;}
+.card-servico span{color:#D4AF37;font-weight:bold;font-size:13px;}
+.card-servico.active{border:2px solid #D4AF37;background:linear-gradient(145deg,#111,#1a1500);box-shadow:0 0 12px rgba(212,175,55,0.5);}
+.card-servico.dupla{grid-column:span 2;background:linear-gradient(90deg,#201a00,#000);border:2px solid #D4AF37;position:relative;}
+.card-servico.dupla::after{content:"R$5 OFF";position:absolute;top:6px;right:8px;background:#D4AF37;color:#000;font-size:10px;font-weight:900;padding:2px 6px;border-radius:6px;}
+.horas-grid{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;width:90%;margin:10px auto;}
+.hora-btn{background:#000;border:1px solid #333;color:#FFD700;padding:10px 12px;border-radius:10px;cursor:pointer;min-width:72px;transition:0.2s;font-weight:bold;}
+.hora-btn:hover{border-color:#D4AF37;}
+.hora-btn.ocupado{background:#1a1a1a;color:#555;border-color:#222;cursor:not-allowed;text-decoration:line-through;}
+.hora-btn.passou{background:#1a1a1a;color:#444;border-color:#222;cursor:not-allowed;}
+.hora-btn.selected{background:linear-gradient(90deg,#D4AF37,#FFD700);color:#000;border-color:#FFD700;box-shadow:0 0 10px rgba(212,175,55,0.6);}
+input, select.input-date{width:90%;padding:14px;margin-bottom:12px;border-radius:12px;border:1px solid #333;background:#000;color:#FFD700;font-size:16px;transition:0.3s;box-sizing:border-box;}
+input:focus{outline:none;border:1px solid #D4AF37;box-shadow:0 0 8px rgba(212,175,55,0.5);}
+.btn-principal{background:linear-gradient(90deg,#D4AF37,#FFD700);color:#000;border:none;padding:15px;font-size:18px;font-weight:900;border-radius:12px;cursor:pointer;margin-top:14px;width:90%;transition:0.3s;box-shadow:0 4px 14px rgba(212,175,55,0.5);}
+.btn-principal:hover{transform:scale(1.02);}
+.btn-sec{background:transparent;border:1px solid #D4AF37;color:#D4AF37;width:90%;padding:12px;border-radius:12px;margin-top:10px;cursor:pointer;font-weight:bold;}
+#confirmacao{display:none;margin-top:16px;color:#00ff7f;font-weight:bold;font-size:16px;background:#002b14;padding:12px;border-radius:10px;border:1px solid #00ff7f;}
+.info-horario{color:#aaa;font-size:12px;margin-top:4px;}
 </style>
 </head>
-
 <body>
+<div id="loader"><img src="https://i.imgur.com/hLIKU5R.jpeg"><div class="loader-bar"><span></span></div></div>
 
-<!-- LOADER BONITO -->
-<div id="loader">
-  <img src="https://i.imgur.com/hLIKU5R.jpeg">
-  <div class="loader-bar">
-    <span></span>
-  </div>
-</div>
+<div class="titulo-principal">ARMANDO BARBER</div>
+<div class="titulo-sub">JOINVILLE - RESERVA</div>
 
-<div class="titulo">ARMANDO BARBER SHOP</div>
-
-<p style="font-size:18px; color:#FFD700; font-weight:bold;">
-🕒 Atendimento<br>
-Segunda a Sexta: 8:30–11:00 | 13:00–19:00<br>
-Sábado: 8:00–11:30 | 13:00–17:00
+<p style="font-size:13px;color:#FFD700;font-weight:bold;line-height:1.5;">
+📍 <span onclick="abrirMaps()" style="text-decoration:underline;cursor:pointer;">Rua Tuiuti, 3442 - Aventureiro, Joinville</span><br>
+🕒 Seg a Sex: 8:30–11:00 | 13:00–19:00<br>
+Sáb: 8:00–11:30 | 13:00–17:00
 </p>
 
 <div id="form-container">
-
-<form>
-
 <label>💈 Escolha o Barbeiro</label>
-
 <div class="barbeiros">
-
-<div class="card active" onclick="selecionarBarbeiro('David',this)">
-<img src="https://i.imgur.com/QYKPKZ2.jpg">
-<span>David</span>
+<div class="card-barbeiro" id="card-David" onclick="selecionarBarbeiro('David')"><img src="https://i.imgur.com/QYKPKZ2.jpg"><span>David</span><small>8:30 às 19:00</small></div>
+<div class="card-barbeiro" id="card-Armando" onclick="selecionarBarbeiro('Armando')"><img src="https://i.imgur.com/JVUmj2q.jpg"><span>Armando</span><small>8:30 às 19:00</small></div>
 </div>
+<input type="hidden" id="barbeiro" value="">
 
-<div class="card" onclick="selecionarBarbeiro('Armando',this)">
-<img src="https://i.imgur.com/JVUmj2q.jpg">
-<span>Armando</span>
+<label>✂️ Serviço</label>
+<div class="servicos">
+<div class="card-servico" id="serv-Corte" onclick="selecionarServico('Corte','40')"><b>Corte</b><span>R$40</span></div>
+<div class="card-servico" id="serv-Barba" onclick="selecionarServico('Barba','30')"><b>Barba</b><span>R$30</span></div>
+<div class="card-servico" id="serv-Sobrancelha" onclick="selecionarServico('Sobrancelha','10')"><b>Sobrancelha</b><span>R$10</span></div>
+<div class="card-servico" id="serv-Corte e Barba" onclick="selecionarServico('Corte e Barba','70')"><b>Corte e Barba</b><span>R$70</span></div>
+<div class="card-servico dupla" id="serv-Dupla" onclick="selecionarServico('Dupla','70')"><b>Dupla (2 pessoas)</b><span>R$70</span></div>
 </div>
-
-</div>
-
-<input type="hidden" id="barbeiro" value="David">
-
-<label>Serviço</label>
-
-<select id="servico">
-<option value="Corte">Corte - R$40</option>
-<option value="Barba">Barba - R$30</option>
-<option value="Sobrancelha">Sobrancelha - R$10</option>
-<option value="Corte e Barba">Corte e Barba - R$70</option>
-</select>
+<input type="hidden" id="servico" value="">
+<input type="hidden" id="servicoValor" value="">
 
 <label>📅 Data</label>
-<input type="date" id="data" required>
+<input type="date" id="data" class="input-date" required>
 
-<label>👤 Nome</label>
-<input type="text" id="nome" placeholder="Seu nome" required>
+<label>⏰ Horários - pode escolher até 4</label>
+<div id="horasContainer" class="horas-grid"><span style="color:#777;font-size:13px;">Escolha barbeiro e data primeiro</span></div>
+<div class="info-horario" id="horasSelecionadasTxt"></div>
+<input type="hidden" id="hora" value="">
 
-<label>📱 WhatsApp</label>
-<input type="tel" inputmode="numeric" id="telefone" placeholder="Ex: 4734354016" required>
+<label>👤 Seu nome</label>
+<input type="text" id="nome" placeholder="Ex: João Silva" required>
 
-<label>⏰ Hora</label>
-<select id="hora"></select>
-  
-<button type="button" id="btnAgendar" onclick="agendar()">Agendar ✅</button>
-<button type="button" onclick="abrirMaps()">📍 Ver localização</button>
-<button id="btnInstalar" style="display:none; width:100%; margin-top:12px; padding:15px; background:#D4AF37; color:#000; border:none; border-radius:12px; font-weight:bold; font-size:16px;">📲 Baixar APP - Armando Barber</button>
+<label>📱 WhatsApp - com 1 número já agenda</label>
+<input type="tel" inputmode="numeric" id="telefone" placeholder="Ex: 47999999999" required>
 
-<script>
-let deferredPrompt;
-window.addEventListener('beforeinstallprompt', (e) => {
-  e.preventDefault();
-  deferredPrompt = e;
-  document.getElementById('btnInstalar').style.display = 'block';
-});
+<button type="button" id="btnAgendar" class="btn-principal" onclick="agendar()">Agendar no WhatsApp ✅</button>
+<button type="button" class="btn-sec" onclick="abrirMaps()">📍 Ver localização no Maps</button>
 
-document.getElementById('btnInstalar').addEventListener('click', async () => {
-  if (deferredPrompt) {
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-    if (outcome === 'accepted') {
-      document.getElementById('btnInstalar').style.display = 'none';
-    }
-    deferredPrompt = null;
-  }
-});
-</script>
-</form>
-
-<div id="confirmacao" style="display:none;">
-Reserva enviada com sucesso! Obrigado por nos preferir.
-</div>
-
+<div id="confirmacao"></div>
 </div>
 
 <script>
-
 (function(){
-
 "use strict";
-
-/* CONFIG */
 const API_URL = "https://script.google.com/macros/s/AKfycbztv0Kjze9NPhvUBXgkD0ROj_kvRZOrOq2a9hNkn4tzVIPQ0LB3oT3wFSycJTRRGucn/exec";
 
-/* LOADER */
-window.addEventListener("load", function(){
-  setTimeout(function(){
-    var loader = document.getElementById("loader");
-    if(loader){
-      loader.style.display = "none";
-    }
-  }, 1200);
-});
-  // LIMPIAR CAMPOS CUANDO EL USUARIO REGRESA DESDE WHATSAPP
-window.addEventListener("pageshow", function(){
-
-  // limpiar nombre
-  document.getElementById("nome").value = "";
-
-  // limpiar teléfono
-  document.getElementById("telefone").value = "";
-
-  // limpiar servicio (volver al primero)
-  document.getElementById("servico").selectedIndex = 0;
-
-  // limpiar hora
-  document.getElementById("hora").selectedIndex = 0;
-
+window.addEventListener("load", function(){setTimeout(()=>{let l=document.getElementById("loader");if(l)l.style.display="none";},1000);});
+window.addEventListener("pageshow", ()=>{limparTudo();});
+window.addEventListener("load", ()=>{
+  let agora=new Date();
+  let hoy=agora.getFullYear()+"-"+String(agora.getMonth()+1).padStart(2,'0')+"-"+String(agora.getDate()).padStart(2,'0');
+  document.getElementById("data").min=hoy;
+  limparTudo();
 });
 
-/* FECHA MINIMA */
-window.addEventListener("load", function(){
-  var agora = new Date();
+function limparTudo(){
+  document.getElementById("barbeiro").value="";
+  document.getElementById("servico").value="";
+  document.getElementById("servicoValor").value="";
+  document.getElementById("data").value="";
+  document.getElementById("hora").value="";
+  document.getElementById("nome").value="";
+  document.getElementById("telefone").value="";
+  document.querySelectorAll(".card-barbeiro").forEach(c=>c.classList.remove("active"));
+  document.querySelectorAll(".card-servico").forEach(c=>c.classList.remove("active"));
+  document.getElementById("horasContainer").innerHTML='<span style="color:#777;font-size:13px;">Escolha barbeiro e data primeiro</span>';
+  document.getElementById("horasSelecionadasTxt").innerText="";
+  let msg=document.getElementById("confirmacao");if(msg)msg.style.display="none";
+  localStorage.removeItem("ultima_reserva");
+}
 
-var hoy =
-agora.getFullYear() + "-" +
-String(agora.getMonth() + 1).padStart(2,'0') + "-" +
-String(agora.getDate()).padStart(2,'0');
+var HORAS_SEMANA=["08:30","09:00","09:30","10:00","10:30","11:00","11:30","13:00","13:30","14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30","18:00","18:30","19:00"];
+var HORAS_LUNES=["08:30","09:00","09:30","10:00","10:30","11:00","11:30","13:00","13:30","14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30"];
+var HORAS_SABADO=["08:00","08:30","09:00","09:30","10:00","10:30","11:00","11:30","13:00","13:30","14:00","14:30","15:00","15:30","16:00","16:30","17:00"];
 
-document.getElementById("data").min = hoy;
-});
+let horasSelecionadas=[];
 
-/* HORAS */
+window.selecionarBarbeiro=function(nome){
+  document.getElementById("barbeiro").value=nome;
+  document.querySelectorAll(".card-barbeiro").forEach(c=>c.classList.remove("active"));
+  document.getElementById("card-"+nome).classList.add("active");
+  horasSelecionadas=[];document.getElementById("hora").value="";atualizarTextoHoras();
+  carregarHoras();
+};
 
-var HORAS_SEMANA = [
-"08:30","09:00","09:30",
-"10:00","10:30","11:00",
+window.selecionarServico=function(nome,valor){
+  document.getElementById("servico").value=nome;
+  document.getElementById("servicoValor").value=valor;
+  document.querySelectorAll(".card-servico").forEach(c=>c.classList.remove("active"));
+  let id="serv-"+nome;let el=document.getElementById(id);if(el)el.classList.add("active");
+};
 
-"13:00","13:30","14:00",
-"14:30","15:00","15:30",
-"16:00","16:30","17:00",
-"17:30","18:00","18:30",
-"19:00"
-];
-var HORAS_LUNES = [
-"08:30","09:00","09:30",
-"10:00","10:30","11:00",
+function atualizarTextoHoras(){
+  let txt=document.getElementById("horasSelecionadasTxt");
+  let input=document.getElementById("hora");
+  if(horasSelecionadas.length===0){txt.innerText="";input.value="";}
+  else{txt.innerText="Selecionados: "+horasSelecionadas.join(", ");input.value=horasSelecionadas.join(",");}
+}
 
-"13:00","13:30","14:00",
-"14:30","15:00","15:30",
-"16:00","16:30","17:00",
-"17:30"
-];
-var HORAS_SABADO = [
-"08:00","08:30",
-"09:00","09:30",
-"10:00","10:30",
-"11:00","11:30",
-
-"13:00","13:30",
-"14:00","14:30",
-"15:00","15:30",
-"16:00","16:30",
-"17:00"
-];
-
-/* SELECCIONAR BARBERO */
-window.selecionarBarbeiro = function(nome, el){
-  document.getElementById("barbeiro").value = nome.trim();
-
-  var cards = document.querySelectorAll(".card");
-  
-  for(var i=0;i<cards.length;i++){
-   
-    cards[i].classList.remove("active");
+window.toggleHora=function(hora){
+  let idx=horasSelecionadas.indexOf(hora);
+  if(idx!==-1){horasSelecionadas.splice(idx,1);}
+  else{
+    if(horasSelecionadas.length>=4){alert("Pode selecionar até 4 horários por vez");return;}
+    horasSelecionadas.push(hora);
   }
+  horasSelecionadas.sort();
+  atualizarTextoHoras();
+  document.querySelectorAll(".hora-btn").forEach(btn=>{
+    if(horasSelecionadas.includes(btn.dataset.hora)){btn.classList.add("selected");}
+    else{btn.classList.remove("selected");}
+  });
+};
 
-  el.classList.add("active");
-
-  carregarHoras(); 
-};  
-  
-/* CARGAR HORAS */  
 async function carregarHoras(){
-
-  if(window.carregandoHoras) return;
-  window.carregandoHoras = true;
-
-  var data = document.getElementById("data").value;
-  var barbeiro = document.getElementById("barbeiro").value.trim();
-  var select = document.getElementById("hora");
-
-  // Mostrar mensaje mientras carga
-  select.innerHTML = "";
-
-  var loadingOption = document.createElement("option");
-  loadingOption.value = "";
-  loadingOption.text = "Carregando horas...";
-  loadingOption.className = "loading-horas";
-  loadingOption.disabled = true;
-  loadingOption.selected = true;
-
-  select.add(loadingOption);
-
-  if(!data || !barbeiro){
-    window.carregandoHoras = false;
-    return;
-  }
-
-  // Detectar día de la semana
-  var partes = data.split("-");
-
-var dataSelecionada = new Date(
-  parseInt(partes[0]),
-  parseInt(partes[1]) - 1,
-  parseInt(partes[2])
-);
-
-var diaSemana = dataSelecionada.getDay();
-
-  var HORAS;
-
-  // Domingo cerrado
-  if(diaSemana === 0){
-
-    select.innerHTML = "";
-
-    var opt = document.createElement("option");
-    opt.value = "";
-    opt.text = "Fechado aos domingos";
-    opt.disabled = true;
-    opt.selected = true;
-
-    select.add(opt);
-
-    window.carregandoHoras = false;
-    return;
-
-  }
-
-  // Lunes (nuevo horario)
-if(diaSemana === 1){
-  HORAS = HORAS_LUNES;
-}
-
-// Sábado
-else if(diaSemana === 6){
-  HORAS = HORAS_SABADO;
-}
-
-// Martes a viernes
-else{
-  HORAS = HORAS_SEMANA;
-}
-
-  var ocupados = [];
-
+  let data=document.getElementById("data").value;
+  let barbeiro=document.getElementById("barbeiro").value.trim();
+  let container=document.getElementById("horasContainer");
+  if(!data||!barbeiro){container.innerHTML='<span style="color:#777;font-size:13px;">Escolha barbeiro e data primeiro</span>';return;}
+  container.innerHTML='<span style="color:#FFD700;font-weight:bold;">Carregando horas...</span>';
+  let partes=data.split("-");
+  let dataSelecionada=new Date(parseInt(partes[0]),parseInt(partes[1])-1,parseInt(partes[2]));
+  let dia=dataSelecionada.getDay();
+  let HORAS;
+  if(dia===0){container.innerHTML='<span style="color:#ff5555;font-weight:bold;">Fechado aos domingos</span>';return;}
+  if(dia===1){HORAS=HORAS_LUNES;}else if(dia===6){HORAS=HORAS_SABADO;}else{HORAS=HORAS_SEMANA;}
+  let ocupados=[];
+  let erro=false;
   try{
-
-    var res = await fetch(
-      API_URL +
-      "?reservas=1" +
-      "&data=" + data +
-      "&barbero=" + encodeURIComponent(barbeiro)
-    );
-
-    var datos = await res.json();
-
-    for(var i = 0; i < datos.length; i++){
-
-  if(!datos[i]) continue;
-
-  var d = String(datos[i].data || "")
-            .trim()
-            .toUpperCase();
-
-  var h = String(datos[i].hora || "")
-            .trim();
-
-  var b = String(datos[i].barbero || "")
-            .trim();
-
-  // Ignorar filas vacías
-  if(!d || !h || !b) continue;
-
-  if(
-    (
-      d === data ||
-      d === "TODOS"
-    ) &&
-    b === barbeiro
-  ){
-
-    var status = "";
-
-    if(datos[i].status){
-      status = String(datos[i].status)
-                 .trim()
-                 .toLowerCase();
+    let res=await fetch(API_URL+"?reservas=1&data="+data+"&barbero="+encodeURIComponent(barbeiro),{cache:"no-store"});
+    if(!res.ok) throw new Error("HTTP");
+    let datos=await res.json();
+    for(let d of datos){
+      if(!d) continue;
+      let fd=String(d.data||"").trim().toUpperCase();
+      let fh=String(d.hora||"").trim();
+      let fb=String(d.barbero||"").trim();
+      if(!fd||!fh||!fb) continue;
+      if((fd===data||fd==="TODOS")&&fb===barbeiro){
+        let st=d.status?String(d.status).toLowerCase():"";
+        if(st.includes("cancelado")) continue;
+        ocupados.push(fh);
+      }
     }
-
-    // Si está cancelado, no bloquear
-    if(status.includes("cancelado")){
-      continue;
+  }catch(e){erro=true;console.log(e);}
+  if(erro){container.innerHTML='<span style="color:#ff5555;">Erro de conexão - verifique sua internet e selecione a data novamente</span>';return;}
+  let agora=new Date();
+  let hoy=agora.getFullYear()+"-"+String(agora.getMonth()+1).padStart(2,'0')+"-"+String(agora.getDate()).padStart(2,'0');
+  let horaActual=String(agora.getHours()).padStart(2,'0')+":"+String(agora.getMinutes()).padStart(2,'0');
+  container.innerHTML="";
+  let disponiveis=0;
+  for(let h of HORAS){
+    let btn=document.createElement("button");
+    btn.type="button";
+    btn.className="hora-btn";
+    btn.dataset.hora=h;
+    btn.textContent=h;
+    if(ocupados.includes(h)){btn.classList.add("ocupado");btn.disabled=true;btn.textContent=h+" (ocupado)";}
+    else if(data===hoy&&h<=horaActual){btn.classList.add("passou");btn.disabled=true;btn.textContent=h+" (passou)";}
+    else{
+      disponiveis++;
+      if(horasSelecionadas.includes(h)) btn.classList.add("selected");
+      btn.onclick=()=>toggleHora(h);
     }
-
-    // BLOQUEAR
-    ocupados.push(h);
-
+    container.appendChild(btn);
   }
-
-    }
-
-  }catch(e){
-    console.log("Erro API", e);
-  }
-
-  var ahora = new Date();
-
-  var hoy =
-    ahora.getFullYear() + "-" +
-    String(ahora.getMonth() + 1).padStart(2,'0') + "-" +
-    String(ahora.getDate()).padStart(2,'0');
-
-  var horaActual =
-    String(ahora.getHours()).padStart(2,'0') + ":" +
-    String(ahora.getMinutes()).padStart(2,'0');
-
-  select.innerHTML = "";
-
-  for(var i=0;i<HORAS.length;i++){
-
-    var h = HORAS[i];
-
-    var opt = document.createElement("option");
-
-    opt.value = h;
-    opt.text = h;
-
-    if(ocupados.indexOf(h) !== -1){
-      opt.disabled = true;
-      opt.text = h + " (ocupado)";
-    }
-    
-    if(data === hoy && h <= horaActual){
-      opt.disabled = true;
-      opt.text = h + " (passou)";
-    }
-
-    select.add(opt);
-
-  }
-// SI NO HAY HORARIOS DISPONIBLES
-var disponibles = 0;
-
-for(var i = 0; i < select.options.length; i++){
-  if(!select.options[i].disabled){
-    disponibles++;
-  }
+  if(disponiveis===0){container.innerHTML='<span style="color:#ffaa00;font-weight:bold;">Sem horários disponíveis — escolha outra data</span>';}
 }
 
-if(disponibles === 0){
-
-  select.innerHTML = "";
-
-  var opt = document.createElement("option");
-  opt.value = "";
-  opt.text = "Sem horários disponíveis — escolha outra data";
-  opt.disabled = true;
-  opt.selected = true;
-
-  select.add(opt);
-
-}
-  window.carregandoHoras = false;
-
-}
-
-/* EVENTO FECHA */
-document.addEventListener("DOMContentLoaded", function(){
-  setTimeout(carregarHoras, 100);
+document.addEventListener("DOMContentLoaded", ()=>{
   document.getElementById("data").addEventListener("change", carregarHoras);
 });
 
-/* AGENDAR */
-window.agendar = function(){
-  
-  var btn = document.getElementById("btnAgendar");
-
-// evitar doble clic
-if(btn.disabled){
-  return;
-}
-
-btn.disabled = true;
-btn.innerText = "Agendando...";
-
-  var data = document.getElementById("data").value;
-  var hora = document.getElementById("hora").value;
-  var nome = document.getElementById("nome").value;
-  var telefono = document.getElementById("telefone").value;
-  var barbeiro = document.getElementById("barbeiro").value.trim();
-  var servico = document.getElementById("servico").value;
-
-  if(!data || !hora || !nome || !telefono){
-    alert("Preencha todos os campos");
-    return;
+window.agendar=async function(){
+  let btn=document.getElementById("btnAgendar");
+  if(btn.disabled) return;
+  let data=document.getElementById("data").value;
+  let horas=horasSelecionadas;
+  let nome=document.getElementById("nome").value.trim();
+  let telefone=document.getElementById("telefone").value.trim();
+  let barbeiro=document.getElementById("barbeiro").value.trim();
+  let servico=document.getElementById("servico").value.trim();
+  if(!barbeiro){alert("Escolha o barbeiro");return;}
+  if(!servico){alert("Escolha o serviço");return;}
+  if(!data){alert("Escolha a data");return;}
+  if(horas.length===0){alert("Escolha pelo menos 1 horário");return;}
+  if(!nome){alert("Digite seu nome");return;}
+  if(!telefone||telefone.length<8){alert("Digite seu WhatsApp - com 1 número já agenda");return;}
+  btn.disabled=true;btn.innerText="Verificando...";
+  try{
+    let resp=await fetch(API_URL,{
+      method:"POST",
+      body:new URLSearchParams({
+        data:data,
+        hora:horas.join(","),
+        cliente:nome,
+        telefone:telefone,
+        servico:servico,
+        barbeiro:barbeiro
+      })
+    });
+    let txt=await resp.text();
+    if(txt.includes("HORARIO_OCUPADO")){
+      let horaOcupada=txt.split(":")[1]||horas[0];
+      alert("⚠️ O horário "+horaOcupada+" acabou de ser reservado por outro cliente. Escolha outro.");
+      btn.disabled=false;btn.innerText="Agendar no WhatsApp ✅";
+      horasSelecionadas=horasSelecionadas.filter(h=>h!==horaOcupada);
+      atualizarTextoHoras();
+      carregarHoras();
+      return;
+    }
+    if(txt.includes("ERRO")){
+      alert("Erro: "+txt);
+      btn.disabled=false;btn.innerText="Agendar no WhatsApp ✅";
+      return;
+    }
+    let textoMsg=
+      "Olá Armando Barber Shop%0A%0A"+
+      "Quero agendar%0A%0A"+
+      "Barbeiro: "+barbeiro+"%0A"+
+      "Serviço: "+servico+"%0A"+
+      "Data: "+data+"%0A"+
+      "Hora: "+horas.join(", ")+"%0A"+
+      "Nome: "+nome+"%0A"+
+      "WhatsApp: "+telefone;
+    window.open("https://wa.me/554734354016?text="+textoMsg);
+    let msg=document.getElementById("confirmacao");
+    if(msg){msg.style.display="block";msg.innerText="✅ Reserva enviada com sucesso! Obrigado por nos preferir.";}
+    btn.disabled=false;btn.innerText="Agendado ✅";
+    setTimeout(()=>{limparTudo();carregarHoras();btn.innerText="Agendar no WhatsApp ✅";},2500);
+  }catch(e){
+    alert("Erro de conexão. Verifique sua internet.");
+    btn.disabled=false;btn.innerText="Agendar no WhatsApp ✅";
   }
-
-  var texto =
-  "Olá Armando Barber Shop%0A%0A" +
-  "Quero agendar um horário%0A%0A" +
-  "Barbeiro: " + barbeiro + "%0A" +
-  "Serviço: " + servico + "%0A" +
-  "Data: " + data + "%0A" +
-  "Hora: " + hora + "%0A" +
-  "Nome: " + nome;
-
-  window.open("https://wa.me/554734354016?text=" + texto);
-
-  fetch(API_URL,{
-  method:"POST",
-  body: new URLSearchParams({
-    data: data,
-    hora: hora,
-    cliente: nome,
-    telefone: telefono,
-    servico: servico,
-    barbeiro: barbeiro
-  })
-})
-.then(response => response.text())
-.then(() => {
-
-  // guardar estado de confirmación
-  localStorage.setItem("ultima_reserva", "ok");
-
-  // mostrar mensaje inmediatamente
-  let msg = document.getElementById("confirmacao");
-
-  if(msg){
-    msg.style.display = "block";
-    msg.innerHTML =
-    "Reserva enviada com sucesso! Obrigado por nos preferir.";
-  }
-  
-  // limpiar campos
-document.getElementById("nome").value = "";
-document.getElementById("telefone").value = "";
-document.getElementById("servico").value = "";
-document.getElementById("hora").value = "";
-
-  // recargar horas después de guardar
-  setTimeout(() => {
-    carregarHoras();
-  }, 1500);
-  
-btn.disabled = false;
-btn.innerText = "Agendar ✅";
-  
-})
-.catch(() => {
-  alert("Erro ao salvar reserva");
-
-  btn.disabled = false;
-  btn.innerText = "Agendar ✅";
-});
-
 };
 
-/* MAPS */
-window.abrirMaps = function(){
-  window.open("https://maps.app.goo.gl/PeCnFTVfxGxvAyP48");
-};
-
+window.abrirMaps=function(){window.open("https://maps.app.goo.gl/PeCnFTVfxGxvAyP48");};
 })();
-
-window.addEventListener("load", function(){
-
-  let msg = document.getElementById("confirmacao");
-
-  // ocultar mensaje siempre al entrar a la página
-  if(msg){
-    msg.style.display = "none";
-  }
-
-  // limpiar cualquier estado anterior
-  localStorage.removeItem("ultima_reserva");
-
-});
-
 </script>
-
 </body>
 </html>
