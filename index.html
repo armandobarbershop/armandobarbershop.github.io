@@ -3,299 +3,188 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>David Barber Studio v4.0 FINAL - David + Armando + TODOS</title>
-<link rel="icon" href="./1781700842770.png">
+<title>Barbería Armando - Multi Barbero Multi Horario FINAL</title>
 <style>
-body, html { margin: 0; padding: 0; background: #000; min-height: 100%; }
-#loader { position: fixed; inset:0; background: #000; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 99999; transition: opacity 0.5s ease; }
-#loader.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
-#loader img { width: 180px; max-width: 80%; }
-.loader-bar { width: 220px; height: 6px; background: #222; margin-top: 25px; border-radius: 10px; overflow: hidden; }
-.loader-bar span { display: block; height: 100%; width: 0%; background: linear-gradient(90deg, #967433, #c5a059, #fdf0cd); animation: loading 2s forwards; }
-@keyframes loading { 0% { width: 0; } 100% { width: 100%; } }
-body { font-family: 'Segoe UI', Arial, sans-serif; color: #ddd; text-align: center; padding: 20px; }
-.db-header { font-size: 54px; font-weight: bold; background: linear-gradient(135deg, #967433 0%, #fdf0cd 30%, #c5a059 70%, #ffffff 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-.titulo { font-size: 22px; font-weight: bold; letter-spacing: 4px; background: linear-gradient(135deg, #c5a059 0%, #fdf0cd 50%, #c5a059 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-.slogan { font-size: 10px; color: #fff; letter-spacing: 4px; text-transform: uppercase; margin-bottom: 14px; }
-.horarios-info { font-size: 12px; color: #c5a059; margin-bottom: 15px; border-bottom: 1px dashed #2c2514; padding-bottom: 15px; }
-#form-container { max-width: 440px; margin: auto; padding: 25px; border-radius: 14px; background: #111; border: 1px solid #c5a059; }
-.barbeiros-grid { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
-.card { background: #000; border-radius: 14px; padding: 12px; width: 115px; cursor: pointer; border: 2px solid transparent; margin: auto; transition: all 0.2s; }
-.card img { width: 80px; height: 80px; border-radius: 50%; border: 2px solid #c5a059; object-fit:cover; }
-.card.active { border: 2px solid #fdf0cd; background: #1a1a1a; box-shadow: 0 0 12px rgba(197,160,89,0.4); }
-label { display: block; margin: 16px 0 8px; font-weight: bold; font-size: 15px; text-align: left; color: #c5a059; }
-select, input { width: 90%; padding: 14px; margin-bottom: 12px; border-radius: 10px; border: 1px solid #333; background: #000; color: #fff; font-size: 16px; }
-button { background: linear-gradient(90deg, #967433, #c5a059); color: #000; border: none; padding: 14px; font-size: 17px; font-weight: bold; border-radius: 12px; cursor: pointer; margin-top: 15px; width: 90%; }
-button:disabled { background: #222; color: #555; }
-#confirmacao { display: none; margin-top: 15px; color: #fdf0cd; font-weight: bold; background: #110f0a; padding: 14px; border-radius: 10px; border: 1px solid #c5a059; }
-.btn-cancelar-interno { background: transparent!important; border: 1px solid rgba(255,68,68,0.3)!important; color: #ff6b6b!important; margin-top: 25px; font-size: 13px!important; }
-.btn-instalar-interno { background: transparent!important; border: 1px solid #c5a059!important; color: #c5a059!important; font-size: 13px!important; margin-top: 12px; }
-#modalCancelar, #modalInstalar, #modalProcess, #modalOcupado, #modalCancelando{ display:none; position:fixed; inset:0; background:rgba(0,0,0,0.92); z-index:999999; align-items:center; justify-content:center; padding:20px; }
-.box-cancel{ background:#121212; border:1.5px solid #c5a059; border-radius:14px; width:100%; max-width:300px; padding:18px; box-sizing:border-box; }
-.modal-overlay { display: none; position: fixed; inset:0; background: rgba(0,0,0,0.85); z-index: 9999; justify-content: center; align-items: center; }
-.modal-box { background: #1a1a1a; border: 2px solid #c5a059; border-radius: 16px; padding: 25px; text-align: center; width: 320px; }
-.spinner { width:40px; height:40px; border:4px solid #222; border-top:4px solid #c5a059; border-radius:50%; animation: spin 1s linear infinite; margin:0 auto 15px; }
-@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+*{box-sizing:border-box;font-family:Manrope,system-ui,Arial}
+body{background:#0d0d0d;color:#f2f2f0;margin:0;padding:12px}
+.header{text-align:center;padding:18px 0}
+.header h1{margin:0;font-size:22px;color:#fff}
+.header p{margin:4px 0;color:#9a9a96;font-size:12px}
+.card-barbero{display:flex;gap:10px;justify-content:center;margin:14px 0}
+.barbero{width:130px;background:#000;border:2px solid #222;border-radius:14px;padding:10px;cursor:pointer;position:relative;text-align:center}
+.barbero.active{border-color:#FFD700;box-shadow:0 0 12px rgba(255,215,0,.4)}
+.barbero img{width:80px;height:80px;border-radius:50%;border:2px solid #c5a059;object-fit:cover}
+.barbero .check{position:absolute;top:6px;right:6px;background:#FFD700;color:#000;width:20px;height:20px;border-radius:50%;display:none;align-items:center;justify-content:center;font-weight:bold}
+.barbero.active .check{display:flex}
+.oferta{background:#1a1a1a;border:1px solid #333;border-radius:12px;padding:10px;margin:12px 0;text-align:left;font-size:13px}
+label{display:block;margin:12px 0 6px;font-size:13px;color:#c5a059;font-weight:bold;text-align:left}
+select,input{width:100%;padding:14px;border-radius:10px;border:1px solid #333;background:#000;color:#fff;font-size:15px}
+.horarios-box{background:#111;border:1px solid #222;border-radius:14px;padding:12px;margin:14px 0;text-align:left}
+.horarios-box h3{margin:0 0 10px;font-size:14px;color:#FFD700;display:flex;justify-content:space-between}
+.horarios-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.h-btn{padding:12px;border-radius:10px;border:1px solid #333;background:#000;color:#FFD700;text-align:center;cursor:pointer;font-size:14px}
+.h-btn.pasado{background:#151515;border-color:#222;color:#555;cursor:not-allowed}
+.h-btn.reservado{background:#151515;border-color:#222;color:#666;cursor:not-allowed}
+.h-btn.selected{background:#D4AF37;border-color:#D4AF37;color:#000;font-weight:bold;box-shadow:0 0 10px rgba(212,175,55,.5)}
+.total-box{margin-top:12px;background:linear-gradient(135deg,#18140a,#000);border:1px solid #3a2f12;border-radius:12px;padding:12px;display:flex;justify-content:space-between;align-items:center}
+.btn-agendar{width:100%;margin-top:14px;background:linear-gradient(90deg,#D4AF37,#FFD700);color:#000;border:none;padding:14px;border-radius:12px;font-weight:bold;font-size:16px;cursor:pointer}
+.btn-agendar:disabled{opacity:.5;cursor:not-allowed}
+.limpar{color:#FFD700;font-size:12px;cursor:pointer;text-decoration:underline}
 </style>
 </head>
 <body>
-<div id="loader"><img src="./1781700842770.png" onerror="this.style.display='none'"><div class="loader-bar"><span></span></div></div>
-<div class="db-header">DB</div>
-<div class="titulo">DAVID BARBER STUDIO</div>
-<div class="slogan">Estilo, Precisão e Confiança</div>
-<div class="horarios-info">🕒 Seg: 08:30–11:00, 13:00–17:00<br>🕒 Ter a Sex: 08:30–11:00, 13:00–19:00<br>🕒 Sáb: 08:00–11:30, 13:00–17:00<br><span style="font-size:10px; opacity:0.8; color:#fff;">v4.0 FINAL - David + Armando + TODOS • Base que SÍ sirve</span></div>
-<div id="form-container">
-<form id="agendaForm">
-<label>💈 Profissional</label>
-<div id="barbeirosContainer" class="barbeiros-grid"></div>
-<input type="hidden" id="barbeiro" value="David">
-<label>✂️ Serviço Ofertado</label>
-<select id="servico" required><option value="">Selecione</option></select>
-<label>📅 Data do Agendamento</label>
-<input type="date" id="data" required>
-<label>👤 Seu Nome</label>
-<input type="text" id="cliente" required>
-<label>📱 Seu WhatsApp</label>
-<input type="tel" id="telefone" required>
-<label>⏰ Horários Disponíveis</label>
-<select id="hora" required disabled><option value="">Selecione data e serviço primeiro</option></select>
-<div class="loading" id="loading" style="display:none;">Carregando horários...</div>
-<button type="button" id="btnAgendar" onclick="solicitarAgendamento()" disabled>Agendar Horário ✅</button>
-</form>
-<div id="confirmacao"></div>
-<button type="button" class="btn-cancelar-interno" onclick="abrirCancelar()">CANCELAR MEU AGENDAMENTO ❌</button>
+<div class="header">
+<h1>Barbería Armando</h1>
+<p>HORARIO DE ATENCIÓN<br>De lunes a viernes: 8:30-11:00 | 13:00-19:00<br>Sábado: 8:00-11:30 | 13:00-17:00</p>
 </div>
-<div id="modalProcess"><div style="background:#111; border:1.5px solid #c5a059; border-radius:16px; padding:30px 24px; max-width:300px; width:100%; text-align:center;"><div class="spinner"></div><div style="color:#c5a059; font-weight:bold; font-size:16px; margin-bottom:8px;">Aguarde...</div><div style="color:#fff; font-size:13px;">Estamos verificando seu horário<br>e garantindo sua reserva ✨</div></div></div>
-<div id="modalErro" class="modal-overlay"><div class="modal-box"><div style="color:#fdf0cd; margin-bottom:20px;">Preencha todos os campos</div><button style="background:#c5a059; color:#000; border:none; padding:12px; border-radius:8px; font-weight:bold; width:100%;" onclick="this.parentElement.parentElement.style.display='none'">OK</button></div></div>
-<div id="modalCancelar"><div class="box-cancel"><div style="text-align:center; color:#c5a059; font-weight:bold; font-size:14px; margin-bottom:12px;">Cancelar Agendamento</div><input id="cancelData" type="date" style="width:100%; height:38px; background:#000; color:#fff; border:1px solid #333; border-radius:8px; text-align:center; margin-bottom:8px; box-sizing:border-box;"><input id="cancelTelefone" type="tel" placeholder="Seu WhatsApp" style="width:100%; height:38px; background:#000; color:#fff; border:1px solid #333; border-radius:8px; text-align:center; margin-bottom:14px; box-sizing:border-box;"><button onclick="confirmarCancelar()" style="width:100%; height:40px; background:#c5a059; color:#000; font-weight:bold; border:none; border-radius:8px; margin-bottom:8px;">Confirmar Cancelamento</button><button onclick="fecharCancelar()" style="width:100%; height:36px; background:#1e1e1e; color:#fff; border:none; border-radius:8px;">Voltar</button></div></div>
-<div id="modalCancelando"><div style="background:#121212; border:1.5px solid #c5a059; border-radius:16px; width:100%; max-width:300px; padding:30px 20px; text-align:center; box-sizing:border-box;"><div class="spinner"></div><div style="color:#c5a059; font-weight:bold; font-size:16px; margin-bottom:8px;">Aguarde...</div><div style="color:#fff; font-size:13px; line-height:1.3;">Estamos cancelando seu<br>agendamento ✨</div></div></div>
-<div id="modalInstalar"><div style="background:#111; border:1px solid #c5a059; border-radius:16px; padding:24px; max-width:320px; width:100%; text-align:center;"><h3 style="color:#c5a059; margin-bottom:12px;">Instalar App Oficial</h3><p style="color:#fff; font-size:14px; line-height:1.4; margin-bottom:16px;">Para iPhone: Toque em <b>Compartilhar</b> > <b>Adicionar à tela inicial</b><br><br>Para Android: Toque nos 3 pontos ⋮ > <b>Instalar app</b></p><button onclick="fecharModalInstalar()" style="background:#c5a059; color:#000; border:none; padding:10px 20px; border-radius:8px; font-weight:bold; width:90%;">Aceptar</button></div></div>
-<div id="modalOcupado"><div style="background:#111; border:1.5px solid #ff4444; border-radius:16px; padding:24px; max-width:320px; width:100%; text-align:center;"><div style="font-size:40px; margin-bottom:10px;">⚠️</div><h3 style="color:#ff6b6b; margin-bottom:10px;">Horário já agendado!</h3><p style="color:#fff; font-size:14px; line-height:1.4; margin-bottom:18px;">Esse horário acabou de ser agendado por outro cliente. Por favor escolha outro horário disponível.</p><button onclick="fecharOcupado()" style="background:#c5a059; color:#000; border:none; padding:12px 20px; border-radius:8px; font-weight:bold; width:90%;">Escolher outro horário</button></div></div>
+
+<div style="font-size:13px;text-align:left;margin:10px 0">👤 Elige tu(s) barbero(s): puedes reservar 2</div>
+<div class="card-barbero">
+<div class="barbero" id="card-David" onclick="toggleBarbero('David')"><div class="check">✓</div><img src="https://i.ibb.co/B5GDCLGN/IMG-20241012-152952-2.jpg"><br>David<br><small>0 veces</small></div>
+<div class="barbero" id="card-Armando" onclick="toggleBarbero('Armando')"><div class="check">✓</div><img src="https://i.ibb.co/8gJ3Q9Y/armando.jpg" onerror="this.src='https://i.ibb.co/B5GDCLGN/IMG-20241012-152952-2.jpg'"><br>Armando<br><small>0 veces</small></div>
+</div>
+<div style="font-size:11px;color:#9a9a96;text-align:left">Pulsa para desmarcar. Puedes seleccionar a David y Armando al mismo tiempo.</div>
+
+<div class="oferta">Oferta doble TODOS LOS DÍAS<br>R$35 cada uno + Diseño de cejas gratis - Total R$70</div>
+
+<label>Servicio</label>
+<select id="servico"><option value="Barba">Barba - R$30</option><option value="Corte">Corte - R$40</option><option value="Corte e Barba">Corte e Barba - R$70</option><option value="Sobrancelha">Sobrancelha - R$10</option></select>
+
+<label>📅 Fecha</label>
+<input type="date" id="data">
+
+<label>👤 Nombre</label>
+<div style="display:flex;gap:8px"><input id="nome" placeholder="Su nombre" style="flex:1"><input id="whatsapp" placeholder="473454016" style="flex:1" value="473454016"></div>
+
+<div id="horariosContainer"></div>
+
+<div class="total-box"><div><div style="color:#9a9a96;font-size:12px">Servicio: <span id="servTxt" style="color:#fff">Barba</span></div><div style="color:#9a9a96;font-size:12px">Horario de apertura: <span id="horTxt" style="color:#FFD700">—</span></div></div><div style="text-align:right"><div style="font-size:11px;color:#9a9a96">Total</div><div style="font-size:18px;font-weight:bold;color:#FFD700">R$ <span id="totalTxt">40</span></div></div></div>
+
+<button class="btn-agendar" id="btnAgendar" onclick="agendar()">Horario ✅</button>
+<div id="msg" style="margin-top:10px;font-size:12px"></div>
+
 <script>
-// URL DE TU SHEET QUE YA PROBAMOS QUE DEVUELVE TODOS + 2026-10-14 REAL
 const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxJtqFT6tj3A6ekl2PHhXgF0j-5FJbj-EJT1I9Tn884kFgd7t_9pY9qT8pbK3T-xbXU/exec';
-const BARBEIROS = [
-  { id: 'David', nome: 'David', foto: 'https://i.ibb.co/B5GDCLGN/IMG-20241012-152952-2.jpg' },
-  { id: 'Armando', nome: 'Armando', foto: 'https://i.ibb.co/8gJ3Q9Y/armando.jpg', fallback: 'https://i.ibb.co/B5GDCLGN/IMG-20241012-152952-2.jpg' }
-];
+const HORARIOS_DIA = ['08:00','08:30','09:00','09:30','10:00','10:30','11:00','11:30','12:00','13:00','13:30','14:00','14:30','15:00','15:30','16:00','16:30','17:00','17:30','18:00','18:30','19:00','19:30'];
+let barberosSel = [];
+let horariosSel = {David:[], Armando:[]};
+let bloqueiosCache = {};
 
-setTimeout(() => { const l=document.getElementById('loader'); if(l) l.classList.add('hidden'); }, 2500);
-window.addEventListener('load', () => { setTimeout(()=>{ const l=document.getElementById('loader'); if(l) l.classList.add('hidden'); },800); });
-
-function renderBarbeiros(){
-  const cont = document.getElementById('barbeirosContainer');
-  cont.innerHTML = '';
-  BARBEIROS.forEach((b,i)=>{
-    const div = document.createElement('div');
-    div.className = 'card'+(i===0?' active':'');
-    div.innerHTML = `<img src="${b.foto}" onerror="this.src='${b.fallback||BARBEIROS[0].foto}'"><br>${b.nome}`;
-    div.onclick = ()=>{
-      document.querySelectorAll('.card').forEach(c=>c.classList.remove('active'));
-      div.classList.add('active');
-      document.getElementById('barbeiro').value = b.id;
-      console.log('💈 Barbeiro selecionado:', b.id);
-      carregarHorarios();
-    };
-    cont.appendChild(div);
-  });
-  if(BARBEIROS.length>0) document.getElementById('barbeiro').value = BARBEIROS[0].id;
+function toggleBarbero(b){
+ const idx = barberosSel.indexOf(b);
+ if(idx>=0){ barberosSel.splice(idx,1); document.getElementById('card-'+b).classList.remove('active'); }
+ else { if(barberosSel.length<2){ barberosSel.push(b); document.getElementById('card-'+b).classList.add('active'); } }
+ renderHorarios();
 }
 
-const mapaServicos={
-  'Corte':{preco:'R$40',bloques:1},
-  'Barba':{preco:'R$30',bloques:1},
-  'Sobrancelha':{preco:'R$10',bloques:1},
-  'Corte e Barba':{preco:'R$70',bloques:2}
-};
-
-function getHorariosPorDia(dStr){
-  const d=new Date(dStr+'T12:00:00'); const dia=d.getDay();
-  if(dia===0) return [];
-  if(dia===1) return ['08:30','09:00','09:30','10:00','10:30','11:00','11:30','13:00','13:30','14:00','14:30','15:00','15:30','16:00','16:30','17:00','17:30'];
-  if(dia===6) return ['08:00','08:30','09:00','09:30','10:00','10:30','11:00','11:30','12:00','13:30','14:00','14:30','15:00','15:30','16:00','16:30','17:00','17:30'];
-  return ['08:30','09:00','09:30','10:00','10:30','11:00','11:30','13:00','13:30','14:00','14:30','15:00','15:30','16:00','16:30','17:00','17:30','18:00','18:30','19:00','19:30'];
-}
-function esHoy(dStr){ const hoy=new Date(); const sel=new Date(dStr+'T12:00:00'); return hoy.toDateString()===sel.toDateString(); }
 function getHoraActual(){ const a=new Date(); return String(a.getHours()).padStart(2,'0')+':'+String(a.getMinutes()).padStart(2,'0'); }
+function esHoy(dStr){ const hoy=new Date(); const sel=new Date(dStr+'T12:00:00'); return hoy.toDateString()===sel.toDateString(); }
 
-document.addEventListener('DOMContentLoaded', ()=>{
-  renderBarbeiros();
-  const dataInput=document.getElementById('data'); const hoje=new Date(); dataInput.min=hoje.toISOString().split('T')[0]; const max=new Date(); max.setDate(hoje.getDate()+30); dataInput.max=max.toISOString().split('T')[0];
-  const sel=document.getElementById('servico'); sel.innerHTML='<option value="">Selecione um serviço</option>'; for(const s in mapaServicos){ sel.innerHTML+=`<option value="${s}">${s} — ${mapaServicos[s].preco}</option>`; }
-  dataInput.addEventListener('change', carregarHorarios); sel.addEventListener('change', carregarHorarios);
-});
-
-async function carregarHorarios(){
-  const data=document.getElementById('data').value; const servico=document.getElementById('servico').value; const barbeiro=document.getElementById('barbeiro').value;
-  const horaSelect=document.getElementById('hora'); const loading=document.getElementById('loading'); const btn=document.getElementById('btnAgendar');
-  if(!data||!servico){ horaSelect.innerHTML='<option value="">Selecione data e serviço primeiro</option>'; horaSelect.disabled=true; btn.disabled=true; return; }
-  if(new Date(data+'T12:00:00').getDay()===0){ horaSelect.innerHTML='<option value="">Domingo não trabalhamos</option>'; horaSelect.disabled=true; btn.disabled=true; return; }
-  loading.style.display='block'; horaSelect.disabled=true; horaSelect.innerHTML='<option>Carregando horários reais do Sheet...</option>';
-  try{
-    const url=`${SCRIPT_URL}?data=${data}&barbeiro=${barbeiro}&_=${Date.now()}`;
-    console.log('🔍 Fetch bloqueios reais:', url);
-    const res=await fetch(url, {cache:'no-store'});
-    const json=await res.json();
-    console.log('📅 Resposta Sheet REAL:', json);
-
-    // Soporta dos formatos: array directo (tu URL nueva) o objeto {reservas, bloqueios} (URL vieja)
-    let reservas = [];
-    let bloqueiosInterval = [];
-    if(Array.isArray(json)){
-      reservas = json;
-    } else {
-      reservas = json.reservas || json || [];
-      bloqueiosInterval = json.bloqueios || [];
-    }
-
-    const todos=getHorariosPorDia(data);
-    const ocupados=new Set();
-    const hActual=getHoraActual(); const esHoyDia=esHoy(data); const bloquesNec=mapaServicos[servico]?.bloques||1;
-
-    // Marca ocupados: incluye TODOS y fecha específica, filtra Cancelado ya lo hace el Code.gs
-    reservas.forEach(r=>{
-      const horaR = (r.hora||'').toString().trim();
-      const dataR = (r.data||'').toString();
-      const clienteR = (r.cliente||'').toString().toLowerCase();
-      const servicoR = (r.servico||'').toString().toLowerCase();
-      const statusR = (r.status||'').toString().toLowerCase();
-      // Si es bloqueo o reserva real, ocupa
-      if(!horaR) return;
-      // TODOS ya viene filtrado por tu Code.gs para esta fecha + barbeiro, así que si aparece, bloquea
-      const idx=todos.indexOf(horaR);
-      if(idx!==-1){
-        // Si es Corte e Barba, ocupa 2 bloques
-        const b = (r.bloques|| (mapaServicos[r.servico]?.bloques) || 1);
-        for(let i=0;i<b;i++){ if(todos[idx+i]) ocupados.add(todos[idx+i]); }
-        // Para servicio simple, solo ese hora
-        if(!r.bloques) ocupados.add(horaR);
-      }
-    });
-
-    const esSab=new Date(data+'T12:00:00').getDay()===6;
-    horaSelect.innerHTML='<option value="">Selecione um horário</option>'; let hay=false;
-    todos.forEach((hora, idxHora)=>{
-      if(hora==='12:00') return; if(hora==='11:30' &&!esSab) return;
-      if(esHoyDia && hora < hActual){ horaSelect.innerHTML+=`<option disabled>${hora} - Passado</option>`; return; }
-      let bloq=false; let mot='Ocupado';
-      // Bloqueios por intervalo (formato viejo)
-      for(let b of bloqueiosInterval){ if(hora>=b.inicio && hora<=b.fim){ bloq=true; mot='Bloqueado'; break; } }
-      // Verifica si hora está en ocupados (viene del Sheet REAL)
-      if(!bloq && ocupados.has(hora)){ bloq=true; mot='Ocupado'; }
-      // Verifica si los próximos bloques necesarios también están ocupados (Corte e Barba)
-      if(!bloq){
-        for(let i=0;i<bloquesNec;i++){
-          const s=todos[idxHora+i];
-          if(!s){ if(i===0){ bloq=true; mot='Não cabe'; break; } continue; }
-          if(ocupados.has(s)){ bloq=true; break; }
-        }
-      }
-      if(bloq){
-        // Muestra como bloqueado pero con info de Sheet real
-        const esTodos = reservas.some(r=> r.hora===hora && String(r.data).toUpperCase()==='TODOS');
-        horaSelect.innerHTML+=`<option disabled>${hora} - ${mot}${esTodos?' (TODOS)':''}</option>`;
-      } else {
-        horaSelect.innerHTML+=`<option value="${hora}">${hora}</option>`;
-        hay=true;
-      }
-    });
-    console.log(`✅ Horários para ${data} ${barbeiro}: ocupados REALES del Sheet:`, Array.from(ocupados));
-    if(!hay){ horaSelect.innerHTML='<option>Agenda cheia (todos horários bloqueados do Sheet)</option>'; btn.disabled=true; } else { horaSelect.disabled=false; btn.disabled=false; }
-  }catch(e){
-    console.error('Erro carregar', e);
-    horaSelect.innerHTML='<option>Erro ao carregar horários reais</option>';
-  } finally{ loading.style.display='none'; }
+async function fetchBloqueios(dateISO){
+ if(!dateISO) return {David:[], Armando:[]};
+ if(bloqueiosCache[dateISO]) return bloqueiosCache[dateISO];
+ const results={David:[], Armando:[]};
+ try{
+   const r1=await fetch(`${SCRIPT_URL}?data=${dateISO}&barbeiro=David&_=${Date.now()}`,{cache:'no-store'}); const j1=await r1.json();
+   results.David = (Array.isArray(j1)?j1:j1.reservas||j1||[]).map(x=>x.hora||x).filter(Boolean);
+   const r2=await fetch(`${SCRIPT_URL}?data=${dateISO}&barbeiro=Armando&_=${Date.now()}`,{cache:'no-store'}); const j2=await r2.json();
+   results.Armando = (Array.isArray(j2)?j2:j2.reservas||j2||[]).map(x=>x.hora||x).filter(Boolean);
+   // TODOS
+   const rT=await fetch(`${SCRIPT_URL}?data=TODOS&barbeiro=David&_=${Date.now()}`,{cache:'no-store'}); 
+   try{ const jT=await rT.json(); const horasT=jT.map(x=>x.hora||x); horasT.forEach(h=>{ if(!results.David.includes(h)) results.David.push(h); if(!results.Armando.includes(h)) results.Armando.push(h); }); }catch(e){}
+ }catch(e){ console.error(e); }
+ bloqueiosCache[dateISO]=results;
+ return results;
 }
 
-function limparCampos(){
-  document.getElementById('cliente').value = '';
-  document.getElementById('telefone').value = '';
-  document.getElementById('data').value = '';
-  document.getElementById('servico').selectedIndex = 0;
-  document.getElementById('hora').innerHTML = '<option value="">Selecione data e serviço primeiro</option>';
-  document.getElementById('hora').disabled = true;
-  document.getElementById('btnAgendar').disabled = true;
-  document.getElementById('confirmacao').style.display = 'none';
+async function renderHorarios(){
+ const data=document.getElementById('data').value;
+ const cont=document.getElementById('horariosContainer');
+ if(!data||barberosSel.length===0){ cont.innerHTML='<div style="color:#666;font-size:12px;margin-top:10px">Selecciona barbero(s) y fecha</div>'; return; }
+ cont.innerHTML='Cargando horarios reales del Sheet...';
+ const bloqueios=await fetchBloqueios(data);
+ const hActual=getHoraActual(); const hoy=esHoy(data);
+ let html='';
+ for(let b of barberosSel){
+   const sel=horariosSel[b]||[];
+   html+=`<div class="horarios-box"><h3>⏰ Horarios ${b} • ${sel.length} /4 <span class="limpar" onclick="limpar('${b}')">limpar</span></h3><div class="horarios-grid">`;
+   HORARIOS_DIA.forEach(h=>{
+     let cls='h-btn'; let txt=h; let disabled=false;
+     if(hoy && h < hActual){ cls+=' pasado'; txt='pase'; if(hActual>'11:30') txt='passou'; disabled=true; }
+     else if(bloqueios[b].includes(h)){ cls+=' reservado'; txt='RESERVADO'; disabled=true; }
+     else if(sel.includes(h)){ cls+=' selected'; txt='✓ '+h; }
+     html+=`<div class="${cls}" ${disabled?'':'onclick="toggleHora(\''+b+'\',\''+h+'\')"' }>${txt}</div>`;
+   });
+   html+='</div></div>';
+ }
+ cont.innerHTML=html;
+ updateResumen();
 }
 
-async function solicitarAgendamento(){
-  const btn=document.getElementById('btnAgendar');
-  const data=document.getElementById('data').value; const hora=document.getElementById('hora').value; const cliente=document.getElementById('cliente').value; const telefone=document.getElementById('telefone').value; const servico=document.getElementById('servico').value;
-  if(!data||!hora||!cliente||!telefone||!servico){ document.getElementById('modalErro').style.display='flex'; return; }
-  document.getElementById('modalProcess').style.display='flex';
-  btn.disabled=true; btn.textContent='VERIFICANDO...';
-  try{
-    const fd=new URLSearchParams({data,hora,cliente,telefone,servico,barbeiro:document.getElementById('barbeiro').value});
-    console.log('📤 Enviando reserva REAL:', Object.fromEntries(fd));
-    const r=await fetch(SCRIPT_URL,{method:'POST', body:fd});
-    const result=await r.json();
-    console.log('📥 Resposta agendamento:', result);
-    if(result.success){
-      document.getElementById('confirmacao').style.display='block';
-      document.getElementById('confirmacao').innerHTML='✅ Confirmado! Abrindo WhatsApp directo...';
-      limparCampos();
-      setTimeout(()=>{
-        document.getElementById('modalProcess').style.display='none';
-        abrirWhatsAppDirecto(result.whatsapp || result.whatsappUrl || `https://wa.me/554734354016?text=Agendamento ${data} ${hora}`);
-      }, 800);
-    } else {
-      document.getElementById('modalProcess').style.display='none';
-      document.getElementById('modalOcupado').style.display='flex';
-      btn.disabled=false; btn.textContent='Agendar Horário ✅';
-      carregarHorarios();
-    }
-  }catch(err){
-    console.error(err);
-    document.getElementById('modalProcess').style.display='none';
-    document.getElementById('modalOcupado').style.display='flex';
-    btn.disabled=false; btn.textContent='Agendar Horário ✅';
-    carregarHorarios();
-  }
+function toggleHora(barbero,hora){
+ let sel=horariosSel[barbero];
+ const idx=sel.indexOf(hora);
+ if(idx>=0) sel.splice(idx,1); else { if(sel.length<4) sel.push(hora); else { alert('Máximo 4 horarios por barbero'); return; } }
+ horariosSel[barbero]=sel;
+ renderHorarios();
 }
-function abrirCancelar(){ document.getElementById('modalCancelar').style.display='flex'; }
-function fecharCancelar(){ document.getElementById('modalCancelar').style.display='none'; }
-function fecharModalInstalar(){ document.getElementById('modalInstalar').style.display='none'; }
-function fecharOcupado(){ document.getElementById('modalOcupado').style.display='none'; }
-function abrirWhatsAppDirecto(waUrl){
-  try{
-    let m = waUrl.match(/wa\.me\/(\d+)/);
-    let phone = m? m[1] : "554734354016";
-    let text = waUrl.split('text=')[1] || "";
-    let appUrl = "whatsapp://send?phone=" + phone + "&text=" + text;
-    console.log('📱 Abrindo WhatsApp DIRECTO:', appUrl);
-    window.location.href = appUrl;
-    // Fallback a https después de 1s si no abre app
-    setTimeout(()=>{ window.open(waUrl, '_blank'); }, 1200);
-  }catch(e){
-    window.open(waUrl, '_blank');
-  }
+function limpar(b){ horariosSel[b]=[]; renderHorarios(); }
+
+function updateResumen(){
+ const serv=document.getElementById('servico').value;
+ document.getElementById('servTxt').textContent=serv;
+ const totalList=[];
+ let total=0;
+ const precios={Barba:30,Corte:40,'Corte e Barba':70,Sobrancelha:10};
+ for(let b of barberosSel){
+   const horas=horariosSel[b];
+   if(horas.length>0){ totalList.push(`${b} ${horas.join(', ')}`); total+= (precios[serv]||30)*horas.length; }
+ }
+ document.getElementById('horTxt').textContent= totalList.length? totalList.join(' | ') : '—';
+ document.getElementById('totalTxt').textContent= total || 40;
 }
-async function confirmarCancelar(){
-  const dataInput = document.getElementById('cancelData').value;
-  const tel = document.getElementById('cancelTelefone').value.replace(/\D/g,'');
-  if(!dataInput ||!tel){ alert('Preencha data e WhatsApp'); return; }
-  document.getElementById('modalCancelar').style.display='none';
-  document.getElementById('modalCancelando').style.display='flex';
-  let dataEnvio = dataInput;
-  if(dataInput.includes('/')){ const p=dataInput.split('/'); dataEnvio=`${p[2]}-${p[1].padStart(2,'0')}-${p[0].padStart(2,'0')}`; }
-  try{
-    const formData = new URLSearchParams({acao:'cancelar', data:dataEnvio, telefone:tel});
-    const res = await fetch(SCRIPT_URL,{method:'POST', body:formData});
-    const r = await res.json();
-    document.getElementById('modalCancelando').style.display='none';
-    if(r.success && r.whatsapp){
-      abrirWhatsAppDirecto(r.whatsapp);
-    } else if(r.success){
-      alert('✅ Cancelado: '+r.hora);
-      carregarHorarios();
-    } else {
-      alert(r.error||'Erro ao cancelar');
-    }
-  }catch(e){
-    document.getElementById('modalCancelando').style.display='none';
-    alert('Erro conexão');
-  }
+
+async function agendar(){
+ const data=document.getElementById('data').value; const nome=document.getElementById('nome').value.trim(); const tel=document.getElementById('whatsapp').value.trim(); const serv=document.getElementById('servico').value;
+ if(!data||!nome||!tel||barberosSel.length===0){ document.getElementById('msg').textContent='Rellene todos los campos.'; return; }
+ let totalHor=0; for(let b of barberosSel) totalHor+=horariosSel[b].length;
+ if(totalHor===0){ document.getElementById('msg').textContent='Seleccione al menos 1 horario'; return; }
+ document.getElementById('btnAgendar').disabled=true; document.getElementById('btnAgendar').textContent='Validando tiempo...';
+ try{
+   // Prepara bloqueios array para POST múltiple
+   const bloqueios=[];
+   for(let b of barberosSel){
+     for(let h of horariosSel[b]){
+       bloqueios.push({data, hora:h, barbeiro:b, cliente:nome, telefone:tel, servico:serv});
+     }
+   }
+   // Envía cada uno (tu Code.gs soporta bloqueios como array, pero para garantizar guarda todos, enviamos uno por uno)
+   let whatsappUrl='';
+   for(let item of bloqueios){
+     const fd=new URLSearchParams({data:item.data, hora:item.hora, cliente:item.cliente, telefone:item.telefone, servico:item.servico, barbeiro:item.barbeiro});
+     const r=await fetch(SCRIPT_URL,{method:'POST', body:fd});
+     const j=await r.json();
+     if(j.whatsapp) whatsappUrl=j.whatsapp;
+   }
+   document.getElementById('msg').textContent='✅ Reservado! Abriendo WhatsApp...';
+   if(whatsappUrl){
+     let m=whatsappUrl.match(/wa\.me\/(\d+)/); let phone=m?m[1]:'554734354016'; let text=whatsappUrl.split('text=')[1]||'';
+     let appUrl='whatsapp://send?phone='+phone+'&text='+text;
+     window.location.href=appUrl;
+     setTimeout(()=>{ window.open(whatsappUrl,'_blank'); },1200);
+   }
+   // limpia
+   horariosSel={David:[], Armando:[]}; bloqueiosCache={}; renderHorarios();
+ }catch(e){
+   console.error(e); document.getElementById('msg').textContent='Error al agendar, intente de nuevo';
+ }finally{
+   document.getElementById('btnAgendar').disabled=false; document.getElementById('btnAgendar').textContent='Horario ✅';
+ }
 }
+
+document.getElementById('data').addEventListener('change', renderHorarios);
+document.getElementById('servico').addEventListener('change', updateResumen);
+(function(){ const hoy=new Date(); document.getElementById('data').min=hoy.toISOString().split('T')[0]; const max=new Date(); max.setDate(hoy.getDate()+30); document.getElementById('data').max=max.toISOString().split('T')[0]; })();
 </script>
 </body>
 </html>
