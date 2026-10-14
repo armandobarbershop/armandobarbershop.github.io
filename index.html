@@ -76,19 +76,115 @@ Pode confirmar?`)};return v("div",{className:"min-h-screen bg-[#121212] text-[#f
 </script>
   
 
+
 <script>
-// ARMANDO - FIX: Abre WhatsApp DE UNA (sin preguntar) y guarda en segundo plano
+// ARMANDO - COMPLETO: Guarda + Abre directo + BLOQUEA horas ocupadas
 (function(){
   const API = "https://script.google.com/macros/s/AKfycbztv0Kjze9NPhvUBXgkD0ROj_kvRZOrOq2a9hNkn4tzVIPQ0LB3oT3wFSycJTRRGucn/exec";
-  const originalOpen = window.open;
+  let reservasCache = [];
+  let cacheFecha = null;
+
+  // 1. Leer reservas del Sheet
+  async function cargarReservas() {
+    try {
+      const res = await fetch(API, {method:'GET'});
+      const text = await res.text();
+      try {
+        const json = JSON.parse(text);
+        // Si viene como array de arrays (getValues)
+        if (Array.isArray(json) && json.length > 1) {
+          const headers = json[0].map(h => String(h).toLowerCase());
+          const idxData = headers.indexOf('data');
+          const idxHora = headers.indexOf('hora');
+          const idxBarb = headers.indexOf('barbeiro');
+          const idxStatus = headers.indexOf('status');
+          reservasCache = json.slice(1).map(row => ({
+            data: String(row[idxData] || ''),
+            hora: String(row[idxHora] || ''),
+            barbeiro: String(row[idxBarb] || ''),
+            status: String(idxStatus>=0? row[idxStatus] : '')
+          })).filter(r => r.data && r.hora);
+        }
+      } catch(e) {
+        console.log('Sheet parse', e, text.slice(0,200));
+      }
+      console.log('Reservas cargadas', reservasCache.length);
+    } catch(e){ console.log('Error cargando reservas', e); }
+  }
+
+  function getFechaSeleccionada() {
+    const m = document.body.innerText.match(/(\d{2}\/\d{2}\/\d{4})/);
+    if(!m) return null;
+    const [d,m2,a] = m[0].split('/');
+    return `${a}-${m2}-${d}`;
+  }
+
+  function getBarbeirosSeleccionados() {
+    const txt = document.body.innerText;
+    let barbs = [];
+    if (txt.includes('David')) barbs.push('David');
+    if (txt.includes('Armando')) barbs.push('Armando');
+    // Si no detecta, intenta por botones activos
+    if (barbs.length===0) {
+      const active = Array.from(document.querySelectorAll('button')).filter(b=> b.textContent.includes('David')||b.textContent.includes('Armando')).filter(b=> b.className.includes('d4af37'));
+      active.forEach(c=>{ if(c.textContent.includes('David')&&!barbs.includes('David')) barbs.push('David'); if(c.textContent.includes('Armando')&&!barbs.includes('Armando')) barbs.push('Armando'); });
+    }
+    return barbs.length? barbs : ['David','Armando'];
+  }
+
+  function bloquearHoras() {
+    const fechaISO = getFechaSeleccionada();
+    if (!fechaISO) return;
+    const barbs = getBarbeirosSeleccionados();
+    
+    // Filtrar ocupadas para esa fecha
+    const ocupadas = reservasCache.filter(r => {
+      const rData = r.data.trim();
+      const coincideFecha = rData === fechaISO || rData.toUpperCase() === 'TODOS' || rData === fechaISO.split('-').reverse().join('/');
+      const noCancelada = !r.status || !r.status.toLowerCase().includes('cancel');
+      return coincideFecha && noCancelada;
+    });
+
+    // Bloquear botones
+    const botonesHora = Array.from(document.querySelectorAll('button')).filter(b=> /^\d{2}:\d{2}$/.test(b.textContent.trim().slice(0,5)));
+    
+    botonesHora.forEach(btn => {
+      const hora = btn.textContent.trim().slice(0,5);
+      const estaOcupada = ocupadas.some(o => {
+        const oHora = o.hora.trim().slice(0,5);
+        const oBarb = o.barbeiro.trim();
+        // Si hay bloqueo TODOS, o mismo barbero, o si solo hay 1 barbero seleccionado
+        return oHora === hora && (oBarb === '' || barbs.includes(oBarb) || o.data === 'TODOS');
+      });
+      
+      if (estaOcupada) {
+        btn.disabled = true;
+        btn.style.opacity = '0.25';
+        btn.style.pointerEvents = 'none';
+        btn.title = 'Horario ocupado';
+        if (!btn.textContent.includes('Ocupado')) {
+          btn.textContent = btn.textContent.replace(hora, hora + ' • Ocupado');
+        }
+      } else {
+        btn.disabled = false;
+        btn.style.opacity = '1';
+        btn.style.pointerEvents = 'auto';
+      }
+    });
+  }
+
+  // Cargar al inicio y cada 5 segundos + cuando cambia fecha/barbero
+  cargarReservas().then(()=>{ setTimeout(bloquearHoras, 1000); });
+  setInterval(()=>{ cargarReservas().then(bloquearHoras); }, 8000);
   
+  document.addEventListener('click', ()=>{ setTimeout(bloquearHoras, 300); }, true);
+  
+  // Interceptar WhatsApp - abrir directo + guardar + recargar bloqueo
+  const originalOpen = window.open;
   window.open = function(url, ...rest){
     try {
       if (url && url.includes("wa.me")) {
-        // 1. ABRIR WHATSAPP INMEDIATAMENTE - conserva el gesto del usuario, no pregunta
         const result = originalOpen.call(window, url, ...rest);
-        
-        // 2. GUARDAR EN SHEET EN SEGUNDO PLANO (después de abrir)
         try {
           const urlObj = new URL(url);
           const text = decodeURIComponent(urlObj.searchParams.get("text") || "");
@@ -99,12 +195,11 @@ Pode confirmar?`)};return v("div",{className:"min-h-screen bg-[#121212] text-[#f
           let dataMatch = text.match(/(\d{2}\/\d{2}\/\d{4})/);
           let dataBR = dataMatch ? dataMatch[0] : "";
           let horasMatch = text.match(/(\d{2}:\d{2})/g) || [];
-          
           let dataISO = "";
           if (dataBR) { const [d,m,a] = dataBR.split("/"); dataISO = `${a}-${m}-${d}`; }
           
           if (dataISO && horasMatch.length > 0) {
-            let horasReales = horasMatch.slice(-4).slice(0,3); // ultimas horas reales
+            let horasReales = horasMatch.slice(-3);
             horasReales.forEach(h => {
               let barbs = [];
               if (text.includes("David") && text.includes("Armando")) barbs = ["David","Armando"];
@@ -114,16 +209,15 @@ Pode confirmar?`)};return v("div",{className:"min-h-screen bg-[#121212] text-[#f
               
               barbs.forEach(b => {
                 const params = new URLSearchParams({data: dataISO, hora: h, cliente: cliente.trim(), telefone: telefone.trim(), servico: servico.trim(), barbero: b.trim()});
-                // Fire and forget - no espera
                 fetch(API, {method: 'POST', mode: 'no-cors', body: params}).catch(()=>{});
-                // Backup por GET por si POST falla
                 fetch(`${API}?${params.toString()}`, {mode: 'no-cors'}).catch(()=>{});
               });
             });
+            // Actualizar cache local para bloquear inmediatamente
+            setTimeout(()=>{ cargarReservas().then(bloquearHoras); }, 1500);
           }
         } catch(e){}
-        
-        return result; // devuelve inmediatamente, no pregunta
+        return result;
       }
     } catch(e){}
     return originalOpen.call(window, url, ...rest);
