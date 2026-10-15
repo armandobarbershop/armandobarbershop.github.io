@@ -36,7 +36,7 @@
             overflow: hidden;
         }
 
-        /* CARGA INICIAL (BARRA DORADA) */
+        /* CARGA INICIAL */
         #initialLoader {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -304,6 +304,9 @@
         <button type="button" class="btn-maps" onclick="abrirMaps()">📍 Ver localização no Maps</button>
     </form>
 </div>
+
+<!-- Iframe invisible necesario para enviar datos al Google Sheet sin bloqueos de CORS -->
+<iframe name="hidden_iframe" style="display:none;"></iframe>
 <script>
 (function(){
     "use strict";
@@ -425,7 +428,7 @@
         atualizarResumen();
     };
 
-    // LÓGICA ORIGINAL DE LECTURA DE TU CÓDIGO FUNCIONAL
+    // Lectura probada y directa del Google Sheet
     async function carregarHoras(){
         var HORAS = obterHorariosDoDia(fechaSelStr);
         var ocupadosDavid = [], ocupadosArmando = [];
@@ -437,7 +440,6 @@
                 if(!datos[i]) continue;
                 var d = String(datos[i].data || "").trim().toUpperCase();
                 var h = String(datos[i].hora || "").trim();
-                // Acepta tanto barbeiro como barbero
                 var b = String(datos[i].barbeiro || datos[i].barbero || "").trim();
                 
                 if((d === fechaSelStr || d === "TODOS") && !String(datos[i].status || "").toLowerCase().includes("cancelado")){
@@ -508,6 +510,7 @@
     document.getElementById("nome").addEventListener("input", atualizarResumen);
     document.getElementById("telefone").addEventListener("input", atualizarResumen);
 
+    // Función de agendamiento con el parche de formulario oculto para garantizar el guardado en el Sheet
     window.agendar = async function(){
         var data = fechaSelStr;
         var nome = document.getElementById("nome").value;
@@ -543,21 +546,45 @@
         var wpUrl = "whatsapp://send?phone=554734354016&text=" + encodeURIComponent(msgWp);
         var wpFallback = "https://api.whatsapp.com/send?phone=554734354016&text=" + encodeURIComponent(msgWp);
         
-        var win = window.open(wpUrl, '_blank');
-        if(!win) window.open(wpFallback, '_blank');
-
+        // Enviar al Google Sheet sin bloqueos mediante un formulario invisible apuntando al iframe
         try {
             for(let b of ['David', 'Armando']){
                 for(let h of horasSel[b]){
-                    fetch(API_URL, {
-                        method: "POST",
-                        body: new URLSearchParams({
-                            data: data, hora: h, cliente: nome, telefone: tel, servico: servicoSel, barbeiro: b
-                        })
-                    });
+                    var form = document.createElement("form");
+                    form.method = "POST";
+                    form.action = API_URL;
+                    form.target = "hidden_iframe";
+
+                    var datosEnvio = {
+                        data: data,
+                        hora: h,
+                        cliente: nome,
+                        telefone: tel,
+                        servico: servicoSel,
+                        barbeiro: b,
+                        status: "Agendado"
+                    };
+
+                    for(var key in datosEnvio){
+                        var input = document.createElement("input");
+                        input.type = "hidden";
+                        input.name = key;
+                        input.value = datosEnvio[key];
+                        form.appendChild(input);
+                    }
+
+                    document.body.appendChild(form);
+                    form.submit();
+                    document.body.removeChild(form);
                 }
             }
-        } catch(e){}
+        } catch(e) {
+            console.log("Error enviando al sheet:", e);
+        }
+
+        // Abrir WhatsApp
+        var win = window.open(wpUrl, '_blank');
+        if(!win) window.open(wpFallback, '_blank');
 
         setTimeout(() => {
             document.getElementById("loadingModal").style.display = "none";
