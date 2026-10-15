@@ -36,7 +36,7 @@
             overflow: hidden;
         }
 
-        /* VENTANA MODAL DE CARGA EN EL CENTRO */
+        /* VENTANA MODAL DE PROCESO */
         #loadingModal {
             display: none;
             position: fixed;
@@ -161,7 +161,7 @@
             letter-spacing: 0.5px;
         }
 
-        /* BARBEIROS CON FOTOS REALES */
+        /* BARBEIROS */
         .barbeiros-container { display: flex; flex-direction: column; gap: 10px; }
         .barbeiro-card {
             background: var(--card-bg);
@@ -265,7 +265,6 @@
 </head>
 <body>
 
-<!-- VENTANA MODAL DE PROCESO -->
 <div id="loadingModal">
     <div class="modal-content">
         <div class="spinner"></div>
@@ -403,6 +402,7 @@
 
     function generarScrollFechas(){
         let container = document.getElementById("fechasContainer");
+        if(!container) return;
         container.innerHTML = "";
         let hoy = new Date();
         let diasSemana = ["DOM", "SEG", "TER", "QUA", "QUI", "SEX", "SÁB"];
@@ -593,44 +593,25 @@
         // MOSTRAR VENTANA MODAL DE PROCESO
         document.getElementById("loadingModal").style.display = "flex";
 
-        try {
-            let resCheck = await fetch(API_URL + "?callback=dummy");
-            let datosCheck = await resCheck.json();
-            
-            for(let b of ['David', 'Armando']){
-                for(let h of horasSel[b]){
-                    let ocupadoPorOtro = datosCheck.some(item => {
-                        if(!item) return false;
-                        let dMatch = String(item.data || "").trim().toUpperCase() === data || String(item.data || "").trim().toUpperCase() === "TODOS";
-                        let hMatch = String(item.hora || "").trim() === h;
-                        let bMatch = String(item.barbero || "").trim() === b;
-                        let activo = !String(item.status || "").toLowerCase().includes("cancelado");
-                        return dMatch && hMatch && bMatch && activo;
-                    });
-
-                    if(ocupadoPorOtro){
-                        document.getElementById("loadingModal").style.display = "none";
-                        alert("⚠️ Horário ocupado! O horário " + h + " com o barbeiro " + b + " acaba de ser reservado por outro cliente. Por favor, escolha outro.");
-                        carregarHoras();
-                        return;
-                    }
-                }
-            }
-        } catch(e) {}
-
         let detWp = [];
         for(let b of ['David', 'Armando']){
             if(horasSel[b].length > 0){
-                detWp.push(b + " " + horasSel[b].join(', '));
+                detWp.push("✂️ " + b + ": *" + horasSel[b].join(', ') + "*");
             }
         }
 
         let msgWp = 
-            "Olá! Quero agendar no Armando Barber Shop\n\n" +
-            "Cliente: " + nome + "\n" +
-            "Serviço: " + servicoSel + "\n" +
-            "Barbeiro(s): " + detWp.join(', ') + "\n" +
-            "Data: " + data;
+            "💈 *ARMANDO BARBER SHOP* 💈\n" +
+            "━━━━━━━━━━━━━━━━━━━━\n" +
+            "✅ *NOVO AGENDAMENTO*\n\n" +
+            "👤 *Cliente:* " + nome + "\n" +
+            "📱 *WhatsApp:* " + tel + "\n" +
+            "✂️ *Serviço:* " + servicoSel + "\n" +
+            "👨‍🎨 *Barbeiro(s) e Horário(s):*\n" + detWp.join('\n') + "\n" +
+            "📅 *Data:* " + data + "\n\n" +
+            "📍 *Endereço:* Rua Tuiuti, 3442 - Aventureiro\n" +
+            "━━━━━━━━━━━━━━━━━━━━\n" +
+            "⚠️ _Por favor, chegue com 5 minutos de antecedência._";
 
         var wpUrl = "whatsapp://send?phone=554734354016&text=" + encodeURIComponent(msgWp);
         var wpFallback = "https://api.whatsapp.com/send?phone=554734354016&text=" + encodeURIComponent(msgWp);
@@ -638,10 +619,11 @@
         var win = window.open(wpUrl, '_blank');
         if(!win) window.open(wpFallback, '_blank');
 
+        // ENVÍO LIMPIO Y FLUIDO AL SHEET (MÉTODO ORIGINAL)
         try {
             for(let b of ['David', 'Armando']){
                 for(let h of horasSel[b]){
-                    await fetch(API_URL, {
+                    fetch(API_URL, {
                         method: "POST",
                         body: new URLSearchParams({
                             data: data, hora: h, cliente: nome, telefone: tel, servico: servicoSel, barbeiro: b
@@ -651,7 +633,6 @@
             }
         } catch(e){}
 
-        // OCULTAR MODAL DESPUÉS DE PROCESAR
         setTimeout(() => {
             document.getElementById("loadingModal").style.display = "none";
             document.getElementById("nome").value = "";
@@ -665,5 +646,6 @@
     window.abrirMaps = function(){ window.open("https://maps.app.goo.gl/PeCnFTVfxGxvAyP48"); };
 })();
 </script>
+
 </body>
 </html>
