@@ -5,63 +5,44 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Armando Barber Shop</title>
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: #0c0c0c; color: #f0f0f0; margin: 0; padding: 15px; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #0c0c0c; color: #f0f0f0; margin: 0; padding: 15px; }
         .container { max-width: 420px; margin: auto; background: #121212; padding: 22px; border-radius: 20px; border: 1px solid #222; box-shadow: 0 10px 30px rgba(0,0,0,0.9); }
-        
-        /* HEADER */
         .header { text-align: center; margin-bottom: 22px; }
-        .header h1 { color: #f5f5f5; font-size: 28px; font-weight: 800; letter-spacing: 2px; margin: 0; font-family: 'Times New Roman', serif; }
+        .header h1 { color: #f5f5f5; font-size: 28px; font-weight: 800; margin: 0; font-family: 'Times New Roman', serif; }
         .header h1 span { color: #D4AF37; font-style: italic; font-weight: 400; display: block; font-size: 24px; }
-        .sub-header { color: #888; font-size: 11px; letter-spacing: 1px; margin: 8px 0 16px 0; }
-        
+        .sub-header { color: #888; font-size: 11px; margin: 8px 0 16px 0; }
         .info-box { font-size: 12px; color: #aaa; background: #181818; padding: 12px; border-radius: 12px; border: 1px solid #262626; text-align: left; line-height: 1.6; }
         .status-dot { height: 8px; width: 8px; background-color: #2e7d32; border-radius: 50%; display: inline-block; margin-right: 5px; }
-
         .paso-label { display: flex; justify-content: space-between; align-items: center; margin-top: 22px; margin-bottom: 10px; }
         .paso-titulo { font-weight: bold; color: #fff; font-size: 18px; font-family: 'Times New Roman', serif; }
-        .paso-num { font-size: 10px; color: #888; letter-spacing: 1px; text-transform: uppercase; }
-
-        /* BARBEIROS */
+        .paso-num { font-size: 10px; color: #888; text-transform: uppercase; }
         .cards-container { display: flex; gap: 10px; }
         .card { flex: 1; border: 1px solid #262626; border-radius: 14px; padding: 12px 6px; text-align: center; cursor: pointer; background: #161616; transition: 0.2s; }
-        .card.active { border-color: #D4AF37; background: #1e1a0f; box-shadow: 0 0 12px rgba(212,175,55,0.2); }
+        .card.active { border-color: #D4AF37; background: #1e1a0f; }
         .card img { width: 58px; height: 58px; border-radius: 50%; object-fit: cover; margin-bottom: 6px; }
         .card span { display: block; font-weight: 600; font-size: 14px; color: #fff; }
         .card small { color: #777; font-size: 10px; }
-
-        /* SERVICIOS */
         .servicos-list { display: flex; flex-direction: column; gap: 10px; }
-        .servico-card { border: 1px solid #262626; border-radius: 14px; padding: 14px; background: #161616; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; }
-        .servico-card.active { border-color: #D4AF37; background: #1e1a0f; box-shadow: 0 0 12px rgba(212,175,55,0.2); }
+        .servico-card { border: 1px solid #262626; border-radius: 14px; padding: 14px; background: #161616; cursor: pointer; display: flex; justify-content: space-between; align-items: center; }
+        .servico-card.active { border-color: #D4AF37; background: #1e1a0f; }
         .servico-info .titulo { font-weight: 600; font-size: 15px; color: #fff; }
         .servico-info .desc { font-size: 11px; color: #777; margin-top: 3px; }
         .servico-precio { color: #fff; font-weight: bold; font-size: 15px; text-align: right; }
         .servico-precio small { display: block; font-size: 10px; color: #777; font-weight: normal; }
-
-        .promo-dupla { border: 1px solid #D4AF37; position: relative; background: #1a170e; }
-        .badge-promo { position: absolute; top: -10px; right: 12px; background: #D4AF37; color: #000; font-size: 9px; font-weight: bold; padding: 2px 8px; border-radius: 10px; letter-spacing: 0.5px; }
-
-        /* INPUTS */
         input[type="date"], input[type="text"], input[type="tel"] { width: 100%; padding: 13px; border-radius: 12px; border: 1px solid #262626; background: #161616; color: #fff; box-sizing: border-box; font-size: 14px; }
         input:focus { border-color: #D4AF37; outline: none; }
-
-        /* HORARIOS */
         .seccion-horarios { background: #161616; border: 1px solid #262626; border-radius: 14px; padding: 12px; margin-top: 10px; }
         .horarios-header { display: flex; justify-content: space-between; font-size: 12px; color: #D4AF37; margin-bottom: 10px; font-weight: bold; }
         .horarios-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
         .hora-btn { background: #1f1f1f; border: 1px solid #2a2a2a; color: #ccc; padding: 10px 0; text-align: center; border-radius: 10px; font-size: 13px; cursor: pointer; font-weight: 500; }
         .hora-btn.active { border-color: #D4AF37; background: #D4AF37; color: #000; font-weight: bold; }
         .hora-btn:disabled { background: #111; color: #444; border-color: #1a1a1a; cursor: not-allowed; text-decoration: line-through; }
-
-        /* RESUMO */
         .resumo-box { background: #161616; border: 1px solid #262626; border-radius: 14px; padding: 16px; margin-top: 20px; }
         .resumo-header { font-family: 'Times New Roman', serif; font-size: 20px; font-weight: bold; margin-bottom: 12px; color: #fff; }
         .resumo-item { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 8px; color: #aaa; }
         .resumo-item span:last-child { color: #fff; font-weight: 500; text-align: right; }
         .resumo-divider { border-top: 1px dashed #2a2a2a; margin: 10px 0; }
-
-        /* BOTONES */
-        .btn-agendar { background: #D4AF37; color: #000; font-weight: bold; border: none; width: 100%; padding: 15px; border-radius: 12px; font-size: 15px; cursor: pointer; margin-top: 18px; box-shadow: 0 4px 15px rgba(212,175,55,0.25); }
+        .btn-agendar { background: #D4AF37; color: #000; font-weight: bold; border: none; width: 100%; padding: 15px; border-radius: 12px; font-size: 15px; cursor: pointer; margin-top: 18px; }
         .btn-maps { background: transparent; color: #888; border: 1px solid #262626; width: 100%; padding: 12px; border-radius: 12px; font-size: 13px; cursor: pointer; margin-top: 10px; }
         #confirmacao { margin-top: 12px; padding: 12px; background: #1b4320; color: #75f082; text-align: center; border-radius: 10px; font-size: 13px; font-weight: 500; }
     </style>
@@ -106,14 +87,14 @@
             <div class="servico-card" id="srv-Corte" onclick="selecionarServico('Corte')">
                 <div class="servico-info">
                     <div class="titulo">Corte</div>
-                    <div class="desc">Corte masculino clássico • tesoura e máquina</div>
+                    <div class="desc">Corte masculino clássico</div>
                 </div>
                 <div class="servico-precio">R$40<small>por pessoa</small></div>
             </div>
             <div class="servico-card" id="srv-Barba" onclick="selecionarServico('Barba')">
                 <div class="servico-info">
                     <div class="titulo">Barba</div>
-                    <div class="desc">Barba completa + toalha quente + acabamento</div>
+                    <div class="desc">Barba completa + toalha quente</div>
                 </div>
                 <div class="servico-precio">R$30<small>por pessoa</small></div>
             </div>
@@ -123,14 +104,6 @@
                     <div class="desc">Pacote completo premium</div>
                 </div>
                 <div class="servico-precio">R$70<small>por pessoa</small></div>
-            </div>
-            <div class="servico-card promo-dupla" id="srv-Dupla" onclick="selecionarServico('Promo Dupla')">
-                <span class="badge-promo">TODOS OS DIAS • MAIS ESCOLHIDO</span>
-                <div class="servico-info">
-                    <div class="titulo" style="color:#D4AF37;">PROMO DUPLA <span style="font-size:11px; background:#D4AF37; color:#000; padding:1px 4px; border-radius:4px;">-R$5</span></div>
-                    <div class="desc">R$35 cada corte + Sobrancelha Grátis</div>
-                </div>
-                <div class="servico-precio" style="color:#D4AF37;">R$35<small>cada corte</small></div>
             </div>
         </div>
 
@@ -177,7 +150,7 @@
     </form>
 
     <div id="confirmacao" style="display:none;">
-        Reserva enviada com sucesso! Obrigado por nos preferir.
+        Reserva enviada com sucesso!
     </div>
 </div>
 
@@ -219,14 +192,10 @@
 
     window.selecionarServico = function(s){
         servicoSel = s;
-        var cards = document.querySelectorAll('.servico-card');
-        cards.forEach(c => c.classList.remove('active'));
-        
+        document.querySelectorAll('.servico-card').forEach(c => c.classList.remove('active'));
         if(s === 'Corte') document.getElementById('srv-Corte').classList.add('active');
         if(s === 'Barba') document.getElementById('srv-Barba').classList.add('active');
         if(s === 'Corte + Barba') document.getElementById('srv-CorteBarba').classList.add('active');
-        if(s === 'Promo Dupla') document.getElementById('srv-Dupla').classList.add('active');
-
         atualizarResumen();
     };
 
@@ -252,7 +221,7 @@
                 if(!datos[i]) continue;
                 var d = String(datos[i].data || "").trim().toUpperCase();
                 var h = String(datos[i].hora || "").trim();
-                var b = String(datos[i].barbero || "").trim();
+                var b = String(datos[i].barbeiro || datos[i].barbero || "").trim();
                 if((d === data || d === "TODOS") && !String(datos[i].status || "").toLowerCase().includes("cancelado")){
                     if(b === "David") ocupadosDavid.push(h);
                     if(b === "Armando") ocupadosArmando.push(h);
@@ -265,6 +234,7 @@
 
         ['David', 'Armando'].forEach(b => {
             var grid = document.getElementById("grid-" + b);
+            if(!grid) return;
             grid.innerHTML = "";
             var ocu = (b === 'David') ? ocupadosDavid : ocupadosArmando;
 
@@ -323,7 +293,6 @@
             return alert("Preencha todos os campos e selecione pelo menos um horário!");
         }
 
-        // Construir string combinada para mensaje único de WhatsApp
         let detWp = [];
         for(let b of ['David', 'Armando']){
             if(horasSel[b].length > 0){
@@ -338,19 +307,19 @@
             "Barbeiro(s): " + detWp.join(', ') + "\n" +
             "Data: " + data;
 
-        // Abrir app de WhatsApp directamente
         var wpUrl = "whatsapp://send?phone=554734354016&text=" + encodeURIComponent(msgWp);
         var wpFallback = "https://api.whatsapp.com/send?phone=554734354016&text=" + encodeURIComponent(msgWp);
         
         var win = window.open(wpUrl, '_blank');
         if(!win) window.open(wpFallback, '_blank');
 
-        // Enviar silenciosamente cada fila individual al Google Sheet
+        // Envío directo simple y limpio al Google Sheet original
         try {
             for(let b of ['David', 'Armando']){
                 for(let h of horasSel[b]){
-                    fetch(API_URL, {
+                    await fetch(API_URL, {
                         method: "POST",
+                        mode: "no-cors",
                         body: new URLSearchParams({
                             data: data, hora: h, cliente: nome, telefone: tel, servico: servicoSel, barbeiro: b
                         })
