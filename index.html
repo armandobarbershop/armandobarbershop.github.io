@@ -3,247 +3,55 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Armando Barber - Reserva</title>
+    <title>Barbearia Armando - Reserva</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #121212;
-            color: #fff;
-            margin: 0;
-            padding: 15px;
-        }
-        .container {
-            max-width: 420px;
-            margin: auto;
-            background: #181818;
-            padding: 20px;
-            border-radius: 16px;
-            box-shadow: 0 8px 24px rgba(0,0,0,0.8);
-            border: 1px solid #333;
-        }
-        .header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        .header h1 {
-            color: #D4AF37;
-            font-size: 24px;
-            margin: 0;
-            letter-spacing: 1px;
-        }
-        .header p {
-            color: #aaa;
-            font-size: 12px;
-            margin: 5px 0 10px 0;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-        .info-box {
-            font-size: 12px;
-            color: #ccc;
-            text-align: center;
-            background: #222;
-            padding: 10px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            line-height: 1.5;
-            border: 1px solid #333;
-        }
-        .info-box a {
-            color: #D4AF37;
-            text-decoration: none;
-        }
-        label {
-            display: block;
-            margin-top: 15px;
-            margin-bottom: 8px;
-            font-weight: bold;
-            color: #D4AF37;
-            font-size: 14px;
-        }
-        /* BARBEROS */
-        .cards-container {
-            display: flex;
-            gap: 12px;
-        }
-        .card {
-            flex: 1;
-            border: 2px solid #333;
-            border-radius: 12px;
-            padding: 12px 8px;
-            text-align: center;
-            cursor: pointer;
-            background: #1e1e1e;
-            transition: all 0.2s ease;
-        }
-        .card.active {
-            border-color: #D4AF37;
-            background: #262626;
-            box-shadow: 0 0 10px rgba(212, 175, 55, 0.3);
-        }
-        .card img {
-            width: 65px;
-            height: 65px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-bottom: 8px;
-            border: 2px solid #D4AF37;
-        }
-        .card span {
-            display: block;
-            font-weight: bold;
-            font-size: 14px;
-        }
-        .card small {
-            color: #888;
-            font-size: 11px;
-        }
-        /* SERVICIOS */
-        .servicos-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-        }
-        .servico-card {
-            border: 2px solid #333;
-            border-radius: 10px;
-            padding: 12px;
-            background: #1e1e1e;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .servico-card.active {
-            border-color: #D4AF37;
-            background: #262626;
-        }
-        .servico-card .titulo {
-            font-weight: bold;
-            font-size: 14px;
-            margin-bottom: 4px;
-        }
-        .servico-card .precio {
-            color: #D4AF37;
-            font-size: 13px;
-        }
-        .servico-dupla {
-            grid-column: span 2;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border: 2px solid #333;
-            border-radius: 10px;
-            padding: 12px 15px;
-            background: #1e1e1e;
-            cursor: pointer;
-            margin-top: 10px;
-        }
-        .servico-dupla.active {
-            border-color: #D4AF37;
-            background: #262626;
-        }
-        .badge-off {
-            background: #D4AF37;
-            color: #000;
-            font-size: 10px;
-            font-weight: bold;
-            padding: 3px 6px;
-            border-radius: 4px;
-        }
-        /* INPUTS Y SELECTS */
-        input[type="date"], input[type="text"], input[type="tel"] {
-            width: 100%;
-            padding: 12px;
-            border-radius: 10px;
-            border: 2px solid #333;
-            background: #1e1e1e;
-            color: #fff;
-            box-sizing: border-box;
-            font-size: 15px;
-        }
-        input:focus, select:focus {
-            border-color: #D4AF37;
-            outline: none;
-        }
-        /* HORARIOS GRILLA */
-        .horarios-grid {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 8px;
-            max-height: 220px;
-            overflow-y: auto;
-            padding: 4px;
-        }
-        .hora-btn {
-            background: #1e1e1e;
-            border: 2px solid #333;
-            color: #fff;
-            padding: 10px 5px;
-            text-align: center;
-            border-radius: 8px;
-            font-size: 13px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-        .hora-btn.active {
-            border-color: #D4AF37;
-            background: #D4AF37;
-            color: #000;
-        }
-        .hora-btn:disabled {
-            background: #141414;
-            color: #555;
-            border-color: #222;
-            cursor: not-allowed;
-            text-decoration: line-through;
-        }
-        /* BOTONES PRINCIPALES */
-        .btn-agendar {
-            background: #D4AF37;
-            color: #000;
-            font-weight: bold;
-            border: none;
-            width: 100%;
-            padding: 15px;
-            border-radius: 12px;
-            font-size: 16px;
-            cursor: pointer;
-            margin-top: 25px;
-            text-align: center;
-            box-shadow: 0 4px 12px rgba(212,175,55,0.3);
-        }
-        .btn-agendar:hover {
-            background: #c29f31;
-        }
-        .btn-maps {
-            background: #1e1e1e;
-            color: #D4AF37;
-            font-weight: bold;
-            border: 2px solid #D4AF37;
-            width: 100%;
-            padding: 12px;
-            border-radius: 12px;
-            font-size: 14px;
-            cursor: pointer;
-            margin-top: 10px;
-            text-align: center;
-        }
-        #confirmacao {
-            margin-top: 15px;
-            padding: 12px;
-            background: #2e7d32;
-            color: white;
-            text-align: center;
-            border-radius: 8px;
-            font-weight: bold;
-        }
+        body { font-family: Arial, sans-serif; background-color: #121212; color: #fff; margin: 0; padding: 15px; }
+        .container { max-width: 420px; margin: auto; background: #181818; padding: 20px; border-radius: 16px; box-shadow: 0 8px 24px rgba(0,0,0,0.8); border: 1px solid #333; }
+        .header { text-align: center; margin-bottom: 20px; }
+        .header h1 { color: #D4AF37; font-size: 24px; margin: 0; letter-spacing: 1px; }
+        .header p { color: #aaa; font-size: 12px; margin: 5px 0 10px 0; text-transform: uppercase; letter-spacing: 1px; }
+        .info-box { font-size: 12px; color: #ccc; text-align: center; background: #222; padding: 10px; border-radius: 8px; margin-bottom: 20px; line-height: 1.5; border: 1px solid #333; }
+        .info-box a { color: #D4AF37; text-decoration: none; }
+        label { display: block; margin-top: 15px; margin-bottom: 8px; font-weight: bold; color: #D4AF37; font-size: 14px; }
+        .cards-container { display: flex; gap: 12px; }
+        .card { flex: 1; border: 2px solid #333; border-radius: 12px; padding: 12px 8px; text-align: center; cursor: pointer; background: #1e1e1e; }
+        .card.active { border-color: #D4AF37; background: #262626; box-shadow: 0 0 10px rgba(212, 175, 55, 0.3); }
+        .card img { width: 65px; height: 65px; border-radius: 50%; object-fit: cover; margin-bottom: 8px; border: 2px solid #D4AF37; }
+        .card span { display: block; font-weight: bold; font-size: 14px; }
+        .card small { color: #888; font-size: 11px; }
+        .oferta-dupla { border: 2px solid #333; border-radius: 10px; padding: 12px; background: #1e1e1e; margin-top: 15px; cursor: pointer; }
+        .oferta-dupla.active { border-color: #D4AF37; background: #262626; }
+        .oferta-dupla-header { display: flex; justify-content: space-between; align-items: center; font-weight: bold; font-size: 13px; color: #D4AF37; }
+        .oferta-dupla-desc { font-size: 11px; color: #aaa; margin-top: 4px; }
+        .servicos-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; }
+        .servico-card { border: 2px solid #333; border-radius: 10px; padding: 12px; background: #1e1e1e; cursor: pointer; }
+        .servico-card.active { border-color: #D4AF37; background: #262626; }
+        .servico-card .titulo { font-weight: bold; font-size: 14px; margin-bottom: 4px; }
+        .servico-card .precio { color: #D4AF37; font-size: 13px; }
+        input[type="date"], input[type="text"], input[type="tel"] { width: 100%; padding: 12px; border-radius: 10px; border: 2px solid #333; background: #1e1e1e; color: #fff; box-sizing: border-box; font-size: 15px; }
+        input:focus { border-color: #D4AF37; outline: none; }
+        .seccion-horarios { background: #161616; border: 1px solid #333; border-radius: 10px; padding: 10px; margin-top: 10px; }
+        .horarios-header { display: flex; justify-content: space-between; align-items: center; font-size: 12px; color: #D4AF37; margin-bottom: 8px; }
+        .btn-limpiar { background: none; border: none; color: #ff5555; cursor: pointer; font-size: 11px; font-weight: bold; }
+        .horarios-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; max-height: 180px; overflow-y: auto; }
+        .hora-btn { background: #1e1e1e; border: 2px solid #333; color: #fff; padding: 8px 4px; text-align: center; border-radius: 6px; font-size: 12px; cursor: pointer; font-weight: bold; }
+        .hora-btn.active { border-color: #D4AF37; background: #D4AF37; color: #000; }
+        .hora-btn:disabled { background: #111; color: #444; border-color: #1a1a1a; cursor: not-allowed; text-decoration: line-through; }
+        .resumen-box { background: #151515; border: 1px solid #333; border-radius: 10px; padding: 12px; margin-top: 20px; font-size: 13px; }
+        .resumen-linea { display: flex; justify-content: space-between; margin-bottom: 5px; }
+        .resumen-linea span:last-child { color: #D4AF37; font-weight: bold; }
+        .btn-agendar { background: #D4AF37; color: #000; font-weight: bold; border: none; width: 100%; padding: 15px; border-radius: 12px; font-size: 16px; cursor: pointer; margin-top: 15px; text-align: center; box-shadow: 0 4px 12px rgba(212,175,55,0.3); }
+        .btn-agendar:hover { background: #c29f31; }
+        .btn-maps { background: #1e1e1e; color: #D4AF37; font-weight: bold; border: 2px solid #D4AF37; width: 100%; padding: 12px; border-radius: 12px; font-size: 14px; cursor: pointer; margin-top: 10px; text-align: center; }
+        #confirmacao { margin-top: 15px; padding: 12px; background: #2e7d32; color: white; text-align: center; border-radius: 8px; font-weight: bold; }
     </style>
 </head>
 <body>
 
 <div class="container">
     <div class="header">
-        <h1>ARMANDO BARBER</h1>
-        <p>Joinville - Reserva</p>
+        <h1>BARBERIA ARMANDO</h1>
+        <p>Horário de Atendimento</p>
         <div class="info-box">
             📍 <a href="https://maps.app.goo.gl/PeCnFTVfxGxvAyP48" target="_blank">Rua Tuiuti, 3442 - Aventureiro, Joinville</a><br>
             ⏱ Seg a Sex: 8:30–11:00 | 13:00–19:00<br>
@@ -252,68 +60,91 @@
     </div>
     
     <form id="formReserva" onsubmit="event.preventDefault();">
-        <label>💈 Escolha o Barbeiro</label>
+        <label>Escolha o(s) barbeiro(s): pode reservar até 2</label>
         <div class="cards-container">
-            <div class="card active" onclick="selecionarBarbeiro('David', this)">
+            <div class="card" id="card-David" onclick="toggleBarbeiro('David')">
                 <img src="https://i.imgur.com/QYKPKZ2.jpg">
                 <span>David</span>
-                <small>8:30 às 19:00</small>
+                <small id="contador-David">0 seleções</small>
             </div>
-            <div class="card" onclick="selecionarBarbeiro('Armando', this)">
+            <div class="card" id="card-Armando" onclick="toggleBarbeiro('Armando')">
                 <img src="https://i.imgur.com/JVUmj2q.jpg">
                 <span>Armando</span>
-                <small>8:30 às 19:00</small>
+                <small id="contador-Armando">0 seleções</small>
             </div>
         </div>
 
-        <input type="hidden" id="barbeiro" value="David">
-        <input type="hidden" id="servico" value="Corte">
+        <div class="oferta-dupla" id="ofertaDuplaCard" onclick="toggleOfertaDupla()">
+            <div class="oferta-dupla-header">
+                <span>⭐ Oferta dupla TODOS OS DIAS</span>
+                <span>R$70</span>
+            </div>
+            <div class="oferta-dupla-desc">R$35 cada um + Design de cejas grátis</div>
+        </div>
 
-        <label>✂️ Serviço</label>
+        <label>Serviço</label>
         <div class="servicos-grid">
-            <div class="servico-card active" onclick="selecionarServico('Corte', this)">
+            <div class="servico-card" id="srv-Corte" onclick="selecionarServico('Corte', 'R$40')">
                 <div class="titulo">Corte</div>
                 <div class="precio">R$40</div>
             </div>
-            <div class="servico-card" onclick="selecionarServico('Barba', this)">
+            <div class="servico-card" id="srv-Barba" onclick="selecionarServico('Barba', 'R$30')">
                 <div class="titulo">Barba</div>
                 <div class="precio">R$30</div>
             </div>
-            <div class="servico-card" onclick="selecionarServico('Sobrancelha', this)">
+            <div class="servico-card" id="srv-Sobrancelha" onclick="selecionarServico('Sobrancelha', 'R$10')">
                 <div class="titulo">Sobrancelha</div>
                 <div class="precio">R$10</div>
             </div>
-            <div class="servico-card" onclick="selecionarServico('Corte e Barba', this)">
+            <div class="servico-card" id="srv-Corte e Barba" onclick="selecionarServico('Corte e Barba', 'R$70')">
                 <div class="titulo">Corte e Barba</div>
                 <div class="precio">R$70</div>
             </div>
-        </div>
-        <div class="servico-dupla" onclick="selecionarServico('Dupla (2 pessoas)', this)">
-            <div>
-                <div class="titulo">Dupla (2 pessoas)</div>
-                <div class="precio">R$70</div>
-            </div>
-            <span class="badge-off">R$5 OFF</span>
         </div>
 
         <label>📅 Data</label>
         <input type="date" id="data" required>
 
-        <label>⏰ Horários</label>
-        <div id="horarios-container" class="horarios-grid">
-            <!-- Se llenará dinámicamente -->
+        <div class="seccion-horarios" id="secc-David" style="display:none;">
+            <div class="horarios-header">
+                <span id="label-horarios-David">Horários David - 0/4</span>
+                <button type="button" class="btn-limpiar" onclick="limparHorarios('David')">Limpar</button>
+            </div>
+            <div id="horarios-grid-David" class="horarios-grid"></div>
         </div>
-        <select id="hora" style="display:none;"></select>
 
-        <label>👤 Seu nome</label>
-        <input type="text" id="nome" placeholder="Ex: João Silva" required>
+        <div class="seccion-horarios" id="secc-Armando" style="display:none;">
+            <div class="horarios-header">
+                <span id="label-horarios-Armando">Horários Armando - 0/4</span>
+                <button type="button" class="btn-limpiar" onclick="limparHorarios('Armando')">Limpar</button>
+            </div>
+            <div id="horarios-grid-Armando" class="horarios-grid"></div>
+        </div>
 
-        <label>📱 WhatsApp - com 1 número já agenda</label>
+        <label>👤 Nome</label>
+        <input type="text" id="nome" placeholder="Seu nome" required>
+
+        <label>📱 WhatsApp</label>
         <input type="tel" inputmode="numeric" id="telefone" placeholder="Ex: 4799999999" required>
 
-        <button type="button" class="btn-agendar" onclick="agendar()">Agendar no WhatsApp ✅</button>
-        <button type="button" class="btn-maps" onclick="abrirMaps()">📍 Ver localização no Maps</button>
-        <button id="btnInstalar" style="display:none;" class="btn-maps">📱 Baixar APP - Armando Barber</button>
+        <div class="resumen-box">
+            <div class="resumen-linea">
+                <span>Serviço:</span>
+                <span id="res-servico">-</span>
+            </div>
+            <div class="resumen-linea">
+                <span>Detalhes:</span>
+                <span id="res-detalles">-</span>
+            </div>
+            <div class="resumen-linea" style="margin-top:8px; border-top:1px solid #333; padding-top:6px;">
+                <span>Total:</span>
+                <span id="res-total">-</span>
+            </div>
+        </div>
+
+        <button type="button" class="btn-agendar" onclick="agendar()">Horário ✅</button>
+        <button type="button" class="btn-maps" onclick="abrirMaps()">📍 Ver localização</button>
+        <button id="btnInstalar" style="display:none;" class="btn-maps">📱 Baixar APP</button>
     </form>
 
     <div id="confirmacao" style="display:none;">
@@ -328,14 +159,11 @@ window.addEventListener('beforeinstallprompt', (e) => {
     deferredPrompt = e;
     document.getElementById('btnInstalar').style.display = 'block';
 });
-
 document.getElementById('btnInstalar').addEventListener('click', async () => {
     if (deferredPrompt) {
         deferredPrompt.prompt();
         const { outcome } = await deferredPrompt.userChoice;
-        if (outcome === 'accepted') {
-            document.getElementById('btnInstalar').style.display = 'none';
-        }
+        if (outcome === 'accepted') document.getElementById('btnInstalar').style.display = 'none';
         deferredPrompt = null;
     }
 });
@@ -344,247 +172,244 @@ document.getElementById('btnInstalar').addEventListener('click', async () => {
 <script>
 (function(){
     "use strict";
-
-    /* CONFIG */
     const API_URL = "https://script.google.com/macros/s/AKfycbxJtqFT6tj3A6ekl2PHhXgF0j-5FJbj-EJT1I9Tn884kFgd7t_9pY9qT8pbK3T-xbXU/exec";
+
+    let seleccionBarbeiros = [];
+    let servicoSeleccionado = null;
+    let precioSeleccionado = "-";
+    let horasSeleccionadas = { 'David': [], 'Armando': [] };
+    let ofertaDuplaActiva = false;
 
     window.addEventListener("pageshow", function(){
         document.getElementById("nome").value = "";
         document.getElementById("telefone").value = "";
     });
 
-    /* FECHA MINIMA */
     window.addEventListener("load", function(){
         var agora = new Date();
-        var hoy = agora.getFullYear() + "-" +
-                  String(agora.getMonth() + 1).padStart(2,'0') + "-" +
-                  String(agora.getDate()).padStart(2,'0');
+        var hoy = agora.getFullYear() + "-" + String(agora.getMonth() + 1).padStart(2,'0') + "-" + String(agora.getDate()).padStart(2,'0');
         document.getElementById("data").min = hoy;
         document.getElementById("data").value = hoy;
+        carregarHorasGlobal();
     });
 
-    /* HORAS */
-    var HORAS_SEMANA = [
-        "08:30","09:00","09:30","10:00","10:30","11:00",
-        "13:00","13:30","14:00","14:30","15:00","15:30",
-        "16:00","16:30","17:00","17:30","18:00","18:30",
-        "19:00","19:30","20:00"
-    ];
+    var HORAS_SEMANA = ["08:30","09:00","09:30","10:00","10:30","11:00","13:00","13:30","14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30","18:00","18:30","19:00","19:30","20:00"];
+    var HORAS_SABADO = ["08:00","08:30","09:00","09:30","10:00","10:30","11:00","11:30","13:00","13:30","14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30"];
 
-    var HORAS_SABADO = [
-        "08:00","08:30","09:00","09:30","10:00","10:30",
-        "11:00","11:30","13:00","13:30","14:00","14:30",
-        "15:00","15:30","16:00","16:30","17:00","17:30"
-    ];
-
-    /* SELECCIONAR BARBERO */
-    window.selecionarBarbeiro = function(nome, el){
-        document.getElementById("barbeiro").value = nome.trim();
-        var cards = document.querySelectorAll(".cards-container .card");
-        for(var i=0;i<cards.length;i++){
-            cards[i].classList.remove("active");
+    window.toggleBarbeiro = function(nome){
+        var index = seleccionBarbeiros.indexOf(nome);
+        if(index > -1){
+            seleccionBarbeiros.splice(index, 1);
+            horasSeleccionadas[nome] = [];
+            document.getElementById('card-' + nome).classList.remove('active');
+            document.getElementById('secc-' + nome).style.display = 'none';
+        } else {
+            if(seleccionBarbeiros.length >= 2){ alert("Você só pode selecionar até 2 barbeiros."); return; }
+            seleccionBarbeiros.push(nome);
+            document.getElementById('card-' + nome).classList.add('active');
+            document.getElementById('secc-' + nome).style.display = 'block';
         }
-        el.classList.add("active");
-        carregarHoras();
+        atualizarContadores();
+        carregarHorasGlobal();
+        actualizarResumen();
     };
 
-    /* SELECCIONAR SERVICIO */
-    window.selecionarServico = function(servicoNome, el){
-        document.getElementById("servico").value = servicoNome;
-        var cards = document.querySelectorAll(".servico-card, .servico-dupla");
-        for(var i=0; i<cards.length; i++){
-            cards[i].classList.remove("active");
+    window.toggleOfertaDupla = function(){
+        ofertaDuplaActiva = !ofertaDuplaCard.classList.contains('active');
+        if(ofertaDuplaActiva){
+            document.getElementById('ofertaDuplaCard').classList.add('active');
+            servicoSeleccionado = "Dupla (2 pessoas)";
+            precioSeleccionado = "R$70";
+            var srvs = document.querySelectorAll('.servico-card');
+            for(var i=0; i<srvs.length; i++) srvs[i].classList.remove('active');
+        } else {
+            document.getElementById('ofertaDuplaCard').classList.remove('active');
+            servicoSeleccionado = null;
+            precioSeleccionado = "-";
         }
-        el.classList.add("active");
+        actualizarResumen();
     };
 
-    /* CARGAR HORAS */
-    async function carregarHoras(){
-        if(window.carregandoHoras) return;
-        window.carregandoHoras = true;
+    window.selecionarServico = function(nome, precio){
+        ofertaDuplaActiva = false;
+        document.getElementById('ofertaDuplaCard').classList.remove('active');
+        servicoSeleccionado = nome;
+        precioSeleccionado = precio;
+        var srvs = document.querySelectorAll('.servico-card');
+        for(var i=0; i<srvs.length; i++) srvs[i].classList.remove('active');
+        document.getElementById('srv-' + nome).classList.add('active');
+        actualizarResumen();
+    };
 
+    function atualizarContadores(){
+        var dCount = horasSeleccionadas['David'].length;
+        var aCount = horasSeleccionadas['Armando'].length;
+        document.getElementById('contador-David').innerText = dCount + " horários";
+        document.getElementById('contador-Armando').innerText = aCount + " horários";
+        document.getElementById('label-horarios-David').innerText = "Horários David - " + dCount + "/4";
+        document.getElementById('label-horarios-Armando').innerText = "Horários Armando - " + aCount + "/4";
+    }
+
+    window.limparHorarios = function(barbeiro){
+        horasSeleccionadas[barbeiro] = [];
+        atualizarContadores();
+        carregarHorasGlobal();
+        actualizarResumen();
+    };
+
+    async function carregarHorasGlobal(){
         var data = document.getElementById("data").value;
-        var barbeiro = document.getElementById("barbeiro").value.trim();
-        var container = document.getElementById("horarios-container");
-        var selectHidden = document.getElementById("hora");
-
-        container.innerHTML = "<div style='grid-column: span 4; text-align:center; color:#888; padding:10px;'>Carregando horas...</div>";
-        selectHidden.innerHTML = "";
-
-        if(!data || !barbeiro){
-            window.carregandoHoras = false;
-            return;
-        }
-
+        if(!data) return;
         var partes = data.split("-");
-        var dataSelecionada = new Date(
-            parseInt(partes[0]),
-            parseInt(partes[1]) - 1,
-            parseInt(partes[2])
-        );
+        var dataSelecionada = new Date(parseInt(partes[0]), parseInt(partes[1]) - 1, parseInt(partes[2]));
         var diaSemana = dataSelecionada.getDay();
-        var HORAS;
+        var HORAS = (diaSemana === 6) ? HORAS_SABADO : (diaSemana === 0 ? [] : HORAS_SEMANA);
 
         if(diaSemana === 0){
-            container.innerHTML = "<div style='grid-column: span 4; text-align:center; color:#D4AF37; padding:10px;'>Fechado aos domingos</div>";
-            window.carregandoHoras = false;
+            ['David', 'Armando'].forEach(b => {
+                document.getElementById("horarios-grid-" + b).innerHTML = "<div style='grid-column: span 4; text-align:center; color:#D4AF37;'>Fechado aos domingos</div>";
+            });
             return;
         }
 
-        if(diaSemana === 6){
-            HORAS = HORAS_SABADO;
-        }else{
-            HORAS = HORAS_SEMANA;
-        }
-
-        var ocupados = [];
+        var ocupadosDavid = [], ocupadosArmando = [];
         try{
             var res = await fetch(API_URL + "?callback=dummy");
             var datos = await res.json();
-
             for(var i = 0; i < datos.length; i++){
                 if(!datos[i]) continue;
                 var d = String(datos[i].data || "").trim().toUpperCase();
                 var h = String(datos[i].hora || "").trim();
                 var b = String(datos[i].barbero || "").trim();
-
                 if(!d || !h || !b) continue;
-
-                if((d === data || d === "TODOS") && b === barbeiro){
-                    var status = "";
-                    if(datos[i].status){
-                        status = String(datos[i].status).trim().toLowerCase();
-                    }
-                    if(status.includes("cancelado")){
-                        continue;
-                    }
-                    ocupados.push(h);
+                if(d === data || d === "TODOS"){
+                    var status = String(datos[i].status || "").trim().toLowerCase();
+                    if(status.includes("cancelado")) continue;
+                    if(b === "David") ocupadosDavid.push(h);
+                    if(b === "Armando") ocupadosArmando.push(h);
                 }
             }
-        }catch(e){
-            console.log("Erro API", e);
-        }
+        }catch(e){ console.log("Erro API", e); }
 
         var ahora = new Date();
-        var hoy = ahora.getFullYear() + "-" +
-                  String(ahora.getMonth() + 1).padStart(2,'0') + "-" +
-                  String(ahora.getDate()).padStart(2,'0');
-        var horaActual = String(ahora.getHours()).padStart(2,'0') + ":" +
-                         String(ahora.getMinutes()).padStart(2,'0');
+        var hoy = ahora.getFullYear() + "-" + String(ahora.getMonth() + 1).padStart(2,'0') + "-" + String(ahora.getDate()).padStart(2,'0');
+        var horaActual = String(ahora.getHours()).padStart(2,'0') + ":" + String(ahora.getMinutes()).padStart(2,'0');
 
-        container.innerHTML = "";
-        
-        for(var i=0; i<HORAS.length; i++){
-            var h = HORAS[i];
-            
-            // Crear opción para select oculto
-            var opt = document.createElement("option");
-            opt.value = h;
-            opt.text = h;
-            selectHidden.add(opt);
+        ['David', 'Armando'].forEach(barbeiro => {
+            var container = document.getElementById("horarios-grid-" + barbeiro);
+            container.innerHTML = "";
+            var ocupadosList = (barbeiro === 'David') ? ocupadosDavid : ocupadosArmando;
 
-            // Crear botón visual
-            var btn = document.createElement("button");
-            btn.type = "button";
-            btn.className = "hora-btn";
-            btn.innerText = h;
-            
-            if(ocupados.indexOf(h) !== -1){
-                btn.disabled = true;
+            for(var i=0; i<HORAS.length; i++){
+                var h = HORAS[i];
+                var btn = document.createElement("button");
+                btn.type = "button";
+                btn.className = "hora-btn";
                 btn.innerText = h;
-            } else if(data === hoy && h <= horaActual){
-                btn.disabled = true;
-            } else {
-                // Evento al hacer clic en un horario libre
-                (function(horaVal, botonEl){
-                    btn.onclick = function(){
-                        var todosBtns = container.querySelectorAll(".hora-btn");
-                        for(var b=0; b<todosBtns.length; b++){
-                            todosBtns[b].classList.remove("active");
-                        }
-                        botonEl.classList.add("active");
-                        selectHidden.value = horaVal;
-                    };
-                })(h, btn);
-            }
-            container.appendChild(btn);
-        }
 
-        window.carregandoHoras = false;
+                if(ocupadosList.indexOf(h) !== -1 || (data === hoy && h <= horaActual)){
+                    btn.disabled = true;
+                } else {
+                    if(horasSeleccionadas[barbeiro].indexOf(h) > -1) btn.classList.add("active");
+                    btn.onclick = (function(bName, horaVal, btnEl){
+                        return function(){
+                            var idx = horasSeleccionadas[bName].indexOf(horaVal);
+                            if(idx > -1){
+                                horasSeleccionadas[bName].splice(idx, 1);
+                                btnEl.classList.remove("active");
+                            } else {
+                                if(horasSeleccionadas[bName].length >= 4){ alert("Máximo 4 horários por barbeiro."); return; }
+                                horasSeleccionadas[bName].push(horaVal);
+                                btnEl.classList.add("active");
+                            }
+                            atualizarContadores();
+                            actualizarResumen();
+                        };
+                    })(barbeiro, h, btn);
+                }
+                container.appendChild(btn);
+            }
+        });
     }
 
-    document.addEventListener("DOMContentLoaded", function(){
-        setTimeout(carregarHoras, 100);
-        document.getElementById("data").addEventListener("change", carregarHoras);
-    });
+    function actualizarResumen(){
+        document.getElementById('res-servico').innerText = servicoSeleccionado || "-";
+        let textoDetalles = [];
+        ['David', 'Armando'].forEach(b => {
+            if(horasSeleccionadas[b].length > 0) textoDetalles.push(b + " (" + horasSeleccionadas[b].join(', ') + ")");
+        });
+        document.getElementById('res-detalles').innerText = textoDetalles.length > 0 ? textoDetalles.join(' | ') : "-";
+        document.getElementById('res-total').innerText = precioSeleccionado;
+    }
 
-    /* AGENDAR (CON PARCHE DE TELEFONO) */
-    window.agendar = function(){
+    document.getElementById("data").addEventListener("change", carregarHorasGlobal);
+
+    window.agendar = async function(){
         var data = document.getElementById("data").value;
-        var hora = document.getElementById("hora").value;
         var nome = document.getElementById("nome").value;
-        
         var telefonoInput = document.getElementById("telefone");
         var telefono = telefonoInput ? telefonoInput.value : "";
-        
-        var barbeiro = document.getElementById("barbeiro").value.trim();
-        var servico = document.getElementById("servico").value;
+        let totalHorasCount = horasSeleccionadas['David'].length + horasSeleccionadas['Armando'].length;
 
-        if(!data || !hora || !nome || !telefono){
-            alert("Preencha todos os campos e selecione um horário!");
+        if(!data || !nome || !telefone || !servicoSeleccionado || totalHorasCount === 0){
+            alert("Preencha todos os campos e selecione pelo menos um horário!");
             return;
         }
 
-        var texto =
-            "Olá Armando Barber Shop%0A%0A" +
-            "Quero agendar um horário%0A%0A" +
-            "Barbeiro: " + barbeiro + "%0A" +
-            "Serviço: " + servico + "%0A" +
-            "Data: " + data + "%0A" +
-            "Hora: " + hora + "%0A" +
-            "Nome: " + nome;
+        try {
+            for(let barbeiro of ['David', 'Armando']){
+                for(let hora of horasSeleccionadas[barbeiro]){
+                    // Enviar al Google Sheet de forma independiente por cada hora/barbero
+                    await fetch(API_URL, {
+                        method: "POST",
+                        body: new URLSearchParams({
+                            data: data,
+                            hora: hora,
+                            cliente: nome,
+                            telefone: telefono,
+                            servico: servicoSeleccionado,
+                            barbeiro: barbeiro
+                        })
+                    });
 
-        window.open("https://wa.me/554734354016?text=" + texto);
+                        // Mensaje de WhatsApp personalizado con emojis
+        let textoWp = 
+            "*NOVA RESERVA - Armando Barber Shop*\n\n" +
+            "👤 Cliente: " + nome + "\n" +
+            "📱 WhatsApp Cliente: " + telefono + "\n" +
+            "✂ Serviço: " + servicoSeleccionado + "\n" +
+            "📅 Data: " + data + "\n" +
+            "⏰ Hora: " + hora + "\n" +
+            "💈 Barbeiro: " + barbeiro + "\n\n" +
+            "_Reserva feita pelo site_";
 
-        fetch(API_URL,{
-            method: "POST",
-            body: new URLSearchParams({
-                data: data,
-                hora: hora,
-                cliente: nome,
-                telefone: telefono,
-                servico: servico,
-                barbeiro: barbeiro
-            })
-        })
-        .then(response => response.text())
-        .then(() => {
-            localStorage.setItem("ultima_reserva", "ok");
+        window.open("https://wa.me/554734354016?text=" + encodeURIComponent(textoWp), "_blank");
+    }
 
-            let msg = document.getElementById("confirmacao");
-            if(msg){
-                msg.style.display = "block";
-                msg.innerHTML = "Reserva enviada com sucesso! Obrigado por nos preferir.";
-            }
+    localStorage.setItem("ultima_reserva", "ok");
+    let msg = document.getElementById("confirmacao");
+    if(msg){
+        msg.style.display = "block";
+        msg.innerHTML = "Reserva enviada com sucesso! Obrigado por nos preferir.";
+    }
 
-            document.getElementById("nome").value = "";
-            document.getElementById("telefone").value = "";
+    document.getElementById("nome").value = "";
+    document.getElementById("telefone").value = "";
+    horasSeleccionadas['David'] = [];
+    horasSeleccionadas['Armando'] = [];
+    atualizarContadores();
+    carregarHorasGlobal();
 
-            setTimeout(() => {
-                carregarHoras();
-            }, 1500);
-        })
-        .catch(() => {
-            alert("Erro ao salvar reserva");
-        });
-    };
+    } catch(e) {
+        alert("Erro ao salvar reservas");
+    }
+};
 
-    window.abrirMaps = function(){
-        window.open("https://maps.app.goo.gl/PeCnFTVfxGxvAyP48");
-    };
-
+window.abrirMaps = function(){ window.open("https://maps.app.goo.gl/PeCnFTVfxGxvAyP48"); };
 })();
 </script>
 
 </body>
 </html>
+
+    
