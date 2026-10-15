@@ -300,172 +300,176 @@
   </div>
 
   <script>
-    (function(){
-      "use strict";
+    const API_URL = "https://script.google.com/macros/s/AKfycbxJtqFT6tj3A6ekl2PHhXgF0j-5FJbj-EJT1I9Tn884kFgd7t_9pY9qT8pbK3T-xbXU/exec";
 
-      const API_URL = "https://script.google.com/macros/s/AKfycbxJtqFT6tj3A6ekl2PHhXgF0j-5FJbj-EJT1I9Tn884kFgd7t_9pY9qT8pbK3T-xbXU/exec";
+    const HORAS_SEMANA = ["08:30","09:00","09:30","10:00","10:30","11:00","13:00","13:30","14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30","18:00","18:30","19:00"];
+    const HORAS_LUNES = ["08:30","09:00","09:30","10:00","10:30","11:00","13:00","13:30","14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30"];
+    const HORAS_SABADO = ["08:00","08:30","09:00","09:30","10:00","10:30","11:00","11:30","13:00","13:30","14:00","14:30","15:00","15:30","16:00","16:30","17:00"];
 
-      const HORAS_SEMANA = ["08:30","09:00","09:30","10:00","10:30","11:00","13:00","13:30","14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30","18:00","18:30","19:00"];
-      const HORAS_LUNES = ["08:30","09:00","09:30","10:00","10:30","11:00","13:00","13:30","14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30"];
-      const HORAS_SABADO = ["08:00","08:30","09:00","09:30","10:00","10:30","11:00","11:30","13:00","13:30","14:00","14:30","15:00","15:30","16:00","16:30","17:00"];
+    // Función global para asegurar que el navegador siempre la encuentre
+    window.carregarHoras = async function() {
+      const dataEl = document.getElementById("data");
+      const barbeiroEl = document.getElementById("barbeiro");
+      const select = document.getElementById("hora");
 
-      window.addEventListener("load", () => {
-        setTimeout(() => {
-          const loader = document.getElementById("loader");
-          if(loader) loader.classList.add("hidden");
-        }, 800);
+      if (!dataEl || !barbeiroEl || !select) return;
 
-        const agora = new Date();
-        const hoy = agora.getFullYear() + "-" + String(agora.getMonth() + 1).padStart(2,'0') + "-" + String(agora.getDate()).padStart(2,'0');
-        const dataInput = document.getElementById("data");
-        dataInput.min = hoy;
-        dataInput.value = hoy;
-        
-        carregarHoras();
-      });
+      const data = dataEl.value;
+      const barbeiro = barbeiroEl.value.trim();
 
-      window.selecionarBarbeiro = function(nome, el) {
-        document.getElementById("barbeiro").value = nome.trim();
-        document.querySelectorAll(".card").forEach(c => c.classList.remove("active"));
-        el.classList.add("active");
-        carregarHoras();
-      };
+      if (!data) return;
 
-      window.carregarHoras = async function() {
-        const data = document.getElementById("data").value;
-        const barbeiro = document.getElementById("barbeiro").value.trim();
-        const select = document.getElementById("hora");
+      const partes = data.split("-");
+      const dataSelecionada = new Date(parseInt(partes[0]), parseInt(partes[1]) - 1, parseInt(partes[2]));
+      const diaSemana = dataSelecionada.getDay();
 
-        if(!data || !barbeiro) return;
+      if (diaSemana === 0) {
+        select.innerHTML = "<option disabled selected>Fechado aos domingos</option>";
+        return;
+      }
 
-        const partes = data.split("-");
-        const dataSelecionada = new Date(parseInt(partes[0]), parseInt(partes[1]) - 1, parseInt(partes[2]));
-        const diaSemana = dataSelecionada.getDay();
+      let HORAS = (diaSemana === 1) ? HORAS_LUNES : (diaSemana === 6) ? HORAS_SABADO : HORAS_SEMANA;
+      const ahora = new Date();
+      const hoyStr = ahora.getFullYear() + "-" + String(ahora.getMonth() + 1).padStart(2,'0') + "-" + String(ahora.getDate()).padStart(2,'0');
+      const horaActual = String(ahora.getHours()).padStart(2,'0') + ":" + String(ahora.getMinutes()).padStart(2,'0');
 
-        if(diaSemana === 0) {
-          select.innerHTML = "<option disabled selected>Fechado aos domingos</option>";
-          return;
-        }
+      function aplicarHoras(ocupadosList = []) {
+        select.innerHTML = "";
+        let disponibles = 0;
 
-        let HORAS = (diaSemana === 1) ? HORAS_LUNES : (diaSemana === 6) ? HORAS_SABADO : HORAS_SEMANA;
-        const ahora = new Date();
-        const hoyStr = agora.getFullYear() + "-" + String(agora.getMonth() + 1).padStart(2,'0') + "-" + String(agora.getDate()).padStart(2,'0');
-        const horaActual = String(ahora.getHours()).padStart(2,'0') + ":" + String(ahora.getMinutes()).padStart(2,'0');
+        HORAS.forEach(h => {
+          const opt = document.createElement("option");
+          opt.value = h;
+          opt.text = h;
 
-        // Función segura para rellenar las horas en el selector
-        function aplicarHoras(ocupadosList = []) {
-          select.innerHTML = "";
-          let disponibles = 0;
-
-          HORAS.forEach(h => {
-            const opt = document.createElement("option");
-            opt.value = h;
-            opt.text = h;
-
-            if(ocupadosList.includes(h)) {
-              opt.disabled = true;
-              opt.text = `${h} (ocupado)`;
-            } else if(data === hoyStr && h <= horaActual) {
-              opt.disabled = true;
-              opt.text = `${h} (passou)`;
-            } else {
-              disponibles++;
-            }
-            select.add(opt);
-          });
-
-          if(disponibles === 0) {
-            select.innerHTML = "<option disabled selected>Sem horários disponíveis</option>";
+          if (ocupadosList.includes(h)) {
+            opt.disabled = true;
+            opt.text = `${h} (ocupado)`;
+          } else if (data === hoyStr && h <= horaActual) {
+            opt.disabled = true;
+            opt.text = `${h} (passou)`;
+          } else {
+            disponibles++;
           }
-        }
+          select.add(opt);
+        });
 
-        // 1. Dibuja las horas de inmediato para que NUNCA quede en blanco
-        aplicarHoras();
-
-        // 2. Intenta buscar los ocupados en segundo plano
-        try {
-          const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 4000);
-
-          const res = await fetch(`${API_URL}?reservas=1&data=${data}&barbero=${encodeURIComponent(barbeiro)}`, {
-            signal: controller.signal
-          });
-          clearTimeout(timeoutId);
-
-          if(res.ok) {
-            const datos = await res.json();
-            let ocupados = [];
-
-            if(Array.isArray(datos)) {
-              datos.forEach(item => {
-                if(!item) return;
-                const d = String(item.data || "").trim().toUpperCase();
-                const h = String(item.hora || "").trim();
-                const b = String(item.barbero || "").trim();
-                const status = String(item.status || "").trim().toLowerCase();
-
-                if((d === data || d === "TODOS") && b === barbeiro && !status.includes("cancelado")) {
-                  ocupados.push(h);
-                }
-              });
-            }
-            aplicarHoras(ocupados);
-          }
-        } catch(e) {
-          console.warn("Aviso: No se pudo consultar la API, se mantienen las horas libres.", e);
+        if (disponibles === 0) {
+          select.innerHTML = "<option disabled selected>Sem horários disponíveis</option>";
         }
       }
 
-      document.getElementById("data").addEventListener("change", carregarHoras);
+      // 1. Dibuja las horas de inmediato
+      aplicarHoras();
 
-      window.agendar = async function() {
-        const btn = document.getElementById("btnAgendar");
-        const erroBox = document.getElementById("alerta-erro");
-        erroBox.style.display = "none";
+      // 2. Consulta en segundo plano el Sheet
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 4000);
 
-        const data = document.getElementById("data").value;
-        const hora = document.getElementById("hora").value;
-        const nome = document.getElementById("nome").value.trim();
-        const telefono = document.getElementById("telefone").value.trim();
-        const barbeiro = document.getElementById("barbeiro").value;
-        const servico = document.getElementById("servico").value;
+        const res = await fetch(`${API_URL}?reservas=1&data=${data}&barbero=${encodeURIComponent(barbeiro)}`, {
+          signal: controller.signal
+        });
+        clearTimeout(timeoutId);
 
-        if(!data || !hora || !nome || !telefono) {
-          erroBox.innerText = "Por favor, preencha todos os campos obrigatórios.";
-          erroBox.style.display = "block";
-          return;
+        if (res.ok) {
+          const datos = await res.json();
+          let ocupados = [];
+
+          if (Array.isArray(datos)) {
+            datos.forEach(item => {
+              if (!item) return;
+              const d = String(item.data || "").trim().toUpperCase();
+              const h = String(item.hora || "").trim();
+              const b = String(item.barbero || "").trim();
+              const status = String(item.status || "").trim().toLowerCase();
+
+              if ((d === data || d === "TODOS") && b === barbeiro && !status.includes("cancelado")) {
+                ocupados.push(h);
+              }
+            });
+          }
+          aplicarHoras(ocupados);
         }
+      } catch (e) {
+        console.warn("Aviso: No se pudo conectar a la API, manteniendo horas base.", e);
+      }
+    };
 
-        btn.disabled = true;
-        btn.innerText = "Agendando...";
+    window.selecionarBarbeiro = function(nome, el) {
+      document.getElementById("barbeiro").value = nome.trim();
+      document.querySelectorAll(".card").forEach(c => c.classList.remove("active"));
+      el.classList.add("active");
+      window.carregarHoras();
+    };
 
-        const textoMsg = `Olá Armando Barber Shop%0A%0AQuero agendar um horário%0A%0ABarbeiro: ${barbeiro}%0AServiço: ${servico}%0AData: ${data}%0AHora: ${hora}%0ANome: ${nome}`;
-        
-        try {
-          await fetch(API_URL, {
-            method: "POST",
-            body: new URLSearchParams({ data, hora, cliente: nome, telefone, servico, barbeiro })
-          });
+    window.agendar = async function() {
+      const btn = document.getElementById("btnAgendar");
+      const erroBox = document.getElementById("alerta-erro");
+      erroBox.style.display = "none";
 
-          document.getElementById("confirmacao").style.display = "block";
-          window.open(`https://wa.me/554734354016?text=${textoMsg}`);
+      const data = document.getElementById("data").value;
+      const hora = document.getElementById("hora").value;
+      const nome = document.getElementById("nome").value.trim();
+      const telefono = document.getElementById("telefone").value.trim();
+      const barbeiro = document.getElementById("barbeiro").value;
+      const servico = document.getElementById("servico").value;
 
-          document.getElementById("nome").value = "";
-          document.getElementById("telefone").value = "";
-          carregarHoras();
-        } catch(e) {
-          erroBox.innerText = "Erro ao salvar reserva. Tente novamente.";
-          erroBox.style.display = "block";
-        } finally {
-          btn.disabled = false;
-          btn.innerText = "Agendar ✅";
-        }
-      };
+      if (!data || !hora || !nome || !telefono) {
+        erroBox.innerText = "Por favor, preencha todos os campos obrigatórios.";
+        erroBox.style.display = "block";
+        return;
+      }
 
-      window.abrirMaps = function() {
-        window.open("https://maps.app.goo.gl/PeCnFTVfxGxvAyP48");
-      };
-    })();
+      btn.disabled = true;
+      btn.innerText = "Agendando...";
+
+      const textoMsg = `Olá Armando Barber Shop%0A%0AQuero agendar um horário%0A%0ABarbeiro: ${barbeiro}%0AServiço: ${servico}%0AData: ${data}%0AHora: ${hora}%0ANome: ${nome}`;
+      
+      try {
+        await fetch(API_URL, {
+          method: "POST",
+          body: new URLSearchParams({ data, hora, cliente: nome, telefone, servico, barbeiro })
+        });
+
+        document.getElementById("confirmacao").style.display = "block";
+        window.open(`https://wa.me/554734354016?text=${textoMsg}`);
+
+        document.getElementById("nome").value = "";
+        document.getElementById("telefone").value = "";
+        window.carregarHoras();
+      } catch (e) {
+        erroBox.innerText = "Erro ao salvar reserva. Tente novamente.";
+        erroBox.style.display = "block";
+      } finally {
+        btn.disabled = false;
+        btn.innerText = "Agendar ✅";
+      }
+    };
+
+    window.abrirMaps = function() {
+      window.open("https://maps.app.goo.gl/PeCnFTVfxGxvAyP48");
+    };
+
+    // Inicialización al cargar la página
+    window.addEventListener("load", () => {
+      setTimeout(() => {
+        const loader = document.getElementById("loader");
+        if (loader) loader.classList.add("hidden");
+      }, 800);
+
+      const agora = new Date();
+      const hoy = agora.getFullYear() + "-" + String(agora.getMonth() + 1).padStart(2,'0') + "-" + String(agora.getDate()).padStart(2,'0');
+      const dataInput = document.getElementById("data");
+      
+      if (dataInput) {
+        dataInput.min = hoy;
+        dataInput.value = hoy;
+        dataInput.addEventListener("change", window.carregarHoras);
+      }
+      
+      window.carregarHoras();
+    });
 
     let deferredPrompt;
     window.addEventListener('beforeinstallprompt', (e) => {
