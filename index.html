@@ -286,8 +286,8 @@
       <input type="text" id="nome" placeholder="Seu nome" required>
 
       <label for="telefone">📱 WhatsApp / Telefone</label>
-      <!-- Campo flexible sin restricciones estancas para evitar bloqueos -->
-      <input type="text" id="telefone" placeholder="Ex: 4734354016 o solo un número" required>
+      <!-- Campo flexible sin restricciones para que acepte cualquier formato o número -->
+      <input type="text" id="telefone" placeholder="Ex: 4734354016" required>
 
       <label for="hora">⏰ Hora</label>
       <select id="hora" required></select>
@@ -305,7 +305,7 @@
     (function(){
       "use strict";
 
-      const API_URL = "https://script.google.com/macros/s/AKfycbztv0Kjze9NPhvUBXgkD0ROj_kvRZOrOq2a9hNkn4tzVIPQ0LB3oT3wFSycJTRRGucn/exec";
+      const API_URL = "https://script.google.com/macros/s/AKfycbxJtqFT6tj3A6ekl2PHhXgF0j-5FJbj-EJT1I9Tn884kFgd7t_9pY9qT8pbK3T-xbXU/exec";
 
       const HORAS_SEMANA = ["08:30","09:00","09:30","10:00","10:30","11:00","13:00","13:30","14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30","18:00","18:30","19:00"];
       const HORAS_LUNES = ["08:30","09:00","09:30","10:00","10:30","11:00","13:00","13:30","14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30"];
@@ -355,7 +355,7 @@
         let ocupados = [];
 
         try {
-          // Anticaché y Control de Tiempo Límite (Timeout de 5 segundos para que no se quede colgado)
+          // Anticaché y Control de Tiempo Límite (Timeout de 5 segundos)
           const controller = new AbortController();
           const timeoutId = setTimeout(() => controller.abort(), 5000);
 
