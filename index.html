@@ -154,7 +154,6 @@
     </div>
 </div>
 
-<!-- Iframe oculto para guardar en el Google Sheet sin bloqueos -->
 <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
 
 <script>
@@ -163,7 +162,6 @@
     let barbeirosSel = [];
     let servicoSel = null;
     let horasSel = { 'David': [], 'Armando': [] };
-    let dadosSheet = [];
 
     window.addEventListener("load", function(){
         var hoy = new Date().toISOString().split('T')[0];
@@ -188,7 +186,7 @@
             document.getElementById('card-' + b).classList.add('active');
             document.getElementById('secc-' + b).style.display = 'block';
         }
-        renderizarGrids();
+        carregarHoras();
         atualizarResumen();
     }
 
@@ -203,27 +201,12 @@
 
     function limparHorarios(b){
         horasSel[b] = [];
-        renderizarGrids();
+        carregarHoras();
         atualizarResumen();
     }
 
-    // CARGA VELOZ POR JSONP
-    function carregarHoras(){
-        var script = document.createElement('script');
-        script.src = API_URL + "?callback=procesarDatosSheet";
-        document.body.appendChild(script);
-        script.onload = function() { script.remove(); };
-        script.onerror = function() { script.remove(); };
-    }
-
-    window.procesarDatosSheet = function(datos){
-        if(Array.isArray(datos)){
-            dadosSheet = datos;
-        }
-        renderizarGrids();
-    };
-
-    function renderizarGrids(){
+    // LECTURA DIRECTA COMPATIBLE CON EL JSON PLANO DE TU APPS SCRIPT
+    async function carregarHoras(){
         var data = document.getElementById("data").value;
         if(!data) return;
         var partes = data.split("-");
@@ -232,21 +215,28 @@
         var HORAS = (dia === 6) ? HORAS_SABADO : (dia === 0 ? [] : HORAS_SEMANA);
 
         var ocupadosDavid = [], ocupadosArmando = [];
-        for(var i=0; i<dadosSheet.length; i++){
-            if(!dadosSheet[i]) continue;
-            var d = String(dadosSheet[i].data || dadosSheet[i].Data || "").trim();
-            var h = String(dadosSheet[i].hora || dadosSheet[i].Hora || "").trim();
-            var b = String(dadosSheet[i].barbeiro || dadosSheet[i].barbero || dadosSheet[i].Barbeiro || dadosSheet[i].Barbero || "").trim().toLowerCase();
-            var st = String(dadosSheet[i].status || dadosSheet[i].Status || "").toLowerCase();
+        try{
+            var res = await fetch(API_URL);
+            var datos = await res.json();
+            
+            if(Array.isArray(datos)){
+                for(var i=0; i<datos.length; i++){
+                    if(!datos[i]) continue;
+                    var d = String(datos[i].data || "").trim();
+                    var h = String(datos[i].hora || "").trim();
+                    var b = String(datos[i].barbeiro || "").trim().toLowerCase();
+                    var st = String(datos[i].status || "").toLowerCase();
 
-            if(d.includes("T")) {
-                d = d.split("T")[0];
-            }
+                    if(d.includes("T")) d = d.split("T")[0];
 
-            if((d === data || d === "TODOS") && !st.includes("cancelado") && !st.includes("bloque")){
-                if(b === "david") ocupadosDavid.push(h);
-                if(b === "armando") ocupadosArmando.push(h);
+                    if((d === data || d === "TODOS") && !st.includes("cancelado") && !st.includes("bloque")){
+                        if(b === "david") ocupadosDavid.push(h);
+                        if(b === "armando") ocupadosArmando.push(h);
+                    }
+                }
             }
+        }catch(e){
+            console.error("Error leyendo sheet:", e);
         }
 
         var hoy = new Date().toISOString().split('T')[0];
@@ -299,7 +289,7 @@
     }
 
     document.getElementById("data").addEventListener("change", function(){
-        renderizarGrids();
+        carregarHoras();
         atualizarResumen();
     });
 
@@ -328,7 +318,6 @@
             "Barbeiro(s): " + detWp.join(', ') + "\n" +
             "Data: " + data;
 
-        // Envío directo al Sheet mediante formulario oculto para evitar bloqueos CORS
         try {
             for(let b of ['David', 'Armando']){
                 for(let h of horasSel[b]){
