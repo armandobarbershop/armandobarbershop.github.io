@@ -4,7 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Armando Barber Shop</title>
-<link rel="manifest" href="manifest.json">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<link rel="manifest" href="manifest.json?v=3">
 <link rel="apple-touch-icon" href="logo.jpg">
 <meta name="theme-color" content="#D4AF37">
 <style>
@@ -35,9 +38,6 @@ button{background:linear-gradient(90deg,#D4AF37,#FFD700);color:#000;border:none;
 button:hover{transform:scale(1.05);box-shadow:0 6px 18px rgba(212,175,55,0.6);}
 #confirmacao{display:none;margin-top:15px;color:#00ff7f;font-weight:bold;font-size:18px;background:#002b14;padding:12px;border-radius:10px;border:1px solid #00ff7f;}
 @keyframes slideUp{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
-.loading-horas{display:flex;align-items:center;justify-content:center;color:#FFD700;font-weight:bold;}
-.loading-horas::after{content:"";width:16px;height:16px;margin-left:8px;border:3px solid #FFD700;border-top:3px solid transparent;border-radius:50%;animation:girarHoras 0.8s linear infinite;}
-@keyframes girarHoras{from{ transform:rotate(0deg); }to{ transform:rotate(360deg); }}
 </style>
 </head>
 <body>
@@ -60,16 +60,12 @@ button:hover{transform:scale(1.05);box-shadow:0 6px 18px rgba(212,175,55,0.6);}
 <label>⏰ Hora</label><select id="hora"></select>
 <button type="button" id="btnAgendar" onclick="agendar()">Agendar ✅</button>
 <button type="button" onclick="abrirMaps()">📍 Ver localização</button>
-<button id="btnInstalar" style="display:none; width:100%; margin-top:12px; padding:15px; background:#D4AF37; color:#000; border:none; border-radius:12px; font-weight:bold; font-size:16px;">📲 Baixar APP - Armando Barber</button>
-<script>
-let deferredPrompt;
-window.addEventListener('beforeinstallprompt', (e) => {e.preventDefault();deferredPrompt=e;document.getElementById('btnInstalar').style.display='block';});
-document.getElementById('btnInstalar').addEventListener('click', async () => {if (deferredPrompt) {deferredPrompt.prompt();const { outcome } = await deferredPrompt.userChoice;if (outcome === 'accepted') {document.getElementById('btnInstalar').style.display='none';}deferredPrompt=null;}});
-</script>
 </form>
 <div id="confirmacao" style="display:none;">Reserva enviada com sucesso! Obrigado por nos preferir.</div>
 </div>
 <script>
+const VERSION_APP = Date.now();
+console.log("🔄 Versión anticache:", VERSION_APP);
 (function(){
 "use strict";
 const API_URL = "https://script.google.com/macros/s/AKfycbxJtqFT6tj3A6ekl2PHhXgF0j-5FJbj-EJT1I9Tn884kFgd7t_9pY9qT8pbK3T-xbXU/exec";
@@ -125,7 +121,7 @@ if(abortCtrl) try{abortCtrl.abort();}catch(e){}
 abortCtrl=new AbortController();
 var timeoutId=setTimeout(()=>{try{abortCtrl.abort();}catch(e){}},3500);
 try{
-  var res=await fetch(API_URL+"?reservas=1&data="+data+"&barbero="+encodeURIComponent(barbeiro),{signal:abortCtrl.signal, cache:"no-store"});
+  var res=await fetch(API_URL+"?reservas=1&data="+data+"&barbero="+encodeURIComponent(barbeiro)+"&_t="+VERSION_APP+"&v="+Date.now(),{signal:abortCtrl.signal, cache:"no-store", headers:{'Cache-Control':'no-cache'}});
   clearTimeout(timeoutId);
   var datos=await res.json();
   var ocupados=[];
@@ -164,7 +160,7 @@ if(!data||!hora||!nome||!telefono){alert("Preencha todos os campos");btn.disable
 var texto="Olá Armando Barber Shop%0A%0AQuero agendar um horário%0A%0ABarbeiro: "+barbeiro+"%0A"+"Serviço: "+servico+"%0A"+"Data: "+data+"%0A"+"Hora: "+hora+"%0A"+"Nome: "+nome;
 var params=new URLSearchParams({data:data,[STRIPPED]
 try{var blob=new Blob([params.toString()],{type:'application/x-www-form-urlencoded'});navigator.sendBeacon(API_URL,blob);}catch(e){}
-fetch(API_URL,{method:"POST",mode:"no-cors",keepalive:true,body:params}).catch(()=>{});
+fetch(API_URL,{method:"POST",mode:"no-cors",keepalive:true,body:params,cache:"no-store"}).catch(()=>{});
 setTimeout(function(){
   window.open("https://wa.me/554734354016?text="+texto);
   var msg=document.getElementById("confirmacao");
