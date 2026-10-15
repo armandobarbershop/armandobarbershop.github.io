@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Armando Barber Shop</title>
   
-  <!-- Anticaché para navegadores móviles -->
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
   <meta http-equiv="Pragma" content="no-cache">
   <meta http-equiv="Expires" content="0">
@@ -332,7 +331,7 @@
         carregarHoras();
       };
 
-      async function carregarHoras() {
+      window.carregarHoras = async function() {
         const data = document.getElementById("data").value;
         const barbeiro = document.getElementById("barbeiro").value.trim();
         const select = document.getElementById("hora");
@@ -353,8 +352,8 @@
         const hoyStr = agora.getFullYear() + "-" + String(agora.getMonth() + 1).padStart(2,'0') + "-" + String(agora.getDate()).padStart(2,'0');
         const horaActual = String(ahora.getHours()).padStart(2,'0') + ":" + String(ahora.getMinutes()).padStart(2,'0');
 
-        // Función para renderizar el select inmediatamente o con horas bloqueadas
-        function renderizarSelect(ocupadosList = []) {
+        // Función segura para rellenar las horas en el selector
+        function aplicarHoras(ocupadosList = []) {
           select.innerHTML = "";
           let disponibles = 0;
 
@@ -380,10 +379,10 @@
           }
         }
 
-        // 1. Pinta las horas de inmediato para que el cliente JAMÁS se quede esperando
-        renderizarSelect();
+        // 1. Dibuja las horas de inmediato para que NUNCA quede en blanco
+        aplicarHoras();
 
-        // 2. Consulta al Sheet en segundo plano de manera silenciosa
+        // 2. Intenta buscar los ocupados en segundo plano
         try {
           const controller = new AbortController();
           const timeoutId = setTimeout(() => controller.abort(), 4000);
@@ -410,11 +409,10 @@
                 }
               });
             }
-            // Actualiza el select marcando los horarios ocupados reales
-            renderizarSelect(ocupados);
+            aplicarHoras(ocupados);
           }
         } catch(e) {
-          console.warn("Aviso: No se pudo conectar a la API en tiempo real, se mantienen las horas base.", e);
+          console.warn("Aviso: No se pudo consultar la API, se mantienen las horas libres.", e);
         }
       }
 
