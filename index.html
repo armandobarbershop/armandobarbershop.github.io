@@ -36,7 +36,7 @@
             overflow: hidden;
         }
 
-        /* 1. CARGA INICIAL (LOADER PANTALLA COMPLETA) */
+        /* CARGA INICIAL (BARRA DORADA) */
         #initialLoader {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -63,14 +63,13 @@
             background: rgba(255, 255, 255, 0.1);
             border-radius: 10px;
             overflow: hidden;
-            box-shadow: 0 0 10px rgba(0,0,0,0.5);
         }
         .loader-bar-fill {
             width: 0%;
             height: 100%;
             background: linear-gradient(90deg, #b8860b, #ffd700, #b8860b);
             box-shadow: 0 0 12px var(--gold);
-            animation: loadFill 1.8s ease-in-out forwards;
+            animation: loadFill 1.5s ease-in-out forwards;
         }
         @keyframes loadFill {
             0% { width: 0%; }
@@ -78,7 +77,7 @@
             100% { width: 100%; }
         }
 
-        /* 2. VENTANA MODAL DE PROCESO (AL AGENDAR) */
+        /* MODAL DE AGENDAMIENTO */
         #loadingModal {
             display: none;
             position: fixed;
@@ -193,19 +192,15 @@
 </head>
 <body>
 
-<!-- PANTALLA DE CARGA INICIAL CON BARRA DORADA -->
 <div id="initialLoader">
     <div class="loader-title">ARMANDO <span>BARBER SHOP</span></div>
-    <div class="loader-bar-bg">
-        <div class="loader-bar-fill"></div>
-    </div>
+    <div class="loader-bar-bg"><div class="loader-bar-fill"></div></div>
 </div>
 
-<!-- VENTANA MODAL DE PROCESO -->
 <div id="loadingModal">
     <div class="modal-content">
         <div class="spinner"></div>
-        <div style="font-weight: bold; font-size: 14px; color: #fff;">Agendamiento em processo...</div>
+        <div style="font-weight: bold; font-size: 14px; color: #fff;">Agendamento em processo...</div>
         <div style="font-size: 11px; color: #aaa; margin-top: 5px;">Aguarde por favor</div>
     </div>
 </div>
@@ -323,14 +318,13 @@
         generarScrollFechas();
         carregarHoras();
         
-        // OCULTAR PANTALLA DE CARGA INICIAL DESPUÉS DE 1.8 SEGUNDOS
         setTimeout(function(){
             var loader = document.getElementById("initialLoader");
             if(loader){
                 loader.style.opacity = "0";
                 setTimeout(() => loader.style.display = "none", 500);
             }
-        }, 1800);
+        }, 1500);
     });
 
     function generarScrollFechas(){
@@ -431,6 +425,7 @@
         atualizarResumen();
     };
 
+    // LÓGICA ORIGINAL DE LECTURA DE TU CÓDIGO FUNCIONAL
     async function carregarHoras(){
         var HORAS = obterHorariosDoDia(fechaSelStr);
         var ocupadosDavid = [], ocupadosArmando = [];
@@ -442,7 +437,9 @@
                 if(!datos[i]) continue;
                 var d = String(datos[i].data || "").trim().toUpperCase();
                 var h = String(datos[i].hora || "").trim();
-                var b = String(datos[i].barbero || "").trim();
+                // Acepta tanto barbeiro como barbero
+                var b = String(datos[i].barbeiro || datos[i].barbero || "").trim();
+                
                 if((d === fechaSelStr || d === "TODOS") && !String(datos[i].status || "").toLowerCase().includes("cancelado")){
                     if(b === "David") ocupadosDavid.push(h);
                     if(b === "Armando") ocupadosArmando.push(h);
@@ -521,7 +518,6 @@
             return alert("Preencha todos os campos e selecione pelo menos um horário!");
         }
 
-        // MOSTRAR VENTANA MODAL DE PROCESO
         document.getElementById("loadingModal").style.display = "flex";
 
         let detWp = [];
@@ -550,7 +546,6 @@
         var win = window.open(wpUrl, '_blank');
         if(!win) window.open(wpFallback, '_blank');
 
-        // ENVÍO AL SHEET DIRECTO Y SEGURO
         try {
             for(let b of ['David', 'Armando']){
                 for(let h of horasSel[b]){
