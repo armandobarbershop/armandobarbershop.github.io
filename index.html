@@ -36,7 +36,49 @@
             overflow: hidden;
         }
 
-        /* VENTANA MODAL DE PROCESO */
+        /* 1. CARGA INICIAL (LOADER PANTALLA COMPLETA) */
+        #initialLoader {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #050505;
+            z-index: 10000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        .loader-title {
+            font-family: 'Times New Roman', serif;
+            font-size: 26px;
+            font-weight: bold;
+            color: #fff;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+        .loader-title span { color: var(--gold); font-style: italic; }
+        .loader-bar-bg {
+            width: 220px;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0,0,0,0.5);
+        }
+        .loader-bar-fill {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #b8860b, #ffd700, #b8860b);
+            box-shadow: 0 0 12px var(--gold);
+            animation: loadFill 1.8s ease-in-out forwards;
+        }
+        @keyframes loadFill {
+            0% { width: 0%; }
+            50% { width: 60%; }
+            100% { width: 100%; }
+        }
+
+        /* 2. VENTANA MODAL DE PROCESO (AL AGENDAR) */
         #loadingModal {
             display: none;
             position: fixed;
@@ -66,153 +108,51 @@
         }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
 
-        /* BARRA DE CARGA SUPERIOR */
-        .progress-bar-container {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%;
-            height: 3px;
-            background: rgba(212, 175, 55, 0.1);
-            z-index: 99;
-        }
-        .progress-bar {
-            width: 0%;
-            height: 100%;
-            background: linear-gradient(90deg, #b8860b, #ffd700, #b8860b);
-            box-shadow: 0 0 8px var(--gold);
-            transition: width 0.4s ease;
-        }
-
         /* HEADER */
-        .header {
-            text-align: left;
-            margin-bottom: 20px;
-            padding-top: 5px;
-        }
+        .header { text-align: left; margin-bottom: 20px; padding-top: 5px; }
         .badge-top {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            background: #18150c;
-            border: 1px solid #33280c;
-            color: var(--gold);
-            font-size: 10px;
-            font-weight: bold;
-            padding: 4px 10px;
-            border-radius: 20px;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            margin-bottom: 12px;
+            display: inline-flex; align-items: center; gap: 6px;
+            background: #18150c; border: 1px solid #33280c;
+            color: var(--gold); font-size: 10px; font-weight: bold;
+            padding: 4px 10px; border-radius: 20px; letter-spacing: 1px;
+            text-transform: uppercase; margin-bottom: 12px;
         }
         .badge-top .dot {
-            width: 6px; height: 6px;
-            background: var(--gold);
-            border-radius: 50%;
-            box-shadow: 0 0 6px var(--gold);
+            width: 6px; height: 6px; background: var(--gold);
+            border-radius: 50%; box-shadow: 0 0 6px var(--gold);
         }
-
         .header h1 {
-            font-family: 'Times New Roman', serif;
-            font-size: 32px;
-            font-weight: 800;
-            margin: 0;
-            line-height: 0.95;
-            color: #fff;
-            letter-spacing: 1px;
+            font-family: 'Times New Roman', serif; font-size: 32px;
+            font-weight: 800; margin: 0; line-height: 0.95; color: #fff; letter-spacing: 1px;
         }
-        .header h1 span {
-            color: var(--gold);
-            font-style: italic;
-            font-weight: 400;
-            display: block;
-            font-size: 28px;
-        }
-        .header p {
-            color: var(--text-muted);
-            font-size: 11px;
-            margin: 8px 0 0 0;
-        }
+        .header h1 span { color: var(--gold); font-style: italic; font-weight: 400; display: block; font-size: 28px; }
+        .header p { color: var(--text-muted); font-size: 11px; margin: 8px 0 0 0; }
 
-        /* SECCIONES */
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin: 22px 0 10px 0;
-        }
-        .section-title {
-            font-size: 16px;
-            font-weight: bold;
-            color: #fff;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .section-title::before {
-            content: '';
-            display: inline-block;
-            width: 12px; height: 2px;
-            background: var(--gold);
-        }
-        .section-count {
-            font-size: 10px;
-            color: var(--gold);
-            font-weight: bold;
-            letter-spacing: 0.5px;
-        }
+        /* SECCIONES Y TARJETAS */
+        .section-header { display: flex; justify-content: space-between; align-items: center; margin: 22px 0 10px 0; }
+        .section-title { font-size: 16px; font-weight: bold; color: #fff; display: flex; align-items: center; gap: 8px; }
+        .section-title::before { content: ''; display: inline-block; width: 12px; height: 2px; background: var(--gold); }
+        .section-count { font-size: 10px; color: var(--gold); font-weight: bold; letter-spacing: 0.5px; }
 
-        /* BARBEIROS */
         .barbeiros-container { display: flex; flex-direction: column; gap: 10px; }
         .barbeiro-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 14px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            cursor: pointer;
-            transition: all 0.2s ease;
+            background: var(--card-bg); border: 1px solid var(--border-color);
+            border-radius: 16px; padding: 14px; display: flex; align-items: center;
+            gap: 12px; cursor: pointer; transition: all 0.2s ease;
         }
-        .barbeiro-card.active {
-            border-color: var(--gold);
-            background: #18150c;
-            box-shadow: 0 0 15px var(--gold-glow);
-        }
-        .barbeiro-avatar {
-            width: 52px; height: 52px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 1.5px solid #333;
-        }
+        .barbeiro-card.active { border-color: var(--gold); background: #18150c; box-shadow: 0 0 15px var(--gold-glow); }
+        .barbeiro-avatar { width: 52px; height: 52px; border-radius: 50%; object-fit: cover; border: 1.5px solid #333; }
         .barbeiro-card.active .barbeiro-avatar { border-color: var(--gold); }
         .barbeiro-info { flex: 1; }
         .barbeiro-nome { font-size: 16px; font-weight: bold; color: #fff; display: block; }
         .barbeiro-cargo { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px; display: block; }
         .barbeiro-desc { font-size: 11px; color: #aaa; margin-top: 4px; display: block; }
         .barbeiro-badge { display: inline-block; font-size: 9px; color: var(--gold); background: rgba(212, 175, 55, 0.1); padding: 2px 6px; border-radius: 6px; margin-top: 6px; font-weight: bold; }
-        .check-icon {
-            width: 18px; height: 18px;
-            border-radius: 50%;
-            border: 1px solid #444;
-            display: flex; align-items: center; justify-content: center;
-            font-size: 10px; color: transparent;
-        }
+        .check-icon { width: 18px; height: 18px; border-radius: 50%; border: 1px solid #444; display: flex; align-items: center; justify-content: center; font-size: 10px; color: transparent; }
         .barbeiro-card.active .check-icon { background: var(--gold); border-color: var(--gold); color: #000; }
 
-        /* SERVICIOS */
         .servicos-container { display: flex; flex-direction: column; gap: 10px; }
-        .servico-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 14px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
+        .servico-card { background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; padding: 14px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: all 0.2s ease; }
         .servico-card.active { border-color: var(--gold); background: #18150c; box-shadow: 0 0 12px var(--gold-glow); }
         .servico-card.promo { border-color: var(--gold); background: #16130b; }
         .servico-info .title { font-size: 14px; font-weight: bold; color: #fff; }
@@ -220,19 +160,9 @@
         .servico-precio { font-size: 15px; font-weight: bold; color: #fff; text-align: right; }
         .servico-card.promo .servico-precio { color: var(--gold); }
 
-        /* FECHAS */
         .fechas-scroll { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 8px; margin-top: 5px; }
         .fechas-scroll::-webkit-scrollbar { display: none; }
-        .fecha-item {
-            min-width: 65px;
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 14px;
-            padding: 10px 6px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
+        .fecha-item { min-width: 65px; background: var(--card-bg); border: 1px solid var(--border-color); border-radius: 14px; padding: 10px 6px; text-align: center; cursor: pointer; transition: all 0.2s; }
         .fecha-item.active { border-color: var(--gold); background: var(--gold); color: #000; }
         .fecha-item .dia-sem { font-size: 10px; font-weight: bold; text-transform: uppercase; display: block; color: var(--text-muted); }
         .fecha-item.active .dia-sem { color: #000; }
@@ -240,7 +170,6 @@
         .fecha-item .tag-hoje { font-size: 8px; font-weight: bold; background: rgba(252, 252, 252, 0.1); padding: 1px 4px; border-radius: 4px; display: inline-block; }
         .fecha-item.active .tag-hoje { background: #000; color: var(--gold); }
 
-        /* HORARIOS */
         .seccion-barbeiro-horarios { background: #111; border: 1px solid var(--border-color); border-radius: 16px; padding: 14px; margin-top: 12px; }
         .barbeiro-horarios-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid #1a1a1a; }
         .barbeiro-horarios-title { font-size: 12px; font-weight: bold; color: var(--gold); background: rgba(212, 175, 55, 0.1); padding: 4px 8px; border-radius: 6px; }
@@ -250,7 +179,6 @@
         .hora-btn.active { border-color: var(--gold); background: var(--gold); color: #000; box-shadow: 0 0 8px var(--gold-glow); }
         .hora-btn:disabled { background: #0d0d0d; color: #333; border-color: #141414; cursor: not-allowed; text-decoration: line-through; }
 
-        /* INPUTS Y RESUMO */
         .input-field { width: 100%; padding: 13px; border-radius: 12px; border: 1px solid var(--border-color); background: var(--card-bg); color: #fff; box-sizing: border-box; font-size: 14px; margin-bottom: 10px; }
         .input-field:focus { border-color: var(--gold); outline: none; }
         .resumo-ticket { background: #121212; border: 1px solid var(--border-color); border-radius: 18px; padding: 16px; margin-top: 20px; }
@@ -265,6 +193,15 @@
 </head>
 <body>
 
+<!-- PANTALLA DE CARGA INICIAL CON BARRA DORADA -->
+<div id="initialLoader">
+    <div class="loader-title">ARMANDO <span>BARBER SHOP</span></div>
+    <div class="loader-bar-bg">
+        <div class="loader-bar-fill"></div>
+    </div>
+</div>
+
+<!-- VENTANA MODAL DE PROCESO -->
 <div id="loadingModal">
     <div class="modal-content">
         <div class="spinner"></div>
@@ -274,8 +211,6 @@
 </div>
 
 <div class="container">
-    <div class="progress-bar-container"><div class="progress-bar" id="progressBar"></div></div>
-    
     <div class="header">
         <div class="badge-top"><span class="dot"></span> AGENDA ABERTA • 4 ANOS</div>
         <h1>ARMANDO <span>BARBER</span></h1>
@@ -384,20 +319,18 @@
     let fechaSelStr = "";
     let horasSel = { 'David': [], 'Armando': [] };
 
-    function triggerProgressBar(){
-        let bar = document.getElementById("progressBar");
-        if(!bar) return;
-        bar.style.width = "0%";
-        setTimeout(() => bar.style.width = "40%", 50);
-        setTimeout(() => bar.style.width = "80%", 200);
-        setTimeout(() => bar.style.width = "100%", 400);
-        setTimeout(() => bar.style.width = "0%", 700);
-    }
-
     window.addEventListener("load", function(){
-        triggerProgressBar();
         generarScrollFechas();
         carregarHoras();
+        
+        // OCULTAR PANTALLA DE CARGA INICIAL DESPUÉS DE 1.8 SEGUNDOS
+        setTimeout(function(){
+            var loader = document.getElementById("initialLoader");
+            if(loader){
+                loader.style.opacity = "0";
+                setTimeout(() => loader.style.display = "none", 500);
+            }
+        }, 1800);
     });
 
     function generarScrollFechas(){
@@ -424,7 +357,6 @@
                 document.querySelectorAll(".fecha-item").forEach(el => el.classList.remove("active"));
                 item.classList.add("active");
                 fechaSelStr = dateIso;
-                triggerProgressBar();
                 carregarHoras();
                 atualizarResumen();
             };
@@ -464,7 +396,6 @@
     }
 
     window.toggleBarbeiro = function(b){
-        triggerProgressBar();
         var idx = barbeirosSel.indexOf(b);
         if(idx > -1){
             barbeirosSel.splice(idx, 1);
@@ -619,7 +550,7 @@
         var win = window.open(wpUrl, '_blank');
         if(!win) window.open(wpFallback, '_blank');
 
-        // ENVÍO LIMPIO Y FLUIDO AL SHEET (MÉTODO ORIGINAL)
+        // ENVÍO AL SHEET DIRECTO Y SEGURO
         try {
             for(let b of ['David', 'Armando']){
                 for(let h of horasSel[b]){
