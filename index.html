@@ -154,14 +154,16 @@
     </div>
 </div>
 
+<!-- Iframe invisible tradicional para guardar en el Sheet sin bloqueos -->
+<iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
+
 <script>
-(function(){
-    "use strict";
     const API_URL = "https://script.google.com/macros/s/AKfycbxJtqFT6tj3A6ekl2PHhXgF0j-5FJbj-EJT1I9Tn884kFgd7t_9pY9qT8pbK3T-xbXU/exec";
 
     let barbeirosSel = [];
     let servicoSel = null;
     let horasSel = { 'David': [], 'Armando': [] };
+    let dadosSheet = [];
 
     window.addEventListener("load", function(){
         var hoy = new Date().toISOString().split('T')[0];
@@ -173,7 +175,7 @@
     var HORAS_SEMANA = ["08:30","09:00","09:30","10:00","10:30","11:00","13:00","13:30","14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30","18:00","18:30","19:00","19:30","20:00"];
     var HORAS_SABADO = ["08:00","08:30","09:00","09:30","10:00","10:30","11:00","11:30","13:00","13:30","14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30"];
 
-    window.toggleBarbeiro = function(b){
+    function toggleBarbeiro(b){
         var idx = barbeirosSel.indexOf(b);
         if(idx > -1){
             barbeirosSel.splice(idx, 1);
@@ -186,26 +188,43 @@
             document.getElementById('card-' + b).classList.add('active');
             document.getElementById('secc-' + b).style.display = 'block';
         }
-        carregarHoras();
+        renderizarGrids();
         atualizarResumen();
-    };
+    }
 
-    window.selecionarServico = function(s){
+    function selecionarServico(s){
         servicoSel = s;
         document.querySelectorAll('.servico-card').forEach(c => c.classList.remove('active'));
         if(s === 'Corte') document.getElementById('srv-Corte').classList.add('active');
         if(s === 'Barba') document.getElementById('srv-Barba').classList.add('active');
         if(s === 'Corte + Barba') document.getElementById('srv-CorteBarba').classList.add('active');
         atualizarResumen();
-    };
+    }
 
-    window.limparHorarios = function(b){
+    function limparHorarios(b){
         horasSel[b] = [];
-        carregarHoras();
+        renderizarGrids();
         atualizarResumen();
+    }
+
+    // CARGA POR JSONP INMEDIATO (SIN DEMORA DE FETCH NI REDIRECCIÓN)
+    function carregarHoras(){
+        var script = document.createElement('script');
+        script.src = API_URL + "?callback=procesarDatosSheet";
+        document.body.appendChild(script);
+        script.onload = function() { script.remove(); };
+        script.onerror = function() { script.remove(); };
+    }
+
+    // FUNCIÓN GLOBAL LLAMADA POR EL JSONP
+    window.procesarDatosSheet = function(datos){
+        if(Array.isArray(datos)){
+            dadosSheet = datos;
+        }
+        renderizarGrids();
     };
 
-    async function carregarHoras(){
+    function renderizarGrids(){
         var data = document.getElementById("data").value;
         if(!data) return;
         var partes = data.split("-");
@@ -214,20 +233,16 @@
         var HORAS = (dia === 6) ? HORAS_SABADO : (dia === 0 ? [] : HORAS_SEMANA);
 
         var ocupadosDavid = [], ocupadosArmando = [];
-        try{
-            var res = await fetch(API_URL + "?callback=dummy");
-            var datos = await res.json();
-            for(var i=0; i<datos.length; i++){
-                if(!datos[i]) continue;
-                var d = String(datos[i].data || "").trim().toUpperCase();
-                var h = String(datos[i].hora || "").trim();
-                var b = String(datos[i].barbeiro || datos[i].barbero || "").trim();
-                if((d === data || d === "TODOS") && !String(datos[i].status || "").toLowerCase().includes("cancelado")){
-                    if(b === "David") ocupadosDavid.push(h);
-                    if(b === "Armando") ocupadosArmando.push(h);
-                }
+        for(var i=0; i<dadosSheet.length; i++){
+            if(!dadosSheet[i]) continue;
+            var d = String(dadosSheet[i].data || "").trim().toUpperCase();
+            var h = String(dadosSheet[i].hora || "").trim();
+            var b = String(dadosSheet[i].barbeiro || dadosSheet[i].barbero || "").trim();
+            if((d === data || d === "TODOS") && !String(dadosSheet[i].status || "").toLowerCase().includes("cancelado")){
+                if(b === "David") ocupadosDavid.push(h);
+                if(b === "Armando") ocupadosArmando.push(h);
             }
-        }catch(e){}
+        }
 
         var hoy = new Date().toISOString().split('T')[0];
         var horaActual = String(new Date().getHours()).padStart(2,'0') + ":" + String(new Date().getMinutes()).padStart(2,'0');
@@ -279,11 +294,12 @@
     }
 
     document.getElementById("data").addEventListener("change", function(){
-        carregarHoras();
+        renderizarGrids();
         atualizarResumen();
     });
 
-    window.agendar = async function(){
+    // GUARDAR EN EL SHEET MEDIANTE FORMULARIO OCULTO TRADICIONAL
+    function agendar(){
         var data = document.getElementById("data").value;
         var nome = document.getElementById("nome").value;
         var tel = document.getElementById("telefone").value;
@@ -307,37 +323,46 @@
             "Barbeiro(s): " + detWp.join(', ') + "\n" +
             "Data: " + data;
 
+        // Enviar al Google Sheet por cada horario seleccionado
+        try {
+            for(let b of ['David', 'Armando']){
+                for(let h of horasSel[b]){
+                    var form = document.createElement("form");
+                    form.method = "POST";
+                    form.action = API_URL;
+                    form.target = "hidden_iframe";
+
+                    var datos = { data: data, hora: h, cliente: nome, telefone: tel, servico: servicoSel, barbeiro: b };
+                    for(var k in datos){
+                        var input = document.createElement("input");
+                        input.type = "hidden";
+                        input.name = k;
+                        input.value = datos[k];
+                        form.appendChild(input);
+                    }
+                    document.body.appendChild(form);
+                    form.submit();
+                    form.remove();
+                }
+            }
+        } catch(e){}
+
         var wpUrl = "whatsapp://send?phone=554734354016&text=" + encodeURIComponent(msgWp);
         var wpFallback = "https://api.whatsapp.com/send?phone=554734354016&text=" + encodeURIComponent(msgWp);
         
         var win = window.open(wpUrl, '_blank');
         if(!win) window.open(wpFallback, '_blank');
 
-        // Envío directo simple y limpio al Google Sheet original
-        try {
-            for(let b of ['David', 'Armando']){
-                for(let h of horasSel[b]){
-                    await fetch(API_URL, {
-                        method: "POST",
-                        mode: "no-cors",
-                        body: new URLSearchParams({
-                            data: data, hora: h, cliente: nome, telefone: tel, servico: servicoSel, barbeiro: b
-                        })
-                    });
-                }
-            }
-        } catch(e){}
-
         document.getElementById("confirmacao").style.display = "block";
         document.getElementById("nome").value = "";
         document.getElementById("telefone").value = "";
         horasSel = { 'David': [], 'Armando': [] };
-        carregarHoras();
+        
+        setTimeout(carregarHoras, 1000);
         atualizarResumen();
-    };
+    }
 
     window.abrirMaps = function(){ window.open("https://maps.app.goo.gl/PeCnFTVfxGxvAyP48"); };
-})();
 </script>
 
 </body>
