@@ -154,7 +154,7 @@
     </div>
 </div>
 
-<!-- Iframe invisible tradicional para guardar en el Sheet sin bloqueos -->
+<!-- Iframe oculto para guardar en el Google Sheet sin bloqueos -->
 <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
 
 <script>
@@ -207,7 +207,7 @@
         atualizarResumen();
     }
 
-    // CARGA POR JSONP INMEDIATO (SIN DEMORA DE FETCH NI REDIRECCIÓN)
+    // CARGA VELOZ POR JSONP
     function carregarHoras(){
         var script = document.createElement('script');
         script.src = API_URL + "?callback=procesarDatosSheet";
@@ -216,7 +216,6 @@
         script.onerror = function() { script.remove(); };
     }
 
-    // FUNCIÓN GLOBAL LLAMADA POR EL JSONP
     window.procesarDatosSheet = function(datos){
         if(Array.isArray(datos)){
             dadosSheet = datos;
@@ -235,12 +234,18 @@
         var ocupadosDavid = [], ocupadosArmando = [];
         for(var i=0; i<dadosSheet.length; i++){
             if(!dadosSheet[i]) continue;
-            var d = String(dadosSheet[i].data || "").trim().toUpperCase();
-            var h = String(dadosSheet[i].hora || "").trim();
-            var b = String(dadosSheet[i].barbeiro || dadosSheet[i].barbero || "").trim();
-            if((d === data || d === "TODOS") && !String(dadosSheet[i].status || "").toLowerCase().includes("cancelado")){
-                if(b === "David") ocupadosDavid.push(h);
-                if(b === "Armando") ocupadosArmando.push(h);
+            var d = String(dadosSheet[i].data || dadosSheet[i].Data || "").trim();
+            var h = String(dadosSheet[i].hora || dadosSheet[i].Hora || "").trim();
+            var b = String(dadosSheet[i].barbeiro || dadosSheet[i].barbero || dadosSheet[i].Barbeiro || dadosSheet[i].Barbero || "").trim().toLowerCase();
+            var st = String(dadosSheet[i].status || dadosSheet[i].Status || "").toLowerCase();
+
+            if(d.includes("T")) {
+                d = d.split("T")[0];
+            }
+
+            if((d === data || d === "TODOS") && !st.includes("cancelado") && !st.includes("bloque")){
+                if(b === "david") ocupadosDavid.push(h);
+                if(b === "armando") ocupadosArmando.push(h);
             }
         }
 
@@ -298,7 +303,7 @@
         atualizarResumen();
     });
 
-    // GUARDAR EN EL SHEET MEDIANTE FORMULARIO OCULTO TRADICIONAL
+    // GUARDAR EN EL SHEET Y ABRIR WHATSAPP
     function agendar(){
         var data = document.getElementById("data").value;
         var nome = document.getElementById("nome").value;
@@ -323,7 +328,7 @@
             "Barbeiro(s): " + detWp.join(', ') + "\n" +
             "Data: " + data;
 
-        // Enviar al Google Sheet por cada horario seleccionado
+        // Envío directo al Sheet mediante formulario oculto para evitar bloqueos CORS
         try {
             for(let b of ['David', 'Armando']){
                 for(let h of horasSel[b]){
@@ -332,12 +337,12 @@
                     form.action = API_URL;
                     form.target = "hidden_iframe";
 
-                    var datos = { data: data, hora: h, cliente: nome, telefone: tel, servico: servicoSel, barbeiro: b };
-                    for(var k in datos){
+                    var dados = { data: data, hora: h, cliente: nome, telefone: tel, servico: servicoSel, barbeiro: b };
+                    for(var k in dados){
                         var input = document.createElement("input");
                         input.type = "hidden";
                         input.name = k;
-                        input.value = datos[k];
+                        input.value = dados[k];
                         form.appendChild(input);
                     }
                     document.body.appendChild(form);
@@ -358,7 +363,7 @@
         document.getElementById("telefone").value = "";
         horasSel = { 'David': [], 'Armando': [] };
         
-        setTimeout(carregarHoras, 1000);
+        setTimeout(carregarHoras, 1500);
         atualizarResumen();
     }
 
