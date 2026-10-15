@@ -403,7 +403,7 @@ window.selecionarBarbeiro = function(nome, el){
   carregarHoras(); 
 };  
 
-/* CARGAR HORAS DESDE EL SHEET */  
+/* CARGAR HORAS DESDE EL SHEET CON SOPORTE COMPLETO PARA 'TODOS' Y BLOQUEOS */  
 async function carregarHoras(){
   if(window.carregandoHoras) return;
   window.carregandoHoras = true;
@@ -466,12 +466,14 @@ async function carregarHoras(){
 
       if(!d || !h || !b) continue;
 
+      // SOPORTE PARA "TODOS" EN FECHA Y VALIDACIÓN DE BARBERO CON CASE-INSENSITIVE
       if((d === data || d === "TODOS") && b.toLowerCase() === barbeiro.toLowerCase()){
         var status = "";
         if(datos[i].status){
           status = String(datos[i].status).trim().toLowerCase();
         }
-        if(status.includes("cancelado") || status.includes("bloque")){
+        // Si está cancelado, no bloquear
+        if(status.includes("cancelado")){
           continue;
         }
         ocupados.push(h);
@@ -509,14 +511,14 @@ async function carregarHoras(){
     select.add(opt);
   }
 
-  var disponibles = 0;
+  var disponíveis = 0;
   for(var i = 0; i < select.options.length; i++){
     if(!select.options[i].disabled){
-      disponibles++;
+      disponíveis++;
     }
   }
 
-  if(disponibles === 0){
+  if(disponíveis === 0){
     select.innerHTML = "";
     var opt = document.createElement("option");
     opt.value = "";
