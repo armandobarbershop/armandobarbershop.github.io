@@ -286,7 +286,6 @@
       <input type="text" id="nome" placeholder="Seu nome" required>
 
       <label for="telefone">📱 WhatsApp / Telefone</label>
-      <!-- Campo flexible sin restricciones para que acepte cualquier formato o número -->
       <input type="text" id="telefone" placeholder="Ex: 4734354016" required>
 
       <label for="hora">⏰ Hora</label>
@@ -337,8 +336,6 @@
         const data = document.getElementById("data").value;
         const barbeiro = document.getElementById("barbeiro").value.trim();
         const select = document.getElementById("hora");
-        
-        select.innerHTML = "<option disabled selected>Carregando horas...</option>";
 
         if(!data || !barbeiro) return;
 
@@ -352,62 +349,72 @@
         }
 
         let HORAS = (diaSemana === 1) ? HORAS_LUNES : (diaSemana === 6) ? HORAS_SABADO : HORAS_SEMANA;
-        let ocupados = [];
-
-        try {
-          // Anticaché y Control de Tiempo Límite (Timeout de 5 segundos)
-          const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 5000);
-
-          const res = await fetch(`${API_URL}?reservas=1&data=${data}&barbero=${encodeURIComponent(barbeiro)}&_cb=${Date.now()}`, {
-            signal: controller.signal
-          });
-          clearTimeout(timeoutId);
-
-          const datos = await res.json();
-          if(Array.isArray(datos)) {
-            datos.forEach(item => {
-              if(!item) return;
-              const d = String(item.data || "").trim().toUpperCase();
-              const h = String(item.hora || "").trim();
-              const b = String(item.barbero || "").trim();
-              const status = String(item.status || "").trim().toLowerCase();
-
-              if((d === data || d === "TODOS") && b === barbeiro && !status.includes("cancelado")) {
-                ocupados.push(h);
-              }
-            });
-          }
-        } catch(e) {
-          console.warn("Aviso: No se pudo verificar la API a tiempo o hubo un fallo menor, cargando horas base.", e);
-        }
-
         const ahora = new Date();
         const hoyStr = agora.getFullYear() + "-" + String(agora.getMonth() + 1).padStart(2,'0') + "-" + String(agora.getDate()).padStart(2,'0');
         const horaActual = String(ahora.getHours()).padStart(2,'0') + ":" + String(ahora.getMinutes()).padStart(2,'0');
 
-        select.innerHTML = "";
-        let disponibles = 0;
+        // Función para renderizar el select inmediatamente o con horas bloqueadas
+        function renderizarSelect(ocupadosList = []) {
+          select.innerHTML = "";
+          let disponibles = 0;
 
-        HORAS.forEach(h => {
-          const opt = document.createElement("option");
-          opt.value = h;
-          opt.text = h;
+          HORAS.forEach(h => {
+            const opt = document.createElement("option");
+            opt.value = h;
+            opt.text = h;
 
-          if(ocupados.includes(h)) {
-            opt.disabled = true;
-            opt.text = `${h} (ocupado)`;
-          } else if(data === hoyStr && h <= horaActual) {
-            opt.disabled = true;
-            opt.text = `${h} (passou)`;
-          } else {
-            disponibles++;
+            if(ocupadosList.includes(h)) {
+              opt.disabled = true;
+              opt.text = `${h} (ocupado)`;
+            } else if(data === hoyStr && h <= horaActual) {
+              opt.disabled = true;
+              opt.text = `${h} (passou)`;
+            } else {
+              disponibles++;
+            }
+            select.add(opt);
+          });
+
+          if(disponibles === 0) {
+            select.innerHTML = "<option disabled selected>Sem horários disponíveis</option>";
           }
-          select.add(opt);
-        });
+        }
 
-        if(disponibles === 0) {
-          select.innerHTML = "<option disabled selected>Sem horários disponíveis</option>";
+        // 1. Pinta las horas de inmediato para que el cliente JAMÁS se quede esperando
+        renderizarSelect();
+
+        // 2. Consulta al Sheet en segundo plano de manera silenciosa
+        try {
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 4000);
+
+          const res = await fetch(`${API_URL}?reservas=1&data=${data}&barbero=${encodeURIComponent(barbeiro)}`, {
+            signal: controller.signal
+          });
+          clearTimeout(timeoutId);
+
+          if(res.ok) {
+            const datos = await res.json();
+            let ocupados = [];
+
+            if(Array.isArray(datos)) {
+              datos.forEach(item => {
+                if(!item) return;
+                const d = String(item.data || "").trim().toUpperCase();
+                const h = String(item.hora || "").trim();
+                const b = String(item.barbero || "").trim();
+                const status = String(item.status || "").trim().toLowerCase();
+
+                if((d === data || d === "TODOS") && b === barbeiro && !status.includes("cancelado")) {
+                  ocupados.push(h);
+                }
+              });
+            }
+            // Actualiza el select marcando los horarios ocupados reales
+            renderizarSelect(ocupados);
+          }
+        } catch(e) {
+          console.warn("Aviso: No se pudo conectar a la API en tiempo real, se mantienen las horas base.", e);
         }
       }
 
