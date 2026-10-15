@@ -10,36 +10,38 @@
         
         /* HEADER */
         .header { text-align: center; margin-bottom: 22px; }
-        .header h1 { color: #f5f5f5; font-size: 28px; font-weight: 800; letter-spacing: 2px; margin: 0; font-family: 'Times New Roman', serif; }
-        .header h1 span { color: #D4AF37; font-style: italic; font-weight: 400; display: block; font-size: 24px; }
-        .sub-header { color: #888; font-size: 11px; letter-spacing: 1px; margin: 8px 0 16px 0; }
+        .header h1 { color: #f5f5f5; font-size: 26px; font-weight: 800; letter-spacing: 2px; margin: 0; font-family: 'Times New Roman', serif; }
+        .header h1 span { color: #D4AF37; font-style: italic; font-weight: 400; display: block; font-size: 22px; }
+        .sub-header { color: #D4AF37; font-size: 11px; letter-spacing: 1px; margin: 6px 0 12px 0; text-transform: uppercase; font-weight: bold; }
         
-        .info-box { font-size: 12px; color: #aaa; background: #181818; padding: 12px; border-radius: 12px; border: 1px solid #262626; text-align: left; line-height: 1.6; }
+        .info-box { font-size: 11px; color: #aaa; background: #181818; padding: 12px; border-radius: 12px; border: 1px solid #262626; text-align: left; line-height: 1.6; }
         .status-dot { height: 8px; width: 8px; background-color: #2e7d32; border-radius: 50%; display: inline-block; margin-right: 5px; }
 
         .paso-label { display: flex; justify-content: space-between; align-items: center; margin-top: 22px; margin-bottom: 10px; }
-        .paso-titulo { font-weight: bold; color: #fff; font-size: 18px; font-family: 'Times New Roman', serif; }
-        .paso-num { font-size: 10px; color: #888; letter-spacing: 1px; text-transform: uppercase; }
+        .paso-titulo { font-weight: bold; color: #fff; font-size: 17px; font-family: 'Times New Roman', serif; }
+        .paso-num { font-size: 10px; color: #D4AF37; letter-spacing: 1px; text-transform: uppercase; font-weight: bold; }
 
         /* BARBEIROS */
-        .cards-container { display: flex; gap: 10px; }
-        .card { flex: 1; border: 1px solid #262626; border-radius: 14px; padding: 12px 6px; text-align: center; cursor: pointer; background: #161616; transition: 0.2s; }
+        .cards-container { display: flex; flex-direction: column; gap: 10px; }
+        .card { border: 1px solid #262626; border-radius: 14px; padding: 14px; text-align: left; cursor: pointer; background: #161616; transition: 0.2s; display: flex; gap: 12px; align-items: center; position: relative; }
         .card.active { border-color: #D4AF37; background: #1e1a0f; box-shadow: 0 0 12px rgba(212,175,55,0.2); }
-        .card img { width: 58px; height: 58px; border-radius: 50%; object-fit: cover; margin-bottom: 6px; }
-        .card span { display: block; font-weight: 600; font-size: 14px; color: #fff; }
-        .card small { color: #777; font-size: 10px; }
+        .card img { width: 55px; height: 55px; border-radius: 50%; object-fit: cover; }
+        .card-info { flex: 1; }
+        .card-info span { display: block; font-weight: bold; font-size: 15px; color: #fff; }
+        .card-info small { color: #888; font-size: 11px; display: block; margin-top: 2px; }
+        .card-badge { font-size: 10px; color: #D4AF37; margin-top: 4px; display: inline-block; }
 
         /* SERVICIOS */
         .servicos-list { display: flex; flex-direction: column; gap: 10px; }
         .servico-card { border: 1px solid #262626; border-radius: 14px; padding: 14px; background: #161616; cursor: pointer; display: flex; justify-content: space-between; align-items: center; transition: 0.2s; }
         .servico-card.active { border-color: #D4AF37; background: #1e1a0f; box-shadow: 0 0 12px rgba(212,175,55,0.2); }
-        .servico-info .titulo { font-weight: 600; font-size: 15px; color: #fff; }
+        .servico-info .titulo { font-weight: 600; font-size: 14px; color: #fff; }
         .servico-info .desc { font-size: 11px; color: #777; margin-top: 3px; }
-        .servico-precio { color: #fff; font-weight: bold; font-size: 15px; text-align: right; }
+        .servico-precio { color: #fff; font-weight: bold; font-size: 14px; text-align: right; }
         .servico-precio small { display: block; font-size: 10px; color: #777; font-weight: normal; }
 
         .promo-dupla { border: 1px solid #D4AF37; position: relative; background: #1a170e; }
-        .badge-promo { position: absolute; top: -10px; right: 12px; background: #D4AF37; color: #000; font-size: 9px; font-weight: bold; padding: 2px 8px; border-radius: 10px; letter-spacing: 0.5px; }
+        .badge-promo { position: absolute; top: -10px; right: 12px; background: #D4AF37; color: #000; font-size: 9px; font-weight: bold; padding: 2px 8px; border-radius: 10px; }
 
         /* INPUTS */
         input[type="date"], input[type="text"], input[type="tel"] { width: 100%; padding: 13px; border-radius: 12px; border: 1px solid #262626; background: #161616; color: #fff; box-sizing: border-box; font-size: 14px; }
@@ -71,30 +73,37 @@
 <div class="container">
     <div class="header">
         <h1>ARMANDO <span>BARBER SHOP</span></h1>
-        <div class="sub-header">Cortes precisos, barba impecável • Desde 2018</div>
+        <div class="sub-header">MASTER BARBER • FUNDADOR</div>
         <div class="info-box">
             <div style="margin-bottom:6px;"><span class="status-dot"></span><strong style="color:#2e7d32;">Aberto hoje</strong></div>
-            <strong>Segunda a Sexta:</strong> 08:30 - 19:00<br>
-            <strong>Sábado:</strong> 08:00 - 17:00<br>
+            <strong>Segunda:</strong> 08:30–11:00 | 13:00–17:30<br>
+            <strong>Terça a Sexta:</strong> 08:30–11:00 | 13:00–19:00<br>
+            <strong>Sábado:</strong> 08:00–11:30 | 13:00–17:30<br>
             <strong>Domingo:</strong> Fechado
         </div>
     </div>
     
     <form id="formReserva" onsubmit="event.preventDefault();">
         <div class="paso-label">
-            <span class="paso-titulo">Barbeiro(s)</span>
-            <span class="paso-num">Passo 01</span>
+            <span class="paso-titulo">Barbeiro</span>
+            <span class="paso-num" id="num-barb">NENHUM SELECIONADO</span>
         </div>
         <div class="cards-container">
             <div class="card" id="card-David" onclick="toggleBarbeiro('David')">
                 <img src="https://i.imgur.com/QYKPKZ2.jpg">
-                <span>David</span>
-                <small>08:30 - 19:00</small>
+                <div class="card-info">
+                    <span>David</span>
+                    <small>BARBEIRO • DEGRADÊ & TESOURA</small>
+                    <span class="card-badge">⭐ 4.9 DISPONÍVEL</span>
+                </div>
             </div>
             <div class="card" id="card-Armando" onclick="toggleBarbeiro('Armando')">
                 <img src="https://i.imgur.com/JVUmj2q.jpg">
-                <span>Armando</span>
-                <small>08:30 - 19:00</small>
+                <div class="card-info">
+                    <span>Armando</span>
+                    <small>MASTER BARBER • FUNDADOR</small>
+                    <span class="card-badge">⭐ 4.9 DISPONÍVEL</span>
+                </div>
             </div>
         </div>
 
@@ -106,31 +115,31 @@
             <div class="servico-card" id="srv-Corte" onclick="selecionarServico('Corte')">
                 <div class="servico-info">
                     <div class="titulo">Corte</div>
-                    <div class="desc">Corte masculino clássico • tesoura e máquina</div>
+                    <div class="desc">Máquina + tesoura + finalização • 30 min</div>
                 </div>
-                <div class="servico-precio">R$40<small>por pessoa</small></div>
+                <div class="servico-precio">R$ 40</div>
             </div>
             <div class="servico-card" id="srv-Barba" onclick="selecionarServico('Barba')">
                 <div class="servico-info">
                     <div class="titulo">Barba</div>
-                    <div class="desc">Barba completa + toalha quente + acabamento</div>
+                    <div class="desc">Toalha quente + acabamento • 20 min</div>
                 </div>
-                <div class="servico-precio">R$30<small>por pessoa</small></div>
+                <div class="servico-precio">R$ 30</div>
             </div>
             <div class="servico-card" id="srv-CorteBarba" onclick="selecionarServico('Corte + Barba')">
                 <div class="servico-info">
                     <div class="titulo">Corte + Barba</div>
-                    <div class="desc">Pacote completo premium</div>
+                    <div class="desc">Ritual completo • 60 min</div>
                 </div>
-                <div class="servico-precio">R$70<small>por pessoa</small></div>
+                <div class="servico-precio">R$ 70</div>
             </div>
             <div class="servico-card promo-dupla" id="srv-Dupla" onclick="selecionarServico('Promo Dupla')">
-                <span class="badge-promo">TODOS OS DIAS • MAIS ESCOLHIDO</span>
+                <span class="badge-promo">R$10 + R$5 AMIGO</span>
                 <div class="servico-info">
-                    <div class="titulo" style="color:#D4AF37;">PROMO DUPLA <span style="font-size:11px; background:#D4AF37; color:#000; padding:1px 4px; border-radius:4px;">-R$5</span></div>
-                    <div class="desc">R$35 cada corte + Sobrancelha Grátis</div>
+                    <div class="titulo" style="color:#D4AF37;">Promoção Dupla</div>
+                    <div class="desc">Traga um amigo • R$5 OFF cada</div>
                 </div>
-                <div class="servico-precio" style="color:#D4AF37;">R$35<small>cada corte</small></div>
+                <div class="servico-precio" style="color:#D4AF37;">R$ 70<small>2 pessoas</small></div>
             </div>
         </div>
 
@@ -158,7 +167,7 @@
 
         <div class="paso-label">
             <span class="paso-titulo">Seus Dados</span>
-            <span class="paso-num">Passo 04</span>
+            <span class="paso-num">Obrigatório</span>
         </div>
         <input type="text" id="nome" placeholder="Seu nome completo" required style="margin-bottom:10px;">
         <input type="tel" inputmode="numeric" id="telefone" placeholder="WhatsApp (Ex: 4799999999)" required>
@@ -197,8 +206,26 @@
         carregarHoras();
     });
 
-    var HORAS_SEMANA = ["08:30","09:00","09:30","10:00","10:30","11:00","13:00","13:30","14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30","18:00","18:30","19:00","19:30","20:00"];
-    var HORAS_SABADO = ["08:00","08:30","09:00","09:30","10:00","10:30","11:00","11:30","13:00","13:30","14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30"];
+    // Definición de horarios según reglas del negocio
+    function obterHorariosDoDia(dataStr){
+        if(!dataStr) return [];
+        var partes = dataStr.split("-");
+        var dSel = new Date(parseInt(partes[0]), parseInt(partes[1]) - 1, parseInt(partes[2]));
+        var dia = dSel.getDay(); // 0: Dom, 1: Seg, 2: Ter, 3: Qua, 4: Qui, 5: Sex, 6: Sáb
+
+        if(dia === 0) return []; // Domingo fechado
+
+        if(dia === 1){ // Segunda: 8:30-11:00 y 13:00-17:30
+            return ["08:30","09:00","09:30","10:00","10:30","11:00","13:00","13:30","14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30"];
+        }
+        if(dia >= 2 && dia <= 5){ // Terça a Sexta: 8:30-11:00 y 13:00-19:00
+            return ["08:30","09:00","09:30","10:00","10:30","11:00","13:00","13:30","14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30","18:00","18:30","19:00"];
+        }
+        if(dia === 6){ // Sábado: 8:00-11:30 y 13:00-17:30
+            return ["08:00","08:30","09:00","09:30","10:00","10:30","11:00","11:30","13:00","13:30","14:00","14:30","15:00","15:30","16:00","16:30","17:00","17:30"];
+        }
+        return [];
+    }
 
     window.toggleBarbeiro = function(b){
         var idx = barbeirosSel.indexOf(b);
@@ -213,6 +240,10 @@
             document.getElementById('card-' + b).classList.add('active');
             document.getElementById('secc-' + b).style.display = 'block';
         }
+        
+        let numText = barbeirosSel.length === 0 ? "NENHUM SELECIONADO" : barbeirosSel.length + " SELECIONADO(S)";
+        document.getElementById('num-barb').innerText = numText;
+
         carregarHoras();
         atualizarResumen();
     };
@@ -239,10 +270,7 @@
     async function carregarHoras(){
         var data = document.getElementById("data").value;
         if(!data) return;
-        var partes = data.split("-");
-        var dSel = new Date(parseInt(partes[0]), parseInt(partes[1]) - 1, parseInt(partes[2]));
-        var dia = dSel.getDay();
-        var HORAS = (dia === 6) ? HORAS_SABADO : (dia === 0 ? [] : HORAS_SEMANA);
+        var HORAS = obterHorariosDoDia(data);
 
         var ocupadosDavid = [], ocupadosArmando = [];
         try{
@@ -258,15 +286,24 @@
                     if(b === "Armando") ocupadosArmando.push(h);
                 }
             }
-        }catch(e){}
+        }catch(e){
+            // Protección ante mala señal: si falla la red, no bloquea toda la agenda falsamente
+            console.log("Modo offline o error de red al sincronizar");
+        }
 
         var hoy = new Date().toISOString().split('T')[0];
         var horaActual = String(new Date().getHours()).padStart(2,'0') + ":" + String(new Date().getMinutes()).padStart(2,'0');
 
         ['David', 'Armando'].forEach(b => {
             var grid = document.getElementById("grid-" + b);
+            if(!grid) return;
             grid.innerHTML = "";
             var ocu = (b === 'David') ? ocupadosDavid : ocupadosArmando;
+
+            if(HORAS.length === 0){
+                grid.innerHTML = "<div style='grid-column: span 3; text-align:center; color:#D4AF37; font-size:12px;'>Fechado neste dia</div>";
+                return;
+            }
 
             HORAS.forEach(h => {
                 var btn = document.createElement("button");
@@ -313,7 +350,7 @@
         atualizarResumen();
     });
 
-    window.agendar = async function(){
+        window.agendar = async function(){
         var data = document.getElementById("data").value;
         var nome = document.getElementById("nome").value;
         var tel = document.getElementById("telefone").value;
@@ -323,7 +360,32 @@
             return alert("Preencha todos os campos e selecione pelo menos um horário!");
         }
 
-        // Construir string combinada para mensaje único de WhatsApp
+        // --- PROTECCIÓN ANTI DOBLE AGENDA (GANADOR Y PERDEDOR) ---
+        try {
+            let resCheck = await fetch(API_URL + "?callback=dummy");
+            let datosCheck = await resCheck.json();
+            
+            for(let b of ['David', 'Armando']){
+                for(let h of horasSel[b]){
+                    let ocupadoPorOtro = datosCheck.some(item => {
+                        if(!item) return false;
+                        let dMatch = String(item.data || "").trim().toUpperCase() === data || String(item.data || "").trim().toUpperCase() === "TODOS";
+                        let hMatch = String(item.hora || "").trim() === h;
+                        let bMatch = String(item.barbero || "").trim() === b;
+                        let activo = !String(item.status || "").toLowerCase().includes("cancelado");
+                        return dMatch && hMatch && bMatch && activo;
+                    });
+
+                    if(ocupadoPorOtro){
+                        alert("⚠️ Horário ocupado! O horário " + h + " com o barbeiro " + b + " acaba de ser reservado por outro cliente. Por favor, escolha outro.");
+                        carregarHoras();
+                        return;
+                    }
+                }
+            }
+        } catch(e) {}
+        // ---------------------------------------------------------
+
         let detWp = [];
         for(let b of ['David', 'Armando']){
             if(horasSel[b].length > 0){
@@ -338,14 +400,12 @@
             "Barbeiro(s): " + detWp.join(', ') + "\n" +
             "Data: " + data;
 
-        // Abrir app de WhatsApp directamente
         var wpUrl = "whatsapp://send?phone=554734354016&text=" + encodeURIComponent(msgWp);
         var wpFallback = "https://api.whatsapp.com/send?phone=554734354016&text=" + encodeURIComponent(msgWp);
         
         var win = window.open(wpUrl, '_blank');
         if(!win) window.open(wpFallback, '_blank');
 
-        // Enviar silenciosamente cada fila individual al Google Sheet
         try {
             for(let b of ['David', 'Armando']){
                 for(let h of horasSel[b]){
